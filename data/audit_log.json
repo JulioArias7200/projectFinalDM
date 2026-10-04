@@ -1,0 +1,43 @@
+{
+  "events": [
+    {
+      "event_id": "b57d1d2a",
+      "timestamp": "2026-10-04T18:17:53.181447+00:00",
+      "actor": "system",
+      "action": "INIT_SYSTEM",
+      "entity": "persona_dataset",
+      "details": {
+        "message": "Inicialización del sistema de bitácora y catálogo de personas",
+        "status": "success"
+      }
+    },
+    {
+      "event_id": "cd6936d0",
+      "timestamp": "2026-10-04T18:17:53.181447+00:00",
+      "actor": "pipeline_worker",
+      "action": "PREPROCESSING_RUN",
+      "entity": "20261004T171822Z_568e82e3039d_d3abfb0b5f",
+      "details": {
+        "rules_applied": [
+          "L-01",
+          "L-02",
+          "L-03",
+          "L-04",
+          "L-05",
+          "L-06",
+          "L-07",
+          "L-08",
+          "L-09",
+          "L-10",
+          "L-11",
+          "L-12",
+          "L-80"
+        ],
+        "initial_rows": 39497,
+        "initial_columns": 275,
+        "retained_columns": 150,
+        "status": "candidate_generated"
+      }
+    }
+  ]
+}

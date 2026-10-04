@@ -1,0 +1,207 @@
+{% extends 'dashboard/layout.html' %}
+
+{% block title %}ML Lab - Procedimiento y Metodología de Limpieza{% endblock %}
+
+{% block content %}
+<div class="space-y-6 animate-fade-in">
+  <!-- Top Banner -->
+  <div class="bg-[var(--bg-card)] rounded-2xl p-6 border border-[var(--border-card)] shadow-[var(--card-shadow)] flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]"></span>
+        <h1 class="text-base font-bold text-[var(--text-main)]">Procedimiento y Metodología de Limpieza de Datos</h1>
+      </div>
+      <p class="text-xs text-[var(--text-secondary)] mt-1">Guía paso a paso del pipeline de minería de datos aplicado a <code class="text-xs text-emerald-400 font-mono">data/persona.csv</code> según la metodología de <code class="text-xs text-purple-400 font-mono">curso/</code></p>
+    </div>
+    <div class="flex items-center gap-3 shrink-0">
+      <span class="text-xs font-mono px-3 py-1.5 rounded-lg bg-[var(--bg-card-subtle)] border border-[var(--border-card)] text-[var(--text-main)]">
+        7 Fases Ejecutadas
+      </span>
+      <span class="text-xs font-mono px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+        100% Preservado &amp; 11 Vistas
+      </span>
+    </div>
+  </div>
+
+  <!-- Pipeline Overview Summary Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="bg-[var(--bg-card)] p-4 rounded-2xl border border-[var(--border-card)] shadow-[var(--card-shadow)]">
+      <span class="text-[10px] uppercase font-mono tracking-wider text-[var(--text-muted)]">Población Muestral</span>
+      <div class="text-xl font-bold font-mono text-[var(--text-main)] mt-1">39,497 Filas</div>
+      <p class="text-[11px] text-emerald-400 mt-1">12,718 Hogares únicos</p>
+    </div>
+    <div class="bg-[var(--bg-card)] p-4 rounded-2xl border border-[var(--border-card)] shadow-[var(--card-shadow)]">
+      <span class="text-[10px] uppercase font-mono tracking-wider text-[var(--text-muted)]">Columnas Master</span>
+      <div class="text-xl font-bold font-mono text-emerald-400 mt-1">275 Columnas</div>
+      <p class="text-[11px] text-[var(--text-muted)] mt-1">100% Conservadas en Master</p>
+    </div>
+    <div class="bg-[var(--bg-card)] p-4 rounded-2xl border border-[var(--border-card)] shadow-[var(--card-shadow)]">
+      <span class="text-[10px] uppercase font-mono tracking-wider text-[var(--text-muted)]">Vistas Temáticas</span>
+      <div class="text-xl font-bold font-mono text-[#00d2ff] mt-1">11 Vistas</div>
+      <p class="text-[11px] text-cyan-400 mt-1">Segmentadas por población elegible</p>
+    </div>
+    <div class="bg-[var(--bg-card)] p-4 rounded-2xl border border-[var(--border-card)] shadow-[var(--card-shadow)]">
+      <span class="text-[10px] uppercase font-mono tracking-wider text-[var(--text-muted)]">Clave de Persona</span>
+      <div class="text-xl font-bold font-mono text-[#ff2453] mt-1">(folio, nro)</div>
+      <p class="text-[11px] text-red-400 mt-1">0 Duplicados / 0 Conflictos</p>
+    </div>
+  </div>
+
+  <!-- Interactive Sankey Flow Diagram -->
+  {% include 'dashboard/components/sankey_diagram.html' %}
+
+  <!-- Step-by-Step Methodology Workflow -->
+  <div class="space-y-4">
+    
+    <!-- Fase 1 -->
+    <div class="bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)] flex flex-col md:flex-row gap-5">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#3b82f6] to-[#00d2ff] flex items-center justify-center text-white font-bold font-mono text-sm shrink-0 shadow-glow-blue">
+        01
+      </div>
+      <div class="flex-1 space-y-2">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-bold text-[var(--text-main)]">Fase 1: Comprensión y Contrato de Datos (CRISP-DM / KDD)</h2>
+          <span class="text-[10px] font-mono px-2.5 py-0.5 rounded bg-[var(--bg-card-subtle)] text-[var(--text-muted)]">Fundamento: Cap. 10 Metodologías</span>
+        </div>
+        <p class="text-xs text-[var(--text-secondary)]">
+          Se identificó la fuente oficial del archivo <code class="text-xs text-cyan-400 font-mono">persona.csv</code> contrastándola con el diccionario oficial del INE (F27 EH2025). Se delimitaron los <strong>4 universos de análisis</strong> (Salud, Educación, Empleo e Ingresos) y se redactó el contrato de datos (<code class="text-xs font-mono text-[var(--text-main)]">data-contract.md</code>) para establecer los tipos esperados y los campos potencialmente sensibles.
+        </p>
+      </div>
+    </div>
+
+    <!-- Fase 2 -->
+    <div class="bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)] flex flex-col md:flex-row gap-5">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#8a5cf6] to-[#a855f7] flex items-center justify-center text-white font-bold font-mono text-sm shrink-0 shadow-glow-purple">
+        02
+      </div>
+      <div class="flex-1 space-y-2">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-bold text-[var(--text-main)]">Fase 2: Ingesta Inmutable y Conservación del Raw</h2>
+          <span class="text-[10px] font-mono px-2.5 py-0.5 rounded bg-[var(--bg-card-subtle)] text-[var(--text-muted)]">Control de Integridad</span>
+        </div>
+        <p class="text-xs text-[var(--text-secondary)]">
+          El archivo original de 34,568,646 bytes se trató como de <strong>solo lectura</strong>. Se calculó su firma criptográfica SHA-256 (<code class="text-[11px] font-mono text-[var(--text-muted)]">568e82e3039d991a1ee0d8e2056448f8c465c03ffa838330c4f1522dd77bddc8</code>) para garantizar reproducibilidad e inmutabilidad estricta. La lectura inicial se realizó como texto para evitar conversiones automáticas destructivas.
+        </p>
+      </div>
+    </div>
+
+    <!-- Fase 3 -->
+    <div class="bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)] flex flex-col md:flex-row gap-5">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#ff2453] to-[#ff537b] flex items-center justify-center text-white font-bold font-mono text-sm shrink-0 shadow-glow-red">
+        03
+      </div>
+      <div class="flex-1 space-y-2">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-bold text-[var(--text-main)]">Fase 3: Perfilado Exploratorio Inicial (Profiling Pre-Limpieza)</h2>
+          <span class="text-[10px] font-mono px-2.5 py-0.5 rounded bg-[var(--bg-card-subtle)] text-[var(--text-muted)]">Fundamento: Cap. 3 Descriptiva</span>
+        </div>
+        <p class="text-xs text-[var(--text-secondary)]">
+          Se generó el reporte <code class="text-xs text-red-400 font-mono">profile_before.csv</code> evaluando las 275 columnas. Diagnóstico inicial detectado:
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 font-mono text-[11px]">
+          <div class="p-2 rounded-lg bg-[var(--bg-card-subtle)] border border-[var(--border-card)]">
+            <span class="text-[var(--text-muted)] block text-[10px]">Celdas Vacías</span>
+            <span class="text-[var(--text-main)] font-bold">771,655</span>
+          </div>
+          <div class="p-2 rounded-lg bg-[var(--bg-card-subtle)] border border-[var(--border-card)]">
+            <span class="text-[var(--text-muted)] block text-[10px]">Tokens "NA" Explícitos</span>
+            <span class="text-[var(--text-main)] font-bold">5,489,754</span>
+          </div>
+          <div class="p-2 rounded-lg bg-[var(--bg-card-subtle)] border border-[var(--border-card)]">
+            <span class="text-[var(--text-muted)] block text-[10px]">Celdas con Valor "0"</span>
+            <span class="text-[var(--text-main)] font-bold">1,192,066</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fase 4 -->
+    <div class="bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)] flex flex-col md:flex-row gap-5">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#3b82f6] to-[#8a5cf6] flex items-center justify-center text-white font-bold font-mono text-sm shrink-0 shadow-sm">
+        04
+      </div>
+      <div class="flex-1 space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-bold text-[var(--text-main)]">Fase 4: Aplicación de Reglas de Limpieza Metodológicas &amp; Validación Semántica</h2>
+          <span class="text-[10px] font-mono px-2.5 py-0.5 rounded bg-[var(--bg-card-subtle)] text-[var(--text-muted)]">Fundamento: Cap. 2 y 5 Preparación</span>
+        </div>
+        <div class="space-y-2 text-xs text-[var(--text-secondary)]">
+          <div class="flex items-start gap-2">
+            <span class="font-mono font-bold text-[#ff2453] shrink-0">L-01:</span>
+            <span><strong>Tipado y Clave de Persona:</strong> Conversión de <code class="font-mono text-cyan-400">folio</code> (hogar) y <code class="font-mono text-cyan-400">nro</code> (persona) a enteros. Se comprobó que la tupla <code class="font-mono text-[var(--text-main)]">(folio, nro)</code> es 100% única y estable (39,497 registros).</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="font-mono font-bold text-[#00d2ff] shrink-0">L-02:</span>
+            <span><strong>Normalización de Tokens y Faltantes:</strong> Se diferenciaron las cadenas vacías de los tokens <code class="font-mono text-amber-300">"NA"</code>. Se evitó la imputación automática para no distorsionar los saltos legítimos de la encuesta.</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="font-mono font-bold text-[#f59e0b] shrink-0">S-01:</span>
+            <span><strong>Validación Semántica de Horas Semanales:</strong> Se auditaron las jornadas en <code class="font-mono text-amber-400">phrs</code> y <code class="font-mono text-amber-400">tothrs</code>. Se trataron 3 celdas con valores imposibles (&gt; 168h semanales físicas: 171.5 y 192 hrs) convirtiéndolas a NA con bitácora append-only en <code class="font-mono text-amber-300">semantic_cell_changes_restricted.csv</code>.</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="font-mono font-bold text-[#8a5cf6] shrink-0">L-07:</span>
+            <span><strong>Control de Límites Biológicos:</strong> Validación de edad cumplida (<code class="font-mono text-purple-400">s01a_02</code>) en el intervalo <code class="font-mono text-[var(--text-main)]">[0, 110]</code> años, auditando 14 registros atípicos sin eliminaciones arbitrarias.</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="font-mono font-bold text-emerald-400 shrink-0">H-01:</span>
+            <span><strong>Coalescencia Invariante del Hogar:</strong> Consolidación de 12,718 hogares únicos sin discrepancias internas (0 conflictos en <code class="font-mono text-emerald-300">household_field_conflicts.csv</code>).</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fase 5 -->
+    <div class="bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)] flex flex-col md:flex-row gap-5">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white font-bold font-mono text-sm shrink-0 shadow-sm">
+        05
+      </div>
+      <div class="flex-1 space-y-2">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-bold text-[var(--text-main)]">Fase 5: Generación de 11 Vistas Temáticas Especializadas (V-11)</h2>
+          <span class="text-[10px] font-mono px-2.5 py-0.5 rounded bg-[var(--bg-card-subtle)] text-[var(--text-muted)]">Preservación 100% de Dimensionalidad</span>
+        </div>
+        <p class="text-xs text-[var(--text-secondary)]">
+          En lugar de suprimir destructivamente 125 variables de universos específicos, se preservaron las <strong>275 columnas en el dataset maestro</strong> y se generaron <strong>11 vistas temáticas</strong> con filtros rigurosos según los saltos de cuestionario:
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 text-[11px] font-mono">
+          <div class="p-2 rounded-lg bg-[var(--bg-card-subtle)] border border-[var(--border-card)]">
+            <span class="text-cyan-400 font-bold block">Salud (4 Vistas)</span>
+            <span class="text-[var(--text-muted)] text-[10px]">General, Fecundidad 13-50, Niñez &lt;6, Bono &lt;5</span>
+          </div>
+          <div class="p-2 rounded-lg bg-[var(--bg-card-subtle)] border border-[var(--border-card)]">
+            <span class="text-blue-400 font-bold block">Empleo (2 Vistas)</span>
+            <span class="text-[var(--text-muted)] text-[10px]">PET ≥7 años (121 cols) y Secundaria (1,357 casos)</span>
+          </div>
+          <div class="p-2 rounded-lg bg-[var(--bg-card-subtle)] border border-[var(--border-card)]">
+            <span class="text-emerald-400 font-bold block">Hogar &amp; Pobreza</span>
+            <span class="text-[var(--text-muted)] text-[10px]">12,718 hogares únicos y 2 vistas de ingresos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fase 6 y 7 -->
+    <div class="bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)] flex flex-col md:flex-row gap-5">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-500 flex items-center justify-center text-white font-bold font-mono text-sm shrink-0 shadow-glow-blue">
+        06
+      </div>
+      <div class="flex-1 space-y-2">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-bold text-[var(--text-main)]">Fase 6 y 7: Evaluación Comparativa y Materialización Inmutable</h2>
+          <span class="text-[10px] font-mono px-2.5 py-0.5 rounded bg-[var(--bg-card-subtle)] text-[var(--text-muted)]">Artefactos de Salida</span>
+        </div>
+        <p class="text-xs text-[var(--text-secondary)]">
+          Se generó el reporte comparativo <code class="text-xs font-mono text-[var(--text-main)]">comparison_all_columns.csv</code>, el perfil posterior <code class="text-xs font-mono text-[var(--text-main)]">profile_after.csv</code> y el manifiesto <code class="text-xs font-mono text-[var(--text-main)]">views_manifest.json</code>. Los microdatos limpios se materializaron en:
+        </p>
+        <div class="flex flex-wrap gap-2 pt-1 text-[11px] font-mono">
+          <span class="px-2.5 py-1 rounded bg-[var(--bg-card-subtle)] border border-[var(--border-card)] text-emerald-400">master_persona_clean.parquet (2.7 MB, 275 cols)</span>
+          <span class="px-2.5 py-1 rounded bg-[var(--bg-card-subtle)] border border-[var(--border-card)] text-cyan-400">11 Archivos CSV &amp; Parquet en thematic_views/</span>
+          <span class="px-2.5 py-1 rounded bg-[var(--bg-card-subtle)] border border-[var(--border-card)] text-purple-400">manifest.json &amp; views_manifest.json</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,41 @@
+/* ==========================================================================
+   ML LAB / ANALYTICS DESIGN SYSTEM: GLOW & SVG ANIMATIONS
+   ========================================================================== */
+
+.glow-drop {
+  filter: drop-shadow(0px 4px 10px rgba(255, 36, 83, 0.5));
+}
+
+.glow-drop-blue {
+  filter: drop-shadow(0px 4px 10px rgba(59, 130, 246, 0.5));
+}
+
+.glow-drop-purple {
+  filter: drop-shadow(0px 4px 10px rgba(138, 92, 246, 0.5));
+}
+
+.glow-drop-cyan {
+  filter: drop-shadow(0px 4px 10px rgba(0, 210, 255, 0.5));
+}
+
+.donut-circle {
+  transition: stroke-dashoffset 0.8s ease, stroke 0.3s ease;
+}
+
+.neon-pulse {
+  animation: pulseGlow 2.5s infinite ease-in-out;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}

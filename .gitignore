@@ -1,0 +1,12 @@
+curso/
+
+CURSO_DATA_MINING.md
+
+venv/
+
+__pycache__/
+*.pyc
+.env
+.venv/
+
+    

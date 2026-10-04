@@ -1,0 +1,10 @@
+﻿column,households_with_missing_and_one_observed_copy,action
+totper,17,use the sole observed value in household view; person-level source copies remain unchanged
+yhog,17,use the sole observed value in household view; person-level source copies remain unchanged
+yhogpc,17,use the sole observed value in household view; person-level source copies remain unchanged
+p0,17,use the sole observed value in household view; person-level source copies remain unchanged
+p1,17,use the sole observed value in household view; person-level source copies remain unchanged
+p2,17,use the sole observed value in household view; person-level source copies remain unchanged
+pext0,17,use the sole observed value in household view; person-level source copies remain unchanged
+pext1,17,use the sole observed value in household view; person-level source copies remain unchanged
+pext2,17,use the sole observed value in household view; person-level source copies remain unchanged

@@ -1,0 +1,48 @@
+<!-- BEGIN: DistribucionVotosDonut -->
+<div class="bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)] flex flex-col justify-between">
+  <div class="flex items-center justify-between mb-2">
+    <h2 class="text-sm font-semibold text-[var(--text-main)] tracking-wide">Distribución de Votos</h2>
+    <div class="bg-[var(--bg-card-subtle)] text-[var(--text-secondary)] text-[11px] px-2.5 py-1 rounded-lg border border-[var(--border-card)] flex items-center gap-1 cursor-pointer">
+      <span>Mensual</span>
+      <svg class="w-3 h-3 text-[var(--text-muted)]" fill="currentColor" viewBox="0 0 20 20">
+        <path clip-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" fill-rule="evenodd"></path>
+      </svg>
+    </div>
+  </div>
+  <div class="flex items-center justify-around gap-2 my-2">
+    <!-- Modern Donut Chart SVG -->
+    <div class="relative w-32 h-32 flex items-center justify-center">
+      <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 100 100">
+        <!-- Background track -->
+        <circle cx="50" cy="50" fill="none" r="38" stroke="var(--bg-card-subtle)" stroke-width="12"></circle>
+        <!-- Segment Purple: 55% -->
+        <circle class="donut-circle cursor-pointer" cx="50" cy="50" fill="none" r="38" stroke="#8a5cf6" stroke-dasharray="238.76" stroke-dashoffset="107.4" stroke-width="12" style="filter: drop-shadow(0 0 6px rgba(138, 92, 246, 0.7));"></circle>
+        <!-- Segment Blue: 30% -->
+        <circle class="donut-circle cursor-pointer" cx="50" cy="50" fill="none" r="38" stroke="#3b82f6" stroke-dasharray="238.76" stroke-dashoffset="170" stroke-width="12" style="filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.7));"></circle>
+        <!-- Segment Red: 15% -->
+        <circle class="donut-circle cursor-pointer" cx="50" cy="50" fill="none" r="38" stroke="#ff2453" stroke-dasharray="238.76" stroke-dashoffset="208" stroke-width="12" style="filter: drop-shadow(0 0 6px rgba(255, 36, 83, 0.7));"></circle>
+      </svg>
+      <!-- Center Metric Tag -->
+      <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+        <span class="text-xs font-bold text-[var(--text-main)] font-mono">100</span>
+        <span class="text-[9px] text-[var(--text-muted)]">Árboles</span>
+      </div>
+    </div>
+    <!-- Legend with matching circular pills -->
+    <div class="flex flex-col gap-2.5 text-xs">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-[#8a5cf6] shadow-[0_0_6px_#8a5cf6]"></span>
+        <span class="text-[var(--text-secondary)] font-medium">Cardio Activos</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-[#3b82f6] shadow-[0_0_6px_#3b82f6]"></span>
+        <span class="text-[var(--text-secondary)] font-medium">Actigrafía Ok</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-[#ff2453] shadow-[0_0_6px_#ff2453]"></span>
+        <span class="text-[var(--text-secondary)] font-medium">En Espera (OOB)</span>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END: DistribucionVotosDonut -->

@@ -1,0 +1,79 @@
+/* ==========================================================================
+   ML LAB / ANALYTICS DESIGN SYSTEM: THEME TOKENS (LIGHT & DARK MODES)
+   ========================================================================== */
+
+/* Light Mode (Modo Día: Slate / Bright Analytic theme) */
+:root {
+  --bg-app: #edf2f7;
+  --bg-shell: #ffffff;
+  --bg-sidebar: transparent;
+  --bg-card: #ffffff;
+  --bg-card-subtle: #f1f5f9;
+  --bg-card-header: #e2e8f0;
+  --bg-input: #f1f5f9;
+  --border-card: #e2e8f0;
+  --border-sidebar: #e2e8f0;
+  --border-subtle: #cbd5e1;
+  --text-main: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --svg-grid: #e2e8f0;
+  --svg-axis: #64748b;
+  --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+  --shell-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.08);
+  --sidebar-hover: #e2e8f0;
+  --table-row-hover: #f8fafc;
+  --table-header-bg: #e2e8f0;
+  --table-header-text: #1e293b;
+  --badge-bg: #e2e8f0;
+  --badge-text: #334155;
+  --tooltip-bg: #ffffff;
+  --tooltip-border: #cbd5e1;
+  --tooltip-text: #0f172a;
+}
+
+/* Dark Mode (Modo Noche: Cyber High-Tech Neon theme) */
+html.dark {
+  --bg-app: #121424;
+  --bg-shell: #171a2d;
+  --bg-sidebar: transparent;
+  --bg-card: #1e2238;
+  --bg-card-subtle: #1b1e32;
+  --bg-card-header: #2c3358;
+  --bg-input: #1e2238;
+  --border-card: #282d4a;
+  --border-sidebar: #21253f;
+
+  --border-subtle: #2d3356;
+  --text-main: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --svg-grid: #232845;
+  --svg-axis: #64748b;
+  --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  --shell-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  --sidebar-hover: #1e2238;
+  --table-row-hover: rgba(36, 41, 70, 0.5);
+  --table-header-bg: #2c3358;
+  --table-header-text: #ffffff;
+  --badge-bg: #222746;
+  --badge-text: #67e8f9;
+  --tooltip-bg: #121424;
+  --tooltip-border: #2a304e;
+  --tooltip-text: #e2e8f0;
+}
+
+/* Utility semantic classes mapped to CSS variables */
+.theme-bg-app { background-color: var(--bg-app); }
+.theme-bg-shell { background-color: var(--bg-shell); }
+.theme-bg-sidebar { background-color: var(--bg-sidebar); }
+.theme-bg-card { background-color: var(--bg-card); }
+.theme-bg-card-subtle { background-color: var(--bg-card-subtle); }
+.theme-bg-input { background-color: var(--bg-input); }
+.theme-border-card { border-color: var(--border-card); }
+.theme-border-sidebar { border-color: var(--border-sidebar); }
+.theme-text-main { color: var(--text-main); }
+.theme-text-secondary { color: var(--text-secondary); }
+.theme-text-muted { color: var(--text-muted); }
+.theme-shadow-card { box-shadow: var(--card-shadow); }
+.theme-shadow-shell { box-shadow: var(--shell-shadow); }

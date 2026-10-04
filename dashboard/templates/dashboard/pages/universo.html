@@ -1,0 +1,199 @@
+{% extends 'dashboard/layout.html' %}
+
+{% block title %}ML Lab - {{ universe.title }} ({{ universe.section_code }}){% endblock %}
+
+{% block content %}
+<div class="space-y-6 animate-fade-in">
+  <!-- Top Universe Banner -->
+  <div class="bg-[var(--bg-card)] rounded-2xl p-6 border border-[var(--border-card)] shadow-[var(--card-shadow)] flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full shadow-[0_0_8px_currentColor]" style="background-color: {{ universe.icon_color }}; color: {{ universe.icon_color }};"></span>
+        <h1 class="text-base font-bold text-[var(--text-main)]">{{ universe.title }}</h1>
+        <span class="text-xs font-mono px-2.5 py-0.5 rounded-full border {{ universe.badge_class }}">
+          {{ universe.section_code }}
+        </span>
+      </div>
+      <p class="text-xs text-[var(--text-secondary)] mt-1.5">{{ universe.description }}</p>
+      <div class="flex items-center gap-2 mt-2 text-[11px] text-[var(--text-muted)]">
+        <span class="font-semibold text-[var(--text-main)]">Universo Elegible:</span>
+        <span>{{ universe.eligibility }}</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-3 shrink-0">
+      <span class="text-xs font-mono px-3 py-1.5 rounded-lg bg-[var(--bg-card-subtle)] border border-[var(--border-card)] text-[var(--text-main)]">
+        {{ universe.total_vars }} Variables
+      </span>
+      <span class="text-xs font-mono px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+        100% Preservadas (Master)
+      </span>
+    </div>
+  </div>
+
+  <!-- Universe KPI Metric Cards Row -->
+  <section class="grid grid-cols-1 sm:grid-cols-3 gap-5" data-purpose="universe-kpi-cards">
+    <!-- Card 1 -->
+    <div class="bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)] relative overflow-hidden flex flex-col justify-between h-[150px]">
+      <div>
+        <div class="flex justify-between items-start">
+          <span class="text-xs font-medium text-[var(--text-secondary)]">{{ universe.kpi1_title }}</span>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full" style="color: {{ universe.icon_color }}; background-color: {{ universe.icon_color }}15;">
+            Estimación
+          </span>
+        </div>
+        <div class="text-2xl font-bold mt-1 font-mono tracking-tight" style="color: {{ universe.icon_color }};">
+          {{ universe.kpi1_val }}
+        </div>
+      </div>
+      <p class="text-[11px] text-[var(--text-muted)] font-mono">{{ universe.kpi1_sub }}</p>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)] relative overflow-hidden flex flex-col justify-between h-[150px]">
+      <div>
+        <div class="flex justify-between items-start">
+          <span class="text-xs font-medium text-[var(--text-secondary)]">{{ universe.kpi2_title }}</span>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full text-[#3b82f6] bg-[#3b82f6]/10">
+            Muestra
+          </span>
+        </div>
+        <div class="text-2xl font-bold text-[#3b82f6] mt-1 font-mono tracking-tight">
+          {{ universe.kpi2_val }}
+        </div>
+      </div>
+      <p class="text-[11px] text-[var(--text-muted)] font-mono">{{ universe.kpi2_sub }}</p>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)] relative overflow-hidden flex flex-col justify-between h-[150px]">
+      <div>
+        <div class="flex justify-between items-start">
+          <span class="text-xs font-medium text-[var(--text-secondary)]">{{ universe.kpi3_title }}</span>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full text-emerald-400 bg-emerald-500/10">
+            Vistas Temáticas
+          </span>
+        </div>
+        <div class="text-2xl font-bold text-emerald-400 mt-1 font-mono tracking-tight">
+          {{ universe.kpi3_val }}
+        </div>
+      </div>
+      <p class="text-[11px] text-[var(--text-muted)] font-mono">{{ universe.kpi3_sub }}</p>
+    </div>
+  </section>
+
+  <!-- Derived Thematic Views Section for this Universe -->
+  {% if universe.subviews %}
+  <div class="bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)] space-y-4">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+        </svg>
+        <h3 class="text-xs font-bold text-[var(--text-main)] uppercase tracking-wider">Vistas Temáticas Derivadas de este Universo</h3>
+      </div>
+      <span class="text-[11px] font-mono text-[var(--text-muted)]">{{ universe.subviews|length }} archivos especializados en <code class="text-emerald-400">thematic_views/</code></span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-{{ universe.subviews|length if universe.subviews|length <= 4 else 2 }} gap-3">
+      {% for sub in universe.subviews %}
+      <div class="bg-[var(--bg-card-subtle)] rounded-xl p-3.5 border border-[var(--border-card)] hover:border-emerald-500/40 transition-colors flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs font-bold text-[var(--text-main)]">{{ sub.name }}</span>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              {{ sub.rows|int|format_number if format_number is defined else sub.rows }} filas
+            </span>
+          </div>
+          <p class="text-[11px] text-[var(--text-secondary)] mt-1 font-mono text-[10px] text-zinc-400">
+            Filtro: <span class="text-[var(--text-main)]">{{ sub.filter }}</span>
+          </p>
+        </div>
+        <div class="mt-3 pt-2 border-t border-[var(--border-card)] flex items-center justify-between text-[10px] text-[var(--text-muted)] font-mono">
+          <span>{{ sub.cols }} columnas</span>
+          <span class="text-emerald-400">CSV & Parquet</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Methodological Rule Notice on Skip Patterns -->
+  <div class="p-4 rounded-xl border border-amber-500/30 bg-amber-500/5 flex items-start gap-3">
+    <div class="w-5 h-5 text-amber-400 shrink-0 mt-0.5">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+    </div>
+    <div class="text-xs text-[var(--text-secondary)] space-y-1">
+      <span class="font-semibold text-[var(--text-main)]">Control Metodológico de Saltos de Cuestionario & Vistas Temáticas:</span>
+      <p>En este universo, los valores <code class="text-xs font-mono text-amber-300">NA</code> corresponden principalmente a personas fuera del subgrupo elegible y no representan errores destructivos. Las 11 vistas temáticas permiten analizar a la población objetivo sin excluir dimensionalidad del archivo maestro.</p>
+    </div>
+  </div>
+
+  <!-- Search & Filter Controls for Universe Variables -->
+  <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+    <div class="relative w-full sm:w-[380px]">
+      <input type="text" id="var-search-input" 
+             placeholder="Filtrar variables de {{ universe.title }}..."
+             class="w-full bg-[var(--bg-card)] border border-[var(--border-card)] rounded-xl px-4 py-2.5 text-xs text-[var(--text-main)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-1 focus:ring-[#3b82f6] shadow-sm"/>
+    </div>
+    <div class="text-xs text-[var(--text-muted)] font-mono self-end sm:self-auto">
+      Mostrando <span class="font-bold text-[var(--text-main)]">{{ universe.variables|length }}</span> variables de {{ universe.section_code }}
+    </div>
+  </div>
+
+  <!-- Variables Table for this Universe -->
+  <div class="bg-[var(--bg-card)] rounded-2xl border border-[var(--border-card)] shadow-[var(--card-shadow)] overflow-hidden">
+    <div class="overflow-x-auto max-h-[480px]">
+      <table class="w-full text-left text-xs">
+        <thead class="sticky top-0 bg-[var(--table-header-bg)] text-[var(--table-header-text)] z-10 font-semibold">
+          <tr>
+            <th class="py-3 px-4">Variable</th>
+            <th class="py-3 px-4">Descripción / Pregunta</th>
+            <th class="py-3 px-4">Tipo</th>
+            <th class="py-3 px-4">Completitud Global</th>
+            <th class="py-3 px-4">Dominio / Rango</th>
+            <th class="py-3 px-4 text-right">Estado</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[var(--border-card)] text-[var(--text-secondary)]">
+          {% for var in universe.variables %}
+          <tr class="var-row hover:bg-[var(--table-row-hover)] transition-colors"
+              data-var-name="{{ var.name }}"
+              data-var-label="{{ var.label }}"
+              data-var-type="{{ var.type_category }}">
+            <td class="py-3 px-4 font-mono font-semibold text-[var(--text-main)]">{{ var.name }}</td>
+            <td class="py-3 px-4 text-[var(--text-secondary)]">{{ var.label }}</td>
+            <td class="py-3 px-4 font-mono">
+              <span class="px-2 py-0.5 rounded text-[10px] bg-[var(--bg-card-subtle)] border border-[var(--border-card)] text-[var(--text-main)]">
+                {{ var.data_type }}
+              </span>
+            </td>
+            <td class="py-3 px-4">
+              <div class="flex items-center gap-2">
+                <div class="w-16 h-1.5 bg-[var(--bg-card-subtle)] rounded-full overflow-hidden">
+                  <div class="h-full" style="width: {{ var.completeness }}%; background-color: {{ universe.icon_color }};"></div>
+                </div>
+                <span class="font-mono text-[10px] text-[var(--text-muted)]">{{ var.completeness }}%</span>
+              </div>
+            </td>
+            <td class="py-3 px-4 font-mono text-[10px] text-[var(--text-muted)]">{{ var.range_info }}</td>
+            <td class="py-3 px-4 text-right">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                Preservada
+              </span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('dashboard.static', filename='js/data-explorer.js') }}"></script>
+{% endblock %}
+

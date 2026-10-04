@@ -1,0 +1,299 @@
+{
+  "created_at_utc": "2026-10-04T21:52:30.102333+00:00",
+  "dataset_id": "EH2025_Persona",
+  "household_field_conflicts_excluded": {},
+  "household_missing_copies_coalesced": {
+    "p0": 17,
+    "p1": 17,
+    "p2": 17,
+    "pext0": 17,
+    "pext1": 17,
+    "pext2": 17,
+    "totper": 17,
+    "yhog": 17,
+    "yhogpc": 17
+  },
+  "missingness_policy": "No variable is removed by global missingness; module-specific universes remain explicit.",
+  "source_master_sha256": "1dbf937c73972a78746b1106d2e591dc46ea487b943112afb406887801bf8fee",
+  "source_policy": "Derived only from persona.csv through the cleaned candidate master; no other data files are read.",
+  "source_run_id": "20261004T215218Z_568e82e3039d_d3abfb0b5f",
+  "source_version_id": "persona-1dbf937c73972a78",
+  "supporting_files": [
+    {
+      "file": "demografia_persona.csv",
+      "sha256": "66b9c4abfd6e60cb93fe1cb44d710bd6121eb3f03a6952b606106911ce5b054f"
+    },
+    {
+      "file": "educacion_personas_4_mas.csv",
+      "sha256": "ffe34e7a85e6805375f30318f75ec0ad506f14bbc4f39bbc4cff9a0f7c49e1c6"
+    },
+    {
+      "file": "empleo_personas_7_mas.csv",
+      "sha256": "b5114e8fb29288c96ca601702ec2a87782439b01f89f2cb5f82a01f5896240c4"
+    },
+    {
+      "file": "empleo_secundario_casos.csv",
+      "sha256": "e028f342199f29031d6a7dbdb29905139f6a7ab82555034248fb077cf57949de"
+    },
+    {
+      "file": "hogar_resumen_persona_candidato.csv",
+      "sha256": "fbca386ed0e9ac3fbea57e4630fc37d6d0bbf0f14167d2067c2c13437bd3fff8"
+    },
+    {
+      "file": "household_field_coalescing.csv",
+      "sha256": "34999c8f575dc14b6708f3e8ad6ae09769e1e453cab9a6d61b9eb55f0fff1dd8"
+    },
+    {
+      "file": "household_field_conflicts.csv",
+      "sha256": "280bacb997e174e0e6bfa11dae6dccd72a4babd4c569a801d5607c793125c346"
+    },
+    {
+      "file": "ingresos_no_laborales_persona.csv",
+      "sha256": "9a2c74af7255068f7988f806b4708bad5d88d795aa444332cb69d6acc36bdce5"
+    },
+    {
+      "file": "ingresos_pobreza_persona.csv",
+      "sha256": "837f4b8769ee64d2b6e9a470d827d7cd627c940cdb4e477195ec18c6a30ee533"
+    },
+    {
+      "file": "salud_asistencia_infantil_menores_6.csv",
+      "sha256": "a587b7eea5908ebcecd36179e53d7b87535a50336f3f705fc214b1853748919a"
+    },
+    {
+      "file": "salud_bono_menores_5.csv",
+      "sha256": "2975c4fa23a20b2d73dfff3ca074c779d2faf550b24131c742084b7a73db2cc7"
+    },
+    {
+      "file": "salud_fecundidad_mujeres_13_50.csv",
+      "sha256": "f0fec5b93fee9a55a0a4161548ddb5c094f6fe2d6b201b1a154320cfa6ebae6b"
+    },
+    {
+      "file": "salud_general_persona.csv",
+      "sha256": "1a428fbff4985cd8cdda4716ee6c49a159bebe40f1dab72283ea7cedc391b278"
+    },
+    {
+      "file": "view_coverage.csv",
+      "sha256": "3e77c1a98ae2c6822bb63b5c10b11d44ca7a9fcb11ebd273d9e79608c603b90c"
+    }
+  ],
+  "views": [
+    {
+      "analysis_unit": "persona",
+      "caveat": "Todas las 39.497 personas; claves y diseño muestral se retienen como contexto, no se certifica inferencia.",
+      "columns": 33,
+      "file": "demografia_persona.csv",
+      "filter": "Todos los registros persona",
+      "inferential_status": "not certified; confirm design/weights and use domain estimation where applicable",
+      "key": [
+        "folio",
+        "nro"
+      ],
+      "rows": 39497,
+      "sha256": "66b9c4abfd6e60cb93fe1cb44d710bd6121eb3f03a6952b606106911ce5b054f",
+      "survey_design_columns_retained": [
+        "factor",
+        "estrato",
+        "upm"
+      ],
+      "view_id": "demografia_persona"
+    },
+    {
+      "analysis_unit": "persona",
+      "caveat": "Conserva el universo general; los submódulos S02B/C/D tienen universos distintos y sus ausencias no son equivalentes.",
+      "columns": 31,
+      "file": "salud_general_persona.csv",
+      "filter": "Todos los registros persona",
+      "inferential_status": "not certified; confirm design/weights and use domain estimation where applicable",
+      "key": [
+        "folio",
+        "nro"
+      ],
+      "rows": 39497,
+      "sha256": "1a428fbff4985cd8cdda4716ee6c49a159bebe40f1dab72283ea7cedc391b278",
+      "survey_design_columns_retained": [
+        "factor",
+        "estrato",
+        "upm"
+      ],
+      "view_id": "salud_general_persona"
+    },
+    {
+      "analysis_unit": "persona",
+      "caveat": "Filtro documentado en DDI; el resto no pertenece al denominador de fecundidad.",
+      "columns": 24,
+      "file": "salud_fecundidad_mujeres_13_50.csv",
+      "filter": "s01a_02=2 y edad s01a_03 entre 13 y 50, ambos inclusive",
+      "inferential_status": "not certified; confirm design/weights and use domain estimation where applicable",
+      "key": [
+        "folio",
+        "nro"
+      ],
+      "rows": 11328,
+      "sha256": "f0fec5b93fee9a55a0a4161548ddb5c094f6fe2d6b201b1a154320cfa6ebae6b",
+      "survey_design_columns_retained": [
+        "factor",
+        "estrato",
+        "upm"
+      ],
+      "view_id": "salud_fecundidad_mujeres_13_50"
+    },
+    {
+      "analysis_unit": "persona",
+      "caveat": "Universo DDI de asistencia a centro infantil; no interpretar ausencias fuera del corte como falta de respuesta.",
+      "columns": 10,
+      "file": "salud_asistencia_infantil_menores_6.csv",
+      "filter": "Edad s01a_03 < 6",
+      "inferential_status": "not certified; confirm design/weights and use domain estimation where applicable",
+      "key": [
+        "folio",
+        "nro"
+      ],
+      "rows": 3434,
+      "sha256": "a587b7eea5908ebcecd36179e53d7b87535a50336f3f705fc214b1853748919a",
+      "survey_design_columns_retained": [
+        "factor",
+        "estrato",
+        "upm"
+      ],
+      "view_id": "salud_asistencia_infantil_menores_6"
+    },
+    {
+      "analysis_unit": "persona",
+      "caveat": "Vista del submódulo infantil según corte DDI; revisar cortes por pregunta dentro de la sección.",
+      "columns": 12,
+      "file": "salud_bono_menores_5.csv",
+      "filter": "Edad s01a_03 < 5",
+      "inferential_status": "not certified; confirm design/weights and use domain estimation where applicable",
+      "key": [
+        "folio",
+        "nro"
+      ],
+      "rows": 2781,
+      "sha256": "2975c4fa23a20b2d73dfff3ca074c779d2faf550b24131c742084b7a73db2cc7",
+      "survey_design_columns_retained": [
+        "factor",
+        "estrato",
+        "upm"
+      ],
+      "view_id": "salud_bono_menores_5"
+    },
+    {
+      "analysis_unit": "persona",
+      "caveat": "Universo general de educación según DDI; Parte B/C puede imponer cortes más específicos.",
+      "columns": 43,
+      "file": "educacion_personas_4_mas.csv",
+      "filter": "Edad s01a_03 >= 4",
+      "inferential_status": "not certified; confirm design/weights and use domain estimation where applicable",
+      "key": [
+        "folio",
+        "nro"
+      ],
+      "rows": 37354,
+      "sha256": "ffe34e7a85e6805375f30318f75ec0ad506f14bbc4f39bbc4cff9a0f7c49e1c6",
+      "survey_design_columns_retained": [
+        "factor",
+        "estrato",
+        "upm"
+      ],
+      "view_id": "educacion_personas_4_mas"
+    },
+    {
+      "analysis_unit": "persona",
+      "caveat": "Universo general de empleo; cada pregunta de ocupación/ingresos puede imponer filtros adicionales.",
+      "columns": 121,
+      "file": "empleo_personas_7_mas.csv",
+      "filter": "Edad s01a_03 >= 7",
+      "inferential_status": "not certified; confirm design/weights and use domain estimation where applicable",
+      "key": [
+        "folio",
+        "nro"
+      ],
+      "rows": 35366,
+      "sha256": "b5114e8fb29288c96ca601702ec2a87782439b01f89f2cb5f82a01f5896240c4",
+      "survey_design_columns_retained": [
+        "factor",
+        "estrato",
+        "upm"
+      ],
+      "view_id": "empleo_personas_7_mas"
+    },
+    {
+      "analysis_unit": "persona",
+      "caveat": "Not a clean eligible-only sample: contains all affirmative cases and any reported secondary-work data, including filter conflicts. Use only rows with confirmed eligibility for estimates.",
+      "columns": 45,
+      "file": "empleo_secundario_casos.csv",
+      "filter": "s04e_25=1 OR any nonmissing s04e/s04f field; retain exceptions for review",
+      "inferential_status": "not certified; confirm design/weights and use domain estimation where applicable",
+      "key": [
+        "folio",
+        "nro"
+      ],
+      "rows": 1357,
+      "sha256": "e028f342199f29031d6a7dbdb29905139f6a7ab82555034248fb077cf57949de",
+      "survey_design_columns_retained": [
+        "factor",
+        "estrato",
+        "upm"
+      ],
+      "view_id": "empleo_secundario_casos"
+    },
+    {
+      "analysis_unit": "persona",
+      "caveat": "Row-level extract only; item-level questionnaire universes differ. No household aggregation or estimate is implied.",
+      "columns": 48,
+      "file": "ingresos_no_laborales_persona.csv",
+      "filter": "Todos los registros persona",
+      "inferential_status": "not certified; confirm design/weights and use domain estimation where applicable",
+      "key": [
+        "folio",
+        "nro"
+      ],
+      "rows": 39497,
+      "sha256": "9a2c74af7255068f7988f806b4708bad5d88d795aa444332cb69d6acc36bdce5",
+      "survey_design_columns_retained": [
+        "factor",
+        "estrato",
+        "upm"
+      ],
+      "view_id": "ingresos_no_laborales_persona"
+    },
+    {
+      "analysis_unit": "persona",
+      "caveat": "Incluye variables personales y de hogar repetidas por persona. No calcular promedios ni intervalos sin definir unidad, ponderador y diseño.",
+      "columns": 25,
+      "file": "ingresos_pobreza_persona.csv",
+      "filter": "Todos los registros persona",
+      "inferential_status": "not certified; confirm design/weights and use domain estimation where applicable",
+      "key": [
+        "folio",
+        "nro"
+      ],
+      "rows": 39497,
+      "sha256": "837f4b8769ee64d2b6e9a470d827d7cd627c940cdb4e477195ec18c6a30ee533",
+      "survey_design_columns_retained": [
+        "factor",
+        "estrato",
+        "upm"
+      ],
+      "view_id": "ingresos_pobreza_persona"
+    },
+    {
+      "analysis_unit": "hogar",
+      "caveat": "If copies have missing markers but one unique observed value, the household view uses that value and audits the coalescing; person-level master is unchanged. person_records_in_source counts source rows and does not substitute totper, whose local definition/provenance still requires confirmation.",
+      "columns": 18,
+      "file": "hogar_resumen_persona_candidato.csv",
+      "filter": "Una fila por folio; solo campos invariantes dentro del folio",
+      "inferential_status": "not certified; confirm design/weights and use domain estimation where applicable",
+      "key": [
+        "folio"
+      ],
+      "rows": 12718,
+      "sha256": "fbca386ed0e9ac3fbea57e4630fc37d6d0bbf0f14167d2067c2c13437bd3fff8",
+      "survey_design_columns_retained": [
+        "estrato",
+        "upm"
+      ],
+      "view_id": "hogar_resumen_persona_candidato"
+    }
+  ]
+}

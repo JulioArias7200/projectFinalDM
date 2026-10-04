@@ -1,0 +1,95 @@
+{% extends 'dashboard/layout.html' %}
+
+{% block title %}ML Lab - Exploración de Datos &amp; Diccionario{% endblock %}
+
+{% block content %}
+<div class="space-y-6 animate-fade-in">
+  <!-- Top Banner / Summary Card -->
+  <div class="bg-[var(--bg-card)] rounded-2xl p-6 border border-[var(--border-card)] shadow-[var(--card-shadow)] flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-[#00d2ff] shadow-[0_0_6px_#00d2ff]"></span>
+        <h1 class="text-base font-bold text-[var(--text-main)]">Catálogo y Explorador de Variables (JSON)</h1>
+      </div>
+      <p class="text-xs text-[var(--text-secondary)] mt-1">Diccionario oficial y estructura de variables en <code class="text-xs text-cyan-400 font-mono">persona_candidate_clean</code></p>
+    </div>
+    <div class="flex items-center gap-3">
+      <span id="visible-var-count" class="text-xs font-mono px-3 py-1.5 rounded-lg bg-[var(--bg-card-subtle)] border border-[var(--border-card)] text-[var(--text-main)]">
+        {{ variables|length }} variables
+      </span>
+      <span class="text-xs font-mono px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+        150 Conservadas (L-80)
+      </span>
+    </div>
+  </div>
+
+  <!-- Filters & Search Bar -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="md:col-span-2 relative">
+      <input type="text" id="var-search-input" 
+             placeholder="Filtrar por código (ej. s01a_01, factor) o descripción..."
+             class="w-full bg-[var(--bg-card)] border border-[var(--border-card)] rounded-xl px-4 py-2.5 text-xs text-[var(--text-main)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-1 focus:ring-[#3b82f6] shadow-sm"/>
+    </div>
+    <div>
+      <select id="var-type-filter" class="w-full bg-[var(--bg-card)] border border-[var(--border-card)] rounded-xl px-3 py-2.5 text-xs text-[var(--text-main)] focus:outline-none focus:ring-1 focus:ring-[#3b82f6] shadow-sm">
+        <option value="all">Todos los tipos de datos</option>
+        <option value="numeric">Numéricas (Float / Int)</option>
+        <option value="categorical">Categóricas / Códigos</option>
+        <option value="identifier">Identificadores (Claves)</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Variables Dictionary Grid / Table -->
+  <div class="bg-[var(--bg-card)] rounded-2xl border border-[var(--border-card)] shadow-[var(--card-shadow)] overflow-hidden">
+    <div class="overflow-x-auto max-h-[500px]">
+      <table class="w-full text-left text-xs">
+        <thead class="sticky top-0 bg-[var(--table-header-bg)] text-[var(--table-header-text)] z-10 font-semibold">
+          <tr>
+            <th class="py-3 px-4">Variable</th>
+            <th class="py-3 px-4">Descripción / Etiqueta</th>
+            <th class="py-3 px-4">Tipo Detectado</th>
+            <th class="py-3 px-4">Completitud</th>
+            <th class="py-3 px-4">Dominio / Rango</th>
+            <th class="py-3 px-4 text-right">Estado</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[var(--border-card)] text-[var(--text-secondary)]">
+          {% for var in variables %}
+          <tr class="var-row hover:bg-[var(--table-row-hover)] transition-colors"
+              data-var-name="{{ var.name }}"
+              data-var-label="{{ var.label }}"
+              data-var-type="{{ var.type_category }}">
+            <td class="py-3 px-4 font-mono font-semibold text-[var(--text-main)]">{{ var.name }}</td>
+            <td class="py-3 px-4 text-[var(--text-secondary)]">{{ var.label or 'Sin etiqueta declarada' }}</td>
+            <td class="py-3 px-4 font-mono">
+              <span class="px-2 py-0.5 rounded text-[10px] bg-[var(--bg-card-subtle)] border border-[var(--border-card)] text-[var(--text-main)]">
+                {{ var.data_type }}
+              </span>
+            </td>
+            <td class="py-3 px-4">
+              <div class="flex items-center gap-2">
+                <div class="w-16 h-1.5 bg-[var(--bg-card-subtle)] rounded-full overflow-hidden">
+                  <div class="h-full bg-gradient-to-r from-[#00d2ff] to-[#3b82f6]" style="width: {{ var.completeness|default(100) }}%;"></div>
+                </div>
+                <span class="font-mono text-[10px] text-[var(--text-muted)]">{{ var.completeness|default(100) }}%</span>
+              </div>
+            </td>
+            <td class="py-3 px-4 font-mono text-[10px] text-[var(--text-muted)]">{{ var.range_info or 'N/A' }}</td>
+            <td class="py-3 px-4 text-right">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold {% if var.is_retained %}bg-emerald-500/10 text-emerald-400{% else %}bg-amber-500/10 text-amber-400{% endif %}">
+                {% if var.is_retained %}Conservada{% else %}Excluida (L-80){% endif %}
+              </span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('dashboard.static', filename='js/data-explorer.js') }}"></script>
+{% endblock %}

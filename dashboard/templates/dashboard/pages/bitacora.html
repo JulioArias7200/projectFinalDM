@@ -1,0 +1,78 @@
+{% extends 'dashboard/layout.html' %}
+
+{% block title %}ML Lab - Bitácora de Versiones &amp; Auditoría{% endblock %}
+
+{% block content %}
+<div class="space-y-6 animate-fade-in">
+  <!-- Top Banner -->
+  <div class="bg-[var(--bg-card)] rounded-2xl p-6 border border-[var(--border-card)] shadow-[var(--card-shadow)] flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-[#00d2ff] shadow-[0_0_6px_#00d2ff]"></span>
+        <h1 class="text-base font-bold text-[var(--text-main)]">Bitácora Append-Only &amp; Linaje de Versiones (JSON)</h1>
+      </div>
+      <p class="text-xs text-[var(--text-secondary)] mt-1">Registro inmutable de cargas, reglas aplicadas, validaciones y decisiones sobre <code class="text-xs text-cyan-400 font-mono">persona.csv</code></p>
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="text-xs font-mono px-3 py-1.5 rounded-lg bg-[var(--bg-card-subtle)] border border-[var(--border-card)] text-[var(--text-main)]">
+        {{ events|length }} Eventos Registrados
+      </span>
+    </div>
+  </div>
+
+  <!-- Search and Action Filter -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="md:col-span-2">
+      <input type="text" id="audit-search-input" 
+             placeholder="Buscar en eventos de auditoría (por actor, entidad o detalle)..."
+             class="w-full bg-[var(--bg-card)] border border-[var(--border-card)] rounded-xl px-4 py-2.5 text-xs text-[var(--text-main)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-1 focus:ring-[#3b82f6] shadow-sm"/>
+    </div>
+    <div>
+      <select id="audit-action-filter" class="w-full bg-[var(--bg-card)] border border-[var(--border-card)] rounded-xl px-3 py-2.5 text-xs text-[var(--text-main)] focus:outline-none focus:ring-1 focus:ring-[#3b82f6] shadow-sm">
+        <option value="all">Todas las acciones</option>
+        <option value="PREPROCESSING_RUN">Ejecución de Pipeline</option>
+        <option value="INIT_SYSTEM">Inicialización</option>
+        <option value="CHANGE_PROPOSAL">Propuestas de Cambio</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Timeline Cards -->
+  <div class="space-y-3">
+    {% for event in events %}
+    <div class="audit-event-card bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)] flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-[#3b82f6]/50 transition-colors"
+         data-action-type="{{ event.action }}">
+      <div class="flex items-start gap-4">
+        <!-- Event Icon -->
+        <div class="w-10 h-10 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] flex items-center justify-center text-[#3b82f6] shrink-0 mt-0.5">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold font-mono text-[#00d2ff]">{{ event.action }}</span>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--bg-card-subtle)] text-[var(--text-muted)]">ID: #{{ event.event_id }}</span>
+          </div>
+          <p class="text-xs text-[var(--text-main)] mt-1 font-medium">{{ event.details.message or event.entity }}</p>
+          <div class="flex items-center gap-3 mt-2 text-[10px] text-[var(--text-muted)] font-mono">
+            <span>Actor: <strong class="text-[var(--text-secondary)]">{{ event.actor }}</strong></span>
+            <span>•</span>
+            <span>Fecha: {{ event.timestamp }}</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <span class="px-3 py-1 rounded-full text-[10px] font-mono font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          Inmutable / JSON
+        </span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('dashboard.static', filename='js/audit-viewer.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'dashboard/layout.html' %}
+
+{% block title %}ML Lab - Minería de Datos &amp; 4 Universos (persona.csv){% endblock %}
+
+{% block content %}
+<!-- 1. Hub de los 4 Universos (Salud, Educación, Empleo, Ingresos) -->
+{% include 'dashboard/components/universes_hub.html' %}
+
+<!-- 2. Tarjetas KPI de Calidad e Integridad de Datos -->
+{% include 'dashboard/components/kpi_cards.html' %}
+
+<!-- 3. Sección Central: Matriz de Reglas de Limpieza + Estructura de Universos -->
+<section class="grid grid-cols-1 xl:grid-cols-3 gap-5 mb-6" data-purpose="rules-and-universe-distribution">
+  {% include 'dashboard/components/cleaning_rules_table.html' %}
+  {% include 'dashboard/components/universe_distribution.html' %}
+</section>
+
+<!-- 4. Gráfico Comparativo: Perfil de Calidad Antes vs Después -->
+{% include 'dashboard/components/comparative_chart.html' %}
+
+<!-- 5. Modal de Detalle de Reglas Metodológicas (L-01 a L-80) -->
+{% include 'dashboard/components/rule_modal.html' %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('dashboard.static', filename='js/rules-modal.js') }}"></script>
+<script src="{{ url_for('dashboard.static', filename='js/comparative-chart.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,54 @@
+<!-- BEGIN: HistorialExperimentosTable -->
+<div class="xl:col-span-2 bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)] flex flex-col justify-between">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-sm font-semibold text-[var(--text-main)] tracking-wide">Historial de Experimentos &amp; Ensamble</h2>
+    <span class="text-xs text-[var(--text-muted)] font-mono">Dataset: persona_candidate_clean</span>
+  </div>
+  <!-- Table Container -->
+  <div class="overflow-x-auto">
+    <table class="w-full text-left text-xs">
+      <thead>
+        <tr class="bg-[var(--table-header-bg)] text-[var(--table-header-text)] font-medium">
+          <th class="py-2.5 px-3 rounded-l-lg">ID</th>
+          <th class="py-2.5 px-3">Modelo</th>
+          <th class="py-2.5 px-3">Dataset / Muestra</th>
+          <th class="py-2.5 px-3">Métrica (F1)</th>
+          <th class="py-2.5 px-3 rounded-r-lg">Estado de Convergencia</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-[var(--border-card)] text-[var(--text-secondary)]">
+        <!-- Row 1 -->
+        <tr class="hover:bg-[var(--table-row-hover)] transition-colors">
+          <td class="py-3 px-3 font-mono text-[var(--text-muted)]">#4021</td>
+          <td class="py-3 px-3 font-medium text-[var(--text-main)]">AdaBoost Classifier</td>
+          <td class="py-3 px-3 text-[var(--text-secondary)]">Cardiopatía (80/20)</td>
+          <td class="py-3 px-3 font-mono font-semibold text-[var(--text-main)]">0.912</td>
+          <td class="py-3 px-3">
+            <div class="w-20 h-2 bg-[#ff2453] rounded-full shadow-[0_0_8px_#ff2453]"></div>
+          </td>
+        </tr>
+        <!-- Row 2 -->
+        <tr class="hover:bg-[var(--table-row-hover)] transition-colors">
+          <td class="py-3 px-3 font-mono text-[var(--text-muted)]">#4020</td>
+          <td class="py-3 px-3 font-medium text-[var(--text-main)]">Random Forest (Bagging)</td>
+          <td class="py-3 px-3 text-[var(--text-secondary)]">Actigrafía Bipolar</td>
+          <td class="py-3 px-3 font-mono font-semibold text-[var(--text-main)]">0.884</td>
+          <td class="py-3 px-3">
+            <div class="w-20 h-2 bg-[#00d2ff] rounded-full shadow-[0_0_8px_#00d2ff]"></div>
+          </td>
+        </tr>
+        <!-- Row 3 -->
+        <tr class="hover:bg-[var(--table-row-hover)] transition-colors">
+          <td class="py-3 px-3 font-mono text-[var(--text-muted)]">#4019</td>
+          <td class="py-3 px-3 font-medium text-[var(--text-main)]">Gradient Boosting (XGB)</td>
+          <td class="py-3 px-3 text-[var(--text-secondary)]">Cardiopatía (K-Fold)</td>
+          <td class="py-3 px-3 font-mono font-semibold text-[var(--text-main)]">0.928</td>
+          <td class="py-3 px-3">
+            <div class="w-20 h-2 bg-[#8a5cf6] rounded-full shadow-[0_0_8px_#8a5cf6]"></div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<!-- END: HistorialExperimentosTable -->

@@ -1,0 +1,74 @@
+{% extends 'dashboard/layout.html' %}
+
+{% block title %}ML Lab - Calidad Antes / Después &amp; Reglas{% endblock %}
+
+{% block content %}
+<div class="space-y-6 animate-fade-in">
+  <!-- Banner Top -->
+  <div class="bg-[var(--bg-card)] rounded-2xl p-6 border border-[var(--border-card)] shadow-[var(--card-shadow)] flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-[#8a5cf6] shadow-[0_0_6px_#8a5cf6]"></span>
+        <h1 class="text-base font-bold text-[var(--text-main)]">Matriz de Calidad Antes / Después (L-01 a L-12)</h1>
+      </div>
+      <p class="text-xs text-[var(--text-secondary)] mt-1">Comparación de completitud, diagnóstico de nulos y aplicación metodológica de <code class="text-xs text-purple-400 font-mono">curso/</code></p>
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="text-xs font-mono px-3 py-1.5 rounded-lg bg-[var(--bg-card-subtle)] border border-[var(--border-card)] text-[var(--text-main)]">
+        39,497 Filas Evaluadas
+      </span>
+    </div>
+  </div>
+
+  <!-- Quality KPI Comparison Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+    <div class="bg-[var(--bg-card)] p-5 rounded-2xl border border-[var(--border-card)] shadow-[var(--card-shadow)]">
+      <span class="text-xs font-medium text-[var(--text-secondary)]">Filas Originales vs Candidatas</span>
+      <div class="text-xl font-bold font-mono text-[var(--text-main)] mt-2">39,497 <span class="text-xs font-normal text-emerald-400">100% Retenidas</span></div>
+      <p class="text-[11px] text-[var(--text-muted)] mt-1">Sin pérdida destructiva de registros en carga inicial.</p>
+    </div>
+    <div class="bg-[var(--bg-card)] p-5 rounded-2xl border border-[var(--border-card)] shadow-[var(--card-shadow)]">
+      <span class="text-xs font-medium text-[var(--text-secondary)]">Columnas Conservadas (Regla L-80)</span>
+      <div class="text-xl font-bold font-mono text-[#00d2ff] mt-2">150 <span class="text-xs font-normal text-[var(--text-muted)]">de 275 orig.</span></div>
+      <p class="text-[11px] text-[var(--text-muted)] mt-1">Filtro de columnas con completitud > 20%.</p>
+    </div>
+    <div class="bg-[var(--bg-card)] p-5 rounded-2xl border border-[var(--border-card)] shadow-[var(--card-shadow)]">
+      <span class="text-xs font-medium text-[var(--text-secondary)]">Clave Candidata Validada</span>
+      <div class="text-xl font-bold font-mono text-[#ff2453] mt-2">(folio, nro)</div>
+      <p class="text-[11px] text-[var(--text-muted)] mt-1">Unicidad e invariantes confirmados.</p>
+    </div>
+  </div>
+
+  <!-- Cleaning Rules Log -->
+  <div class="bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)]">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-sm font-semibold text-[var(--text-main)] tracking-wide">Ejecución de Reglas de Limpieza</h2>
+      <span class="text-xs text-[var(--text-muted)] font-mono">Reglas L-01 a L-12</span>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs">
+        <thead>
+          <tr class="bg-[var(--table-header-bg)] text-[var(--table-header-text)] font-medium">
+            <th class="py-2.5 px-3 rounded-l-lg">Regla</th>
+            <th class="py-2.5 px-3">Fundamento Curso</th>
+            <th class="py-2.5 px-3">Universo / Columnas</th>
+            <th class="py-2.5 px-3">Condición y Acción</th>
+            <th class="py-2.5 px-3 rounded-r-lg text-right">Registros Afectados</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[var(--border-card)] text-[var(--text-secondary)]">
+          {% for rule in rules %}
+          <tr class="hover:bg-[var(--table-row-hover)] transition-colors">
+            <td class="py-3 px-3 font-mono font-bold text-[#8a5cf6]">{{ rule.rule_id or 'L-' ~ loop.index }}</td>
+            <td class="py-3 px-3 text-[var(--text-main)]">{{ rule.course_ref or 'Preparación de Datos (Cap. 5)' }}</td>
+            <td class="py-3 px-3 font-mono text-[11px]">{{ rule.columns or 'Todas las columnas' }}</td>
+            <td class="py-3 px-3 text-[var(--text-secondary)]">{{ rule.description or 'Normalización de tokens y tipos' }}</td>
+            <td class="py-3 px-3 text-right font-mono font-semibold text-[var(--text-main)]">{{ rule.affected_count|default(0) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

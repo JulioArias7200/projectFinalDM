@@ -1,0 +1,101 @@
+<!-- BEGIN: BottomQualityChartSection -->
+<section class="bg-[var(--bg-card)] rounded-2xl p-6 border border-[var(--border-card)] shadow-[var(--card-shadow)]" data-purpose="comparative-quality-curves">
+  <!-- Header & Controls -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+    <div>
+      <h2 class="text-sm font-semibold text-[var(--text-main)] tracking-wide">Perfil de Calidad y Completitud (Raw vs Candidato Limpio)</h2>
+      <p class="text-xs text-[var(--text-muted)] mt-0.5">Evolución de completitud y normalización de variables a través de las secciones de la encuesta</p>
+    </div>
+    <div class="flex items-center gap-6">
+      <!-- Curve Legend -->
+      <div class="flex items-center gap-4 text-xs">
+        <div class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-[#3b82f6] shadow-[0_0_6px_#3b82f6]"></span>
+          <span class="text-[var(--text-secondary)] text-xs">Datos Originales (Raw)</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-[#ff2453] shadow-[0_0_6px_#ff2453]"></span>
+          <span class="text-[var(--text-secondary)] text-xs">Candidato Limpio (L-80)</span>
+        </div>
+      </div>
+      <!-- View Filter Dropdown -->
+      <div id="chart-time-filter" class="bg-[var(--bg-card-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-main)] text-xs px-3 py-1.5 rounded-lg border border-[var(--border-card)] flex items-center gap-1.5 cursor-pointer select-none transition-colors">
+        <span class="filter-label">Todas las Secciones (275 vars)</span>
+        <svg class="w-3.5 h-3.5 text-[var(--text-muted)]" fill="currentColor" viewBox="0 0 20 20">
+          <path clip-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" fill-rule="evenodd"></path>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Large Dual Wave Graph Canvas -->
+  <div class="relative w-full h-[220px]">
+    <!-- Y-Axis Ticks -->
+    <div class="absolute left-0 top-0 bottom-6 flex flex-col justify-between text-[10px] text-[var(--svg-axis)] font-mono">
+      <span>100%</span>
+      <span>80%</span>
+      <span>60%</span>
+      <span>40%</span>
+      <span>20%</span>
+      <span>0%</span>
+    </div>
+    <!-- Chart Area -->
+    <div class="ml-8 h-full relative">
+      <!-- Horizontal Grid lines -->
+      <div class="w-full h-full flex flex-col justify-between border-b border-[var(--border-card)] pb-6 pointer-events-none">
+        <div class="w-full border-t border-[var(--border-card)]/50"></div>
+        <div class="w-full border-t border-[var(--border-card)]/50"></div>
+        <div class="w-full border-t border-[var(--border-card)]/50"></div>
+        <div class="w-full border-t border-[var(--border-card)]/50"></div>
+        <div class="w-full border-t border-[var(--border-card)]/50"></div>
+      </div>
+      <!-- Curves SVG -->
+      <svg class="absolute inset-0 w-full h-[calc(100%-24px)] overflow-visible" preserveAspectRatio="none" viewBox="0 0 900 180">
+        <defs>
+          <!-- Blue Gradient Fill -->
+          <linearGradient id="blueWaveGrad" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35"></stop>
+            <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.0"></stop>
+          </linearGradient>
+          <!-- Red Gradient Fill -->
+          <linearGradient id="redWaveGrad" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="#ff2453" stop-opacity="0.3"></stop>
+            <stop offset="100%" stop-color="#ff2453" stop-opacity="0.0"></stop>
+          </linearGradient>
+        </defs>
+        <!-- Blue Curve Area Fill (Raw Profile) -->
+        <path d="M0,130 Q70,20 150,45 T300,90 T450,40 T600,120 T750,30 T900,40 L900,180 L0,180 Z" fill="url(#blueWaveGrad)"></path>
+        <!-- Blue Wave Curve Line -->
+        <path class="glow-drop-blue" d="M0,130 Q70,20 150,45 T300,90 T450,40 T600,120 T750,30 T900,40" fill="none" stroke="#3b82f6" stroke-linecap="round" stroke-width="3"></path>
+        <!-- Red Curve Area Fill (Clean Profile) -->
+        <path d="M0,140 Q80,135 150,150 T300,105 T450,140 T600,155 T750,140 T900,145 L900,180 L0,180 Z" fill="url(#redWaveGrad)"></path>
+        <!-- Red Wave Curve Line -->
+        <path class="glow-drop" d="M0,140 Q80,135 150,150 T300,105 T450,140 T600,155 T750,140 T900,145" fill="none" stroke="#ff2453" stroke-linecap="round" stroke-width="2.5"></path>
+        <!-- Interactive Highlight Marker -->
+        <circle id="chart-marker" cx="450" cy="40" fill="#ff2453" r="5" stroke="#ffffff" stroke-width="2" style="filter: drop-shadow(0 0 8px #ff2453);"></circle>
+      </svg>
+      <!-- Tooltip Badge over marker -->
+      <div id="chart-tooltip-badge" class="absolute left-1/2 -translate-x-1/2 top-4 flex flex-col items-center pointer-events-none">
+        <span class="text-[10px] font-mono text-[var(--tooltip-text)] font-semibold bg-[var(--tooltip-bg)] px-1.5 py-0.5 rounded border border-[var(--tooltip-border)] shadow-lg">89.4% Completitud Media</span>
+        <!-- Vertical guideline to X axis -->
+        <div class="w-px h-16 bg-gradient-to-b from-[#ff2453]/80 via-[var(--border-subtle)] to-transparent my-1"></div>
+        <!-- Section pill -->
+        <div class="bg-[var(--tooltip-bg)] border border-[var(--tooltip-border)] text-center px-2 py-0.5 rounded text-[10px] shadow-sm">
+          <div class="text-[var(--text-main)] font-bold text-[10px] leading-tight">s04</div>
+          <div class="text-[var(--text-muted)] text-[9px] leading-tight">Empleo</div>
+        </div>
+      </div>
+      <!-- X-Axis Labels: Survey Sections -->
+      <div class="absolute bottom-0 inset-x-0 flex justify-between text-[11px] text-[var(--svg-axis)] font-medium pt-2 font-mono">
+        <span>Identif.</span>
+        <span>Demogr.</span>
+        <span>Salud (s02)</span>
+        <span>Educación (s03)</span>
+        <span>Empleo (s04)</span>
+        <span>Ingresos (s05)</span>
+        <span>Pobreza</span>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- END: BottomQualityChartSection -->

@@ -1,0 +1,168 @@
+<!-- BEGIN: SankeyDiagramComponent -->
+<div class="bg-[var(--bg-card)] rounded-2xl p-6 border border-[var(--border-card)] shadow-[var(--card-shadow)] space-y-4" data-purpose="sankey-data-flow">
+  <!-- Header & Legend -->
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-[#00d2ff] via-[#8a5cf6] to-[#ff2453]"></span>
+        <h2 class="text-sm font-bold text-[var(--text-main)] tracking-wide">Diagrama de Flujo Dimensional y Vistas Temáticas</h2>
+      </div>
+      <p class="text-xs text-[var(--text-muted)] mt-0.5">Trazabilidad desde el microdato original (275 cols) hasta el Master Limpio y las 11 Vistas Temáticas</p>
+    </div>
+    <div class="flex items-center gap-2 font-mono text-[10px]">
+      <span class="px-2.5 py-1 rounded bg-[var(--bg-card-subtle)] border border-[var(--border-card)] text-cyan-400">275 Raw</span>
+      <span>→</span>
+      <span class="px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">275 Master Limpio (100%)</span>
+      <span>→</span>
+      <span class="px-2.5 py-1 rounded bg-purple-500/10 border border-purple-500/20 text-purple-400">11 Vistas Temáticas</span>
+    </div>
+  </div>
+
+  <!-- Responsive SVG Sankey Container -->
+  <div class="relative w-full overflow-x-auto py-2">
+    <svg class="w-full min-w-[780px] h-[340px]" viewBox="0 0 880 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Gradients for Flow Ribbons -->
+        <!-- Ribbon 1: Raw -> Master Limpio (Cyan to Emerald) -->
+        <linearGradient id="flowRawMaster" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#00d2ff" stop-opacity="0.45"></stop>
+          <stop offset="100%" stop-color="#10b981" stop-opacity="0.55"></stop>
+        </linearGradient>
+
+        <!-- Thematic Views Ribbons (Master -> Vistas) -->
+        <!-- Empleo (Blue) -->
+        <linearGradient id="flowEmpleo" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#10b981" stop-opacity="0.45"></stop>
+          <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.6"></stop>
+        </linearGradient>
+        <!-- Salud (Cyan) -->
+        <linearGradient id="flowSalud" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#10b981" stop-opacity="0.45"></stop>
+          <stop offset="100%" stop-color="#00d2ff" stop-opacity="0.6"></stop>
+        </linearGradient>
+        <!-- Ingresos & Pobreza (Red) -->
+        <linearGradient id="flowIngresos" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#10b981" stop-opacity="0.45"></stop>
+          <stop offset="100%" stop-color="#ff2453" stop-opacity="0.6"></stop>
+        </linearGradient>
+        <!-- Educación (Purple) -->
+        <linearGradient id="flowEdu" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#10b981" stop-opacity="0.45"></stop>
+          <stop offset="100%" stop-color="#8a5cf6" stop-opacity="0.6"></stop>
+        </linearGradient>
+        <!-- Hogar Invariante (Emerald) -->
+        <linearGradient id="flowHogar" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#10b981" stop-opacity="0.45"></stop>
+          <stop offset="100%" stop-color="#34d399" stop-opacity="0.6"></stop>
+        </linearGradient>
+      </defs>
+
+      <!-- ============================================================
+           FLOW RIBBONS (Cubic Bezier Curves)
+           ============================================================ -->
+      
+      <!-- Flow: Raw -> Master Limpio (275 -> 275 cols) -->
+      <path d="M 170 85 C 260 85, 260 85, 350 85 L 350 315 C 260 315, 260 315, 170 315 Z" 
+            fill="url(#flowRawMaster)" class="hover:opacity-80 transition-opacity cursor-pointer"></path>
+
+      <!-- Flow: Master -> 1. Empleo (2 Vistas: PET 121 cols + Secundaria 45 cols) -->
+      <path d="M 490 95 C 570 95, 570 42, 640 42 L 640 76 C 570 76, 570 130, 490 130 Z" 
+            fill="url(#flowEmpleo)" class="hover:opacity-80 transition-opacity cursor-pointer"></path>
+
+      <!-- Flow: Master -> 2. Salud (4 Vistas: General, Fecundidad, Infantil, Bono) -->
+      <path d="M 490 135 C 570 135, 570 95, 640 95 L 640 132 C 570 132, 570 175, 490 175 Z" 
+            fill="url(#flowSalud)" class="hover:opacity-80 transition-opacity cursor-pointer"></path>
+
+      <!-- Flow: Master -> 3. Educación (≥ 4 años, 43 cols) -->
+      <path d="M 490 180 C 570 180, 570 150, 640 150 L 640 186 C 570 186, 570 215, 490 215 Z" 
+            fill="url(#flowEdu)" class="hover:opacity-80 transition-opacity cursor-pointer"></path>
+
+      <!-- Flow: Master -> 4. Ingresos & Pobreza (2 Vistas: No laborales 48 cols + Pobreza 25 cols) -->
+      <path d="M 490 220 C 570 220, 570 205, 640 205 L 640 242 C 570 242, 570 260, 490 260 Z" 
+            fill="url(#flowIngresos)" class="hover:opacity-80 transition-opacity cursor-pointer"></path>
+
+      <!-- Flow: Master -> 5. Hogar Resumen (12,718 Hogares, 18 cols) -->
+      <path d="M 490 265 C 570 265, 570 260, 640 260 L 640 310 C 570 310, 570 315, 490 315 Z" 
+            fill="url(#flowHogar)" class="hover:opacity-80 transition-opacity cursor-pointer"></path>
+
+
+      <!-- ============================================================
+           COL 1: ORIGEN (persona.csv)
+           ============================================================ -->
+      <rect x="20" y="80" width="150" height="235" rx="14" fill="var(--bg-card-subtle)" stroke="#00d2ff" stroke-width="1.5" style="filter: drop-shadow(0 0 10px rgba(0, 210, 255, 0.2));"></rect>
+      <text x="35" y="110" fill="var(--text-main)" font-family="Inter, sans-serif" font-weight="700" font-size="13">persona.csv</text>
+      <text x="35" y="128" fill="#00d2ff" font-family="Inter, sans-serif" font-weight="600" font-size="11" font-family="monospace">275 Columnas (Raw)</text>
+      <text x="35" y="150" fill="var(--text-muted)" font-family="Inter, sans-serif" font-size="10">39,497 Registros</text>
+      <text x="35" y="168" fill="var(--text-muted)" font-family="Inter, sans-serif" font-size="10">34.5 MB inmutables</text>
+      <text x="35" y="190" fill="var(--text-secondary)" font-family="Inter, sans-serif" font-size="9" font-weight="500">Hash: 568e82e303...</text>
+      <rect x="35" y="275" width="120" height="24" rx="6" fill="#00d2ff" fill-opacity="0.15"></rect>
+      <text x="95" y="291" text-anchor="middle" fill="#00d2ff" font-family="Inter, sans-serif" font-size="10" font-weight="600">Base Raw 100%</text>
+
+
+      <!-- ============================================================
+           COL 2: MASTER LIMPIO (master_persona_clean.parquet)
+           ============================================================ -->
+      <rect x="350" y="80" width="140" height="235" rx="14" fill="var(--bg-card-subtle)" stroke="#10b981" stroke-width="1.5" style="filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.25));"></rect>
+      <text x="365" y="108" fill="var(--text-main)" font-family="Inter, sans-serif" font-weight="700" font-size="12">Master Limpio</text>
+      <text x="365" y="126" fill="#10b981" font-family="Inter, sans-serif" font-weight="700" font-size="14" font-family="monospace">275 Columnas</text>
+      <text x="365" y="146" fill="var(--text-muted)" font-family="Inter, sans-serif" font-size="10">100% Preservadas</text>
+      <text x="365" y="166" fill="#34d399" font-family="Inter, sans-serif" font-size="10" font-weight="600">✓ 12,718 Hogares OK</text>
+      <text x="365" y="184" fill="var(--text-muted)" font-family="Inter, sans-serif" font-size="9.5">0 Conflictos Hogar</text>
+      <text x="365" y="204" fill="#f59e0b" font-family="Inter, sans-serif" font-size="10" font-weight="600">✓ Regla S-01 (Horas)</text>
+      <text x="365" y="222" fill="var(--text-muted)" font-family="Inter, sans-serif" font-size="9.5">≤ 168h Semanales</text>
+      <rect x="365" y="275" width="110" height="24" rx="6" fill="#10b981" fill-opacity="0.15"></rect>
+      <text x="420" y="291" text-anchor="middle" fill="#10b981" font-family="Inter, sans-serif" font-size="10" font-weight="600">Sin Exclusiones</text>
+
+
+      <!-- ============================================================
+           COL 3: 11 VISTAS TEMÁTICAS ESPECIALIZADAS
+           ============================================================ -->
+      <!-- 1. Empleo (2 Vistas) -->
+      <g class="cursor-pointer group">
+        <rect x="640" y="32" width="225" height="46" rx="10" fill="var(--bg-card-subtle)" stroke="#3b82f6" stroke-width="1.2"></rect>
+        <circle cx="660" cy="55" r="10" fill="#3b82f6" fill-opacity="0.2"></circle>
+        <text x="660" y="59" text-anchor="middle" font-size="10">💼</text>
+        <text x="680" y="49" fill="var(--text-main)" font-family="Inter, sans-serif" font-weight="700" font-size="11">Empleo (2 Vistas)</text>
+        <text x="680" y="65" fill="#3b82f6" font-family="Inter, sans-serif" font-weight="600" font-size="10" font-family="monospace">PET (35,366 f.) &amp; Secundario (1,357)</text>
+      </g>
+
+      <!-- 2. Salud (4 Vistas) -->
+      <g class="cursor-pointer group">
+        <rect x="640" y="86" width="225" height="46" rx="10" fill="var(--bg-card-subtle)" stroke="#00d2ff" stroke-width="1.2"></rect>
+        <circle cx="660" cy="109" r="10" fill="#00d2ff" fill-opacity="0.2"></circle>
+        <text x="660" y="113" text-anchor="middle" font-size="10">🏥</text>
+        <text x="680" y="103" fill="var(--text-main)" font-family="Inter, sans-serif" font-weight="700" font-size="11">Salud (4 Vistas)</text>
+        <text x="680" y="119" fill="#00d2ff" font-family="Inter, sans-serif" font-weight="600" font-size="10" font-family="monospace">General, Fecundidad, Niñez &amp; Bono</text>
+      </g>
+
+      <!-- 3. Educación (≥ 4 años) -->
+      <g class="cursor-pointer group">
+        <rect x="640" y="140" width="225" height="46" rx="10" fill="var(--bg-card-subtle)" stroke="#8a5cf6" stroke-width="1.2"></rect>
+        <circle cx="660" cy="163" r="10" fill="#8a5cf6" fill-opacity="0.2"></circle>
+        <text x="660" y="167" text-anchor="middle" font-size="10">🎓</text>
+        <text x="680" y="157" fill="var(--text-main)" font-family="Inter, sans-serif" font-weight="700" font-size="11">Educación (43 Columnas)</text>
+        <text x="680" y="173" fill="#8a5cf6" font-family="Inter, sans-serif" font-weight="600" font-size="10" font-family="monospace">37,354 Pers. (≥ 4 años)</text>
+      </g>
+
+      <!-- 4. Ingresos (2 Vistas) -->
+      <g class="cursor-pointer group">
+        <rect x="640" y="194" width="225" height="48" rx="10" fill="var(--bg-card-subtle)" stroke="#ff2453" stroke-width="1.2"></rect>
+        <circle cx="660" cy="218" r="10" fill="#ff2453" fill-opacity="0.2"></circle>
+        <text x="660" y="222" text-anchor="middle" font-size="10">💰</text>
+        <text x="680" y="211" fill="var(--text-main)" font-family="Inter, sans-serif" font-weight="700" font-size="11">Ingresos (2 Vistas)</text>
+        <text x="680" y="227" fill="#ff2453" font-family="Inter, sans-serif" font-weight="600" font-size="10" font-family="monospace">No Laborales (48 c.) &amp; Pobreza (25 c.)</text>
+      </g>
+
+      <!-- 5. Hogar Resumen Folio (12,718) -->
+      <g class="cursor-pointer group">
+        <rect x="640" y="250" width="225" height="52" rx="10" fill="var(--bg-card-subtle)" stroke="#10b981" stroke-width="1.2"></rect>
+        <circle cx="660" cy="276" r="10" fill="#10b981" fill-opacity="0.2"></circle>
+        <text x="660" y="280" text-anchor="middle" font-size="10">🏡</text>
+        <text x="680" y="269" fill="var(--text-main)" font-family="Inter, sans-serif" font-weight="700" font-size="11">Hogar Resumen (Folio)</text>
+        <text x="680" y="285" fill="#10b981" font-family="Inter, sans-serif" font-weight="600" font-size="10" font-family="monospace">12,718 Hogares (18 cols inv.)</text>
+      </g>
+    </svg>
+  </div>
+</div>
+<!-- END: SankeyDiagramComponent -->
+

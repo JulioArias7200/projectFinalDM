@@ -1,0 +1,102 @@
+<!-- BEGIN: UniversesHub -->
+<section class="mb-6" data-purpose="universes-hub-cards">
+  <div class="flex items-center justify-between mb-3">
+    <h2 class="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] font-mono">Universos de la Encuesta (persona.csv)</h2>
+    <span class="text-[11px] text-[var(--text-muted)] font-mono">4 Módulos Especializados</span>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+    <!-- 1. Salud -->
+    <a href="{{ url_for('dashboard.salud') }}" 
+       class="bg-[var(--bg-card)] rounded-2xl p-4 border border-[var(--border-card)] shadow-[var(--card-shadow)] hover:border-[#00d2ff]/60 hover:scale-[1.02] transition-all group flex flex-col justify-between h-[125px]">
+      <div class="flex items-start justify-between">
+        <div>
+          <span class="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-semibold">Sección 2 (s02)</span>
+          <h3 class="text-sm font-bold text-[var(--text-main)] group-hover:text-[#00d2ff] transition-colors mt-0.5">Universo Salud</h3>
+        </div>
+        <div class="w-7 h-7 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-400">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </div>
+      </div>
+      <div class="flex items-end justify-between pt-2 border-t border-[var(--border-card)]">
+        <div>
+          <span class="text-[10px] text-[var(--text-muted)] block">Cobertura Seguro</span>
+          <span class="text-base font-bold font-mono text-cyan-400 leading-none">74.8%</span>
+        </div>
+        <span class="text-[10px] font-mono text-[var(--text-secondary)]">22 Variables</span>
+      </div>
+    </a>
+
+    <!-- 2. Educación -->
+    <a href="{{ url_for('dashboard.educacion') }}" 
+       class="bg-[var(--bg-card)] rounded-2xl p-4 border border-[var(--border-card)] shadow-[var(--card-shadow)] hover:border-[#8a5cf6]/60 hover:scale-[1.02] transition-all group flex flex-col justify-between h-[125px]">
+      <div class="flex items-start justify-between">
+        <div>
+          <span class="text-[10px] font-mono uppercase tracking-wider text-purple-400 font-semibold">Sección 3 (s03)</span>
+          <h3 class="text-sm font-bold text-[var(--text-main)] group-hover:text-[#8a5cf6] transition-colors mt-0.5">Universo Educación</h3>
+        </div>
+        <div class="w-7 h-7 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+            <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/>
+          </svg>
+        </div>
+      </div>
+      <div class="flex items-end justify-between pt-2 border-t border-[var(--border-card)]">
+        <div>
+          <span class="text-[10px] text-[var(--text-muted)] block">Tasa Alfabetismo</span>
+          <span class="text-base font-bold font-mono text-purple-400 leading-none">94.6%</span>
+        </div>
+        <span class="text-[10px] font-mono text-[var(--text-secondary)]">18 Variables</span>
+      </div>
+    </a>
+
+    <!-- 3. Empleo -->
+    <a href="{{ url_for('dashboard.empleo') }}" 
+       class="bg-[var(--bg-card)] rounded-2xl p-4 border border-[var(--border-card)] shadow-[var(--card-shadow)] hover:border-[#3b82f6]/60 hover:scale-[1.02] transition-all group flex flex-col justify-between h-[125px]">
+      <div class="flex items-start justify-between">
+        <div>
+          <span class="text-[10px] font-mono uppercase tracking-wider text-blue-400 font-semibold">Sección 4 (s04)</span>
+          <h3 class="text-sm font-bold text-[var(--text-main)] group-hover:text-[#3b82f6] transition-colors mt-0.5">Universo Empleo</h3>
+        </div>
+        <div class="w-7 h-7 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+            <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/>
+          </svg>
+        </div>
+      </div>
+      <div class="flex items-end justify-between pt-2 border-t border-[var(--border-card)]">
+        <div>
+          <span class="text-[10px] text-[var(--text-muted)] block">Tasa Global PEA</span>
+          <span class="text-base font-bold font-mono text-blue-400 leading-none">68.4%</span>
+        </div>
+        <span class="text-[10px] font-mono text-[var(--text-secondary)]">45 Variables</span>
+      </div>
+    </a>
+
+    <!-- 4. Ingresos -->
+    <a href="{{ url_for('dashboard.ingresos') }}" 
+       class="bg-[var(--bg-card)] rounded-2xl p-4 border border-[var(--border-card)] shadow-[var(--card-shadow)] hover:border-[#ff2453]/60 hover:scale-[1.02] transition-all group flex flex-col justify-between h-[125px]">
+      <div class="flex items-start justify-between">
+        <div>
+          <span class="text-[10px] font-mono uppercase tracking-wider text-red-400 font-semibold">Sección 5 (s05)</span>
+          <h3 class="text-sm font-bold text-[var(--text-main)] group-hover:text-[#ff2453] transition-colors mt-0.5">Universo Ingresos</h3>
+        </div>
+        <div class="w-7 h-7 rounded-lg bg-red-500/10 flex items-center justify-center text-red-400">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+            <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+          </svg>
+        </div>
+      </div>
+      <div class="flex items-end justify-between pt-2 border-t border-[var(--border-card)]">
+        <div>
+          <span class="text-[10px] text-[var(--text-muted)] block">Ingreso Medio Laboral</span>
+          <span class="text-base font-bold font-mono text-[#ff2453] leading-none">3,420 Bs</span>
+        </div>
+        <span class="text-[10px] font-mono text-[var(--text-secondary)]">28 Variables</span>
+      </div>
+    </a>
+  </div>
+</section>
+<!-- END: UniversesHub -->

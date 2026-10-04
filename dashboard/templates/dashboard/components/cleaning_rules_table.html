@@ -1,0 +1,57 @@
+<!-- BEGIN: CleaningRulesTable -->
+<div class="xl:col-span-2 bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)] flex flex-col justify-between">
+  <div class="flex items-center justify-between mb-4">
+    <div>
+      <h2 class="text-sm font-semibold text-[var(--text-main)] tracking-wide">Matriz de Reglas Metodológicas Aplicadas</h2>
+      <p class="text-xs text-[var(--text-muted)] mt-0.5">Fundamentadas en <code class="text-xs text-purple-400 font-mono">curso/</code> y diccionario de encuesta &bull; <span class="text-cyan-400">Haz clic en cualquier fila para inspeccionar el detalle técnico</span></p>
+    </div>
+    <span class="text-xs text-[var(--text-muted)] font-mono">Reglas L-01 a L-80</span>
+  </div>
+  
+  <!-- Table Container -->
+  <div class="overflow-x-auto">
+    <table class="w-full text-left text-xs">
+      <thead>
+        <tr class="bg-[var(--table-header-bg)] text-[var(--table-header-text)] font-medium">
+          <th class="py-2.5 px-3 rounded-l-lg">Regla</th>
+          <th class="py-2.5 px-3">Fundamento Teórico</th>
+          <th class="py-2.5 px-3">Variables / Universo</th>
+          <th class="py-2.5 px-3">Impacto Trazado</th>
+          <th class="py-2.5 px-3 rounded-r-lg text-right">Validación</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-[var(--border-card)] text-[var(--text-secondary)]">
+        {% for rule in rules %}
+        <tr class="hover:bg-[var(--table-row-hover)] transition-colors cursor-pointer group" data-rule-trigger="{{ rule.id }}" title="Clic para ver detalle metodológico de {{ rule.id }}">
+          <td class="py-3 px-3 font-mono font-bold group-hover:underline" style="color: {{ rule.badge_color }};">
+            {{ rule.id }}
+          </td>
+          <td class="py-3 px-3 font-medium text-[var(--text-main)]">
+            <div>{{ rule.name }}</div>
+            <div class="text-[10px] text-[var(--text-muted)] font-mono mt-0.5">{{ rule.category }}</div>
+          </td>
+          <td class="py-3 px-3 text-[var(--text-secondary)] font-mono">
+            {{ rule.columns }}
+          </td>
+          <td class="py-3 px-3 font-mono font-semibold text-[var(--text-main)]">
+            {{ rule.impact }}
+          </td>
+          <td class="py-3 px-3 text-right">
+            <div class="inline-flex items-center gap-2">
+              <span class="font-mono text-[10px] text-emerald-400 font-semibold">{{ rule.validation_rate }}</span>
+              <div class="w-12 h-1.5 {{ rule.status_bar }} rounded-full"></div>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Dynamic JSON Data Payload for JavaScript Modal -->
+  <script id="rules-data-json" type="application/json">
+    {{ rules | tojson | safe }}
+  </script>
+</div>
+<!-- END: CleaningRulesTable -->
+

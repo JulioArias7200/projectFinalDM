@@ -1,0 +1,12 @@
+﻿view_id,analysis_unit,input_person_rows,output_rows,output_columns,filter,inferential_status
+demografia_persona,persona,39497,39497,33,Todos los registros persona,not certified; confirm design/weights and use domain estimation where applicable
+salud_general_persona,persona,39497,39497,31,Todos los registros persona,not certified; confirm design/weights and use domain estimation where applicable
+salud_fecundidad_mujeres_13_50,persona,39497,11328,24,"s01a_02=2 y edad s01a_03 entre 13 y 50, ambos inclusive",not certified; confirm design/weights and use domain estimation where applicable
+salud_asistencia_infantil_menores_6,persona,39497,3434,10,Edad s01a_03 < 6,not certified; confirm design/weights and use domain estimation where applicable
+salud_bono_menores_5,persona,39497,2781,12,Edad s01a_03 < 5,not certified; confirm design/weights and use domain estimation where applicable
+educacion_personas_4_mas,persona,39497,37354,43,Edad s01a_03 >= 4,not certified; confirm design/weights and use domain estimation where applicable
+empleo_personas_7_mas,persona,39497,35366,121,Edad s01a_03 >= 7,not certified; confirm design/weights and use domain estimation where applicable
+empleo_secundario_casos,persona,39497,1357,45,s04e_25=1 OR any nonmissing s04e/s04f field; retain exceptions for review,not certified; confirm design/weights and use domain estimation where applicable
+ingresos_no_laborales_persona,persona,39497,39497,48,Todos los registros persona,not certified; confirm design/weights and use domain estimation where applicable
+ingresos_pobreza_persona,persona,39497,39497,25,Todos los registros persona,not certified; confirm design/weights and use domain estimation where applicable
+hogar_resumen_validado,hogar,39497,12718,9,Una fila por folio; solo campos invariantes dentro del folio,not certified; confirm design/weights and use domain estimation where applicable

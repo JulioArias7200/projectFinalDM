@@ -1,0 +1,76 @@
+<!-- BEGIN: RuleDetailModal -->
+<div id="rule-detail-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 hidden animate-fade-in" role="dialog" aria-modal="true">
+  <!-- Backdrop Blur -->
+  <div id="rule-modal-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+
+  <!-- Modal Dialog Container -->
+  <div class="relative w-full max-w-2xl bg-[var(--bg-card)] border border-[var(--border-card)] rounded-3xl shadow-2xl p-6 sm:p-7 overflow-y-auto max-h-[90vh] z-10 space-y-5">
+    
+    <!-- Modal Header -->
+    <div class="flex items-start justify-between gap-4 pb-4 border-b border-[var(--border-card)]">
+      <div>
+        <div class="flex items-center gap-2">
+          <span id="modal-rule-id" class="text-base font-bold font-mono px-2.5 py-0.5 rounded-lg bg-[var(--bg-card-subtle)] border border-[var(--border-card)]"></span>
+          <span id="modal-rule-category" class="text-xs font-mono text-[var(--text-muted)]"></span>
+        </div>
+        <h3 id="modal-rule-name" class="text-base font-bold text-[var(--text-main)] mt-1.5 leading-snug"></h3>
+      </div>
+      <!-- Close Button -->
+      <button id="rule-modal-close" class="p-2 rounded-xl text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--sidebar-hover)] transition-colors" aria-label="Cerrar modal">
+        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Content Details Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+      <div class="p-3.5 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] space-y-1">
+        <span class="text-[10px] uppercase font-mono tracking-wider text-[var(--text-muted)] font-semibold">Fundamento Teórico (curso/)</span>
+        <p id="modal-rule-course" class="font-medium text-[var(--text-main)]"></p>
+      </div>
+      <div class="p-3.5 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] space-y-1">
+        <span class="text-[10px] uppercase font-mono tracking-wider text-[var(--text-muted)] font-semibold">Variables Afectadas</span>
+        <p id="modal-rule-columns" class="font-mono font-medium text-cyan-400"></p>
+      </div>
+    </div>
+
+    <!-- Universe & Condition -->
+    <div class="space-y-3 text-xs">
+      <div class="p-3.5 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] space-y-1">
+        <span class="text-[10px] uppercase font-mono tracking-wider text-[var(--text-muted)] font-semibold">Universo Poblacional Evaluado</span>
+        <p id="modal-rule-universe" class="text-[var(--text-secondary)]"></p>
+      </div>
+
+      <div class="p-3.5 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] space-y-1">
+        <span class="text-[10px] uppercase font-mono tracking-wider text-[var(--text-muted)] font-semibold">Condición Formal / Criterio</span>
+        <p id="modal-rule-condition" class="font-mono text-emerald-400 text-[11px]"></p>
+      </div>
+
+      <div class="p-3.5 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] space-y-1">
+        <span class="text-[10px] uppercase font-mono tracking-wider text-[var(--text-muted)] font-semibold">Acción Metodológica Aplicada</span>
+        <p id="modal-rule-action" class="text-[var(--text-secondary)] leading-relaxed"></p>
+      </div>
+
+      <!-- Before / After Comparison -->
+      <div class="p-3.5 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] space-y-1">
+        <span class="text-[10px] uppercase font-mono tracking-wider text-[var(--text-muted)] font-semibold">Comprobación Antes vs Después</span>
+        <p id="modal-rule-beforeafter" class="text-[var(--text-main)] font-medium"></p>
+      </div>
+    </div>
+
+    <!-- Impact & Evidence Footer -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pt-3 border-t border-[var(--border-card)] font-mono text-[11px]">
+      <div>
+        <span class="text-[var(--text-muted)] block text-[10px]">Impacto Registrado:</span>
+        <span id="modal-rule-impact" class="font-bold text-[var(--text-main)]"></span>
+      </div>
+      <div class="text-right">
+        <span class="text-[var(--text-muted)] block text-[10px]">Trazabilidad:</span>
+        <span id="modal-rule-evidence" class="text-emerald-400 font-semibold"></span>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- END: RuleDetailModal -->

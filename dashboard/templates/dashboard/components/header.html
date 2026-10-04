@@ -1,0 +1,38 @@
+<!-- BEGIN: TopHeader -->
+<header class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6">
+  <!-- Search Input matching UI Art mockup -->
+  <div class="relative w-full sm:w-[420px]">
+    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-[var(--text-muted)] pointer-events-none">
+      <svg class="w-4 h-4 stroke-current fill-none stroke-2" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7"></circle>
+        <line x1="21" x2="16.65" y1="21" y2="16.65"></line>
+      </svg>
+    </span>
+    <input class="w-full bg-[var(--bg-input)] border border-[var(--border-card)] focus:border-[#3b82f6] rounded-xl pl-11 pr-4 py-2.5 text-xs text-[var(--text-main)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-1 focus:ring-[#3b82f6] transition-all shadow-sm" 
+           placeholder="Buscar modelos, datasets, variables..." 
+           type="text"
+           id="global-search-input"/>
+  </div>
+
+  <!-- System Status Indicator Pills, Theme Toggle & Action Icons -->
+  <div class="flex items-center gap-3 self-end sm:self-auto">
+    <!-- 3 Neon Horizontal Indicators -->
+    <div class="flex items-center gap-2 px-2" title="Estado de subsistemas: Activos">
+      <span class="w-8 h-1.5 rounded-full bg-[#8a5cf6]/90 shadow-[0_0_8px_#8a5cf6]"></span>
+      <span class="w-8 h-1.5 rounded-full bg-[#3b82f6]/90 shadow-[0_0_8px_#3b82f6]"></span>
+      <span class="w-8 h-1.5 rounded-full bg-[#ff2453]/90 shadow-[0_0_8px_#ff2453]"></span>
+    </div>
+
+    <!-- DAY / NIGHT THEME TOGGLE BUTTON -->
+    {% include 'dashboard/components/theme_toggle.html' %}
+
+    <!-- Notification Bell with Neon Alert -->
+    <button class="relative p-2.5 rounded-xl border border-[var(--border-card)] bg-[var(--bg-card-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-main)] hover:bg-[var(--sidebar-hover)] transition-colors" title="Notificaciones del Pipeline">
+      <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+        <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path>
+      </svg>
+      <span class="absolute top-2 right-2 w-2 h-2 bg-[#ff2453] rounded-full shadow-[0_0_6px_#ff2453]"></span>
+    </button>
+  </div>
+</header>
+<!-- END: TopHeader -->

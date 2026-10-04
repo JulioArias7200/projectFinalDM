@@ -1,0 +1,112 @@
+<!-- BEGIN: RightSidebarPanel (Data Quality & Departmental Sample) -->
+<aside class="w-full lg:w-[320px] bg-transparent border-t lg:border-t-0 lg:border-l border-[var(--border-sidebar)] p-6 flex flex-col justify-between gap-6 shrink-0 lg:sticky lg:top-4 lg:self-start lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto custom-scrollbar rounded-b-[31px] lg:rounded-b-none lg:rounded-r-[31px]" data-purpose="user-and-evaluations-sidebar">
+
+
+  <!-- Auditor / Lead Profile Card -->
+  <div class="flex flex-col items-center text-center pt-2">
+    <div class="relative w-20 h-20 rounded-2xl bg-gradient-to-b from-[#8a5cf6] to-[#3b82f6] p-0.5 shadow-glow-purple mb-3">
+      <div class="w-full h-full bg-[var(--bg-card)] rounded-2xl flex items-center justify-center overflow-hidden">
+        <svg class="w-12 h-12" fill="none" viewBox="0 0 24 24">
+          <circle cx="12" cy="8" fill="#00d2ff" r="4"></circle>
+          <path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6" fill="#8a5cf6"></path>
+        </svg>
+      </div>
+    </div>
+    <h3 class="text-[var(--text-main)] font-bold text-base tracking-wide">Auditoría de Datos</h3>
+    <p class="text-xs text-[var(--text-secondary)] mt-0.5">Minería de Datos &amp; Calidad</p>
+    <span class="inline-block mt-2 text-[10px] bg-[var(--bg-card-subtle)] text-[#00d2ff] font-mono px-2.5 py-0.5 rounded-full border border-cyan-500/20">persona.csv (EH2025)</span>
+  </div>
+
+  <!-- Departmental Sample Coverage Neon Bar Chart Widget -->
+  <div class="bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)]">
+    <div class="flex justify-between items-center mb-4">
+      <h4 class="text-xs font-semibold text-[var(--text-main)] tracking-wide">Muestra Departamental</h4>
+      <span class="text-[11px] font-mono text-cyan-400">39,497 Total</span>
+    </div>
+    <!-- Vertical Neon Bars Container for 9 departments -->
+    <div class="flex items-end justify-between h-36 pt-4 pb-2 px-1 border-b border-[var(--border-card)]">
+      <!-- LP -->
+      <div class="flex flex-col items-center gap-1.5 h-full justify-end">
+        <div class="w-2 bg-[#ff2453] rounded-full h-[95%] shadow-[0_0_8px_#ff2453]"></div>
+        <span class="text-[8px] text-red-400 font-mono font-bold">LP</span>
+      </div>
+      <!-- SC -->
+      <div class="flex flex-col items-center gap-1.5 h-full justify-end">
+        <div class="w-2 bg-[#00d2ff] rounded-full h-[90%] shadow-[0_0_8px_#00d2ff]"></div>
+        <span class="text-[8px] text-[var(--text-muted)] font-mono">SC</span>
+      </div>
+      <!-- CB -->
+      <div class="flex flex-col items-center gap-1.5 h-full justify-end">
+        <div class="w-2 bg-[#8a5cf6] rounded-full h-[75%] shadow-[0_0_8px_#8a5cf6]"></div>
+        <span class="text-[8px] text-[var(--text-muted)] font-mono">CB</span>
+      </div>
+      <!-- OR -->
+      <div class="flex flex-col items-center gap-1.5 h-full justify-end">
+        <div class="w-2 bg-[#3b82f6] rounded-full h-[45%] shadow-[0_0_8px_#3b82f6]"></div>
+        <span class="text-[8px] text-[var(--text-muted)] font-mono">OR</span>
+      </div>
+      <!-- PT -->
+      <div class="flex flex-col items-center gap-1.5 h-full justify-end">
+        <div class="w-2 bg-[#8a5cf6] rounded-full h-[55%] shadow-[0_0_8px_#8a5cf6]"></div>
+        <span class="text-[8px] text-[var(--text-muted)] font-mono">PT</span>
+      </div>
+      <!-- TJ -->
+      <div class="flex flex-col items-center gap-1.5 h-full justify-end">
+        <div class="w-2 bg-[#00d2ff] rounded-full h-[50%] shadow-[0_0_8px_#00d2ff]"></div>
+        <span class="text-[8px] text-[var(--text-muted)] font-mono">TJ</span>
+      </div>
+      <!-- CH -->
+      <div class="flex flex-col items-center gap-1.5 h-full justify-end">
+        <div class="w-2 bg-[#8a5cf6] rounded-full h-[48%] shadow-[0_0_8px_#8a5cf6]"></div>
+        <span class="text-[8px] text-[var(--text-muted)] font-mono">CH</span>
+      </div>
+      <!-- BE -->
+      <div class="flex flex-col items-center gap-1.5 h-full justify-end">
+        <div class="w-2 bg-[#3b82f6] rounded-full h-[40%] shadow-[0_0_8px_#3b82f6]"></div>
+        <span class="text-[8px] text-[var(--text-muted)] font-mono">BE</span>
+      </div>
+      <!-- PA -->
+      <div class="flex flex-col items-center gap-1.5 h-full justify-end">
+        <div class="w-2 bg-[#8a5cf6] rounded-full h-[30%] shadow-[0_0_8px_#8a5cf6]"></div>
+        <span class="text-[8px] text-[var(--text-muted)] font-mono">PA</span>
+      </div>
+    </div>
+    <div class="flex justify-between items-center text-[10px] text-[var(--text-muted)] pt-2 font-mono">
+      <span>9 Departamentos</span>
+      <span class="text-emerald-400 font-semibold">100% Ponderable</span>
+    </div>
+  </div>
+
+  <!-- Inmutable Manifest Status Panel -->
+  <div class="bg-gradient-to-br from-[var(--bg-card)] to-[var(--bg-card-subtle)] rounded-2xl p-4 border border-[var(--border-card)] shadow-[var(--card-shadow)] flex flex-col justify-between relative overflow-hidden">
+    <div>
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold text-[var(--text-main)]">Estado del Manifiesto</span>
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+      </div>
+      <p class="text-[11px] text-[var(--text-secondary)] mt-1">Corrida de preprocesamiento:</p>
+    </div>
+    <!-- Quick Manifest Details -->
+    <div class="my-3 space-y-2">
+      <div class="flex items-center justify-between text-[11px] bg-[var(--bg-card-subtle)] p-2 rounded-lg border border-[var(--border-card)]">
+        <span class="text-[var(--text-secondary)] font-mono">ID: 20261004T171822Z</span>
+        <span class="text-emerald-400 font-bold font-mono">Candidato OK</span>
+      </div>
+      <div class="text-[10px] text-[var(--text-muted)] space-y-1 font-mono">
+        <div class="flex justify-between">
+          <span>Formato:</span>
+          <span class="text-[var(--text-main)]">Parquet / CSV</span>
+        </div>
+        <div class="flex justify-between">
+          <span>Hash Raw:</span>
+          <span class="text-[var(--text-main)]">d3abfb0b5f...</span>
+        </div>
+      </div>
+    </div>
+    <div class="text-[10px] text-[var(--text-muted)] flex items-center justify-between pt-1 font-mono">
+      <span>Persistencia:</span>
+      <span class="text-cyan-400 font-bold">JSON Inmutable</span>
+    </div>
+  </div>
+</aside>
+<!-- END: RightSidebarPanel -->

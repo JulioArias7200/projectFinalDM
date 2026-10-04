@@ -1,0 +1,10 @@
+﻿column,households_with_multiple_values,action
+totper,17,excluded_from_household_summary; retained in person-level master/view
+yhog,17,excluded_from_household_summary; retained in person-level master/view
+yhogpc,17,excluded_from_household_summary; retained in person-level master/view
+p0,17,excluded_from_household_summary; retained in person-level master/view
+p1,17,excluded_from_household_summary; retained in person-level master/view
+p2,17,excluded_from_household_summary; retained in person-level master/view
+pext0,17,excluded_from_household_summary; retained in person-level master/view
+pext1,17,excluded_from_household_summary; retained in person-level master/view
+pext2,17,excluded_from_household_summary; retained in person-level master/view

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>{% block title %}ML Lab - Métodos de Ensamble &amp; Analítica Predictiva{% endblock %}</title>
+
+  <!-- Anti-FOUC (Flash of Unstyled Content) Inline Script -->
+  <script>
+    (function () {
+      const savedTheme = localStorage.getItem('mllab_theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
+
+  <!-- Tailwind CSS v3 with Plugins -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <!-- Tailwind Custom Configuration -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              dark: '#141724',
+              surface: '#1b1e32',
+              card: '#1e2238',
+              hover: '#252a45',
+              border: '#2a304e',
+              red: '#ff2453',
+              pink: '#ff3366',
+              cyan: '#00d2ff',
+              blue: '#3b82f6',
+              purple: '#8a5cf6',
+              neonPurple: '#a855f7'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          },
+          boxShadow: {
+            'glow-red': '0 0 25px -4px rgba(255, 36, 83, 0.45)',
+            'glow-blue': '0 0 25px -4px rgba(59, 130, 246, 0.45)',
+            'glow-purple': '0 0 25px -4px rgba(168, 85, 247, 0.45)',
+            'card-soft': '0 10px 30px -10px rgba(0, 0, 0, 0.5)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Inter -->
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+
+  <!-- Design System CSS Modules -->
+  <link rel="stylesheet" href="{{ url_for('dashboard.static', filename='css/theme.css') }}"/>
+  <link rel="stylesheet" href="{{ url_for('dashboard.static', filename='css/base.css') }}"/>
+  <link rel="stylesheet" href="{{ url_for('dashboard.static', filename='css/animations.css') }}"/>
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="min-h-screen flex items-center justify-center p-3 md:p-6 lg:p-8">
+  <!-- BEGIN: DashboardWrapper -->
+  <div class="w-full max-w-[1440px] bg-[var(--bg-shell)] border border-[var(--border-sidebar)] rounded-[32px] shadow-[var(--shell-shadow)] flex flex-col lg:flex-row min-h-[920px] transition-colors relative" data-purpose="app-shell">
+    
+    <!-- Left Navigation Sidebar -->
+    {% include 'dashboard/components/sidebar_nav.html' %}
+
+
+    <!-- Main Dynamic Content Area -->
+    <main class="flex-1 min-w-0 flex flex-col p-5 md:p-7 overflow-y-auto" data-purpose="main-dashboard-body">
+      <!-- Top Navigation & Global Header -->
+      {% include 'dashboard/components/header.html' %}
+
+      <!-- View Specific Content Block -->
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- Right Sidebar Panel (optional or page customizable) -->
+    {% block right_sidebar %}
+      {% include 'dashboard/components/sidebar_right.html' %}
+    {% endblock %}
+
+  </div>
+  <!-- END: DashboardWrapper -->
+
+  <!-- Base JS Modules -->
+  <script src="{{ url_for('dashboard.static', filename='js/theme.js') }}"></script>
+  <script src="{{ url_for('dashboard.static', filename='js/nav.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>
