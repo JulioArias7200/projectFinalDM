@@ -161,96 +161,139 @@
       <div>
         <div class="flex items-center gap-2">
           <span class="text-xs font-mono font-bold text-amber-400 px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20" id="card-dept-code">LP</span>
-          <span class="text-xs font-mono text-[var(--text-muted)]" id="card-dept-capital">Capital: Nuestra Señora de La Paz</span>
+          <span class="text-xs font-mono text-[var(--text-muted)]" id="card-dept-capital">Capital: La Paz / El Alto</span>
         </div>
         <h3 class="text-lg font-bold text-[var(--text-main)] mt-1" id="card-dept-name">La Paz</h3>
       </div>
-      <span class="text-[11px] font-mono font-bold text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-2.5 py-1 rounded-xl" id="card-dept-sample">
-        9,839 encuestados (24.9%)
-      </span>
+      <div class="text-right">
+        <span class="text-xs font-mono font-bold text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-2.5 py-1 rounded-xl inline-block" id="card-dept-sample">
+          9,839 personas
+        </span>
+        <span class="text-[10px] font-mono text-[var(--text-muted)] block mt-0.5" id="card-dept-hogares">3,097 hogares (24.9%)</span>
+      </div>
     </div>
 
-    <!-- Universe Metrics Stack -->
-    <div class="space-y-3 my-3 text-xs overflow-y-auto max-h-[360px] pr-1">
+    <!-- Universe Metrics Stack with exact Dataset counts -->
+    <div class="space-y-3 my-3 text-xs overflow-y-auto max-h-[380px] pr-1" id="card-universe-list">
       
       <!-- 1. Demografia & Muestra s01 -->
-      <div class="p-3 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] space-y-1.5">
+      <div class="p-3 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] space-y-2">
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#ff537b]/10 text-[#ff537b] border border-[#ff537b]/20">
-            Demografía & Muestra (s01)
+            Demografía & Hogar (s01)
           </span>
           <span class="text-[10px] font-mono text-[var(--text-muted)]" id="card-dem-pop">3,119,042 hab. proyectados</span>
         </div>
-        <div class="grid grid-cols-2 gap-2 pt-1 font-mono text-[11px]">
-          <div>
+        <div class="grid grid-cols-2 gap-2 pt-0.5 font-mono text-[11px]">
+          <div class="bg-[var(--bg-card)] p-2 rounded-lg border border-[var(--border-card)]">
             <span class="text-[var(--text-muted)] text-[10px] block">Área Urbana:</span>
-            <span class="font-bold text-[var(--text-main)]" id="card-dem-urb">86.1%</span>
+            <span class="font-bold text-cyan-400" id="card-dem-urb">8,472 (86.1%)</span>
           </div>
-          <div>
+          <div class="bg-[var(--bg-card)] p-2 rounded-lg border border-[var(--border-card)]">
             <span class="text-[var(--text-muted)] text-[10px] block">Área Rural:</span>
-            <span class="font-bold text-[var(--text-main)]" id="card-dem-rur">13.9%</span>
+            <span class="font-bold text-emerald-400" id="card-dem-rur">1,367 (13.9%)</span>
+          </div>
+          <div class="bg-[var(--bg-card)] p-2 rounded-lg border border-[var(--border-card)]">
+            <span class="text-[var(--text-muted)] text-[10px] block">Sexo (H/M):</span>
+            <span class="font-bold text-[var(--text-main)]" id="card-dem-sex">4,839 H / 5,000 M</span>
+          </div>
+          <div class="bg-[var(--bg-card)] p-2 rounded-lg border border-[var(--border-card)]">
+            <span class="text-[var(--text-muted)] text-[10px] block">Edad Promedio:</span>
+            <span class="font-bold text-amber-400" id="card-dem-edad">33.0 años</span>
           </div>
         </div>
       </div>
 
       <!-- 2. Universo Salud s02 -->
-      <div class="p-3 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] space-y-1">
+      <div class="p-3 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] space-y-2">
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#00d2ff]/10 text-[#00d2ff] border border-[#00d2ff]/20">
             Universo Salud (s02)
           </span>
-          <span class="font-mono text-xs font-bold text-cyan-400" id="card-salud-val">65.9%</span>
+          <span class="font-mono text-xs font-bold text-cyan-400" id="card-salud-val">8,574 con seguro (87.1%)</span>
         </div>
-        <p class="text-[11px] text-[var(--text-secondary)]">
-          Cobertura de seguro de salud SUS / Cajas (Var. <code class="font-mono text-cyan-400">s02a_01a</code>).
-        </p>
+        <div class="grid grid-cols-3 gap-1.5 font-mono text-[10px]">
+          <div class="bg-[var(--bg-card)] p-1.5 rounded-lg border border-[var(--border-card)] text-center">
+            <span class="text-[var(--text-muted)] block text-[9px]">MEF 13-50</span>
+            <span class="font-bold text-pink-400" id="card-salud-mef">2,913</span>
+          </div>
+          <div class="bg-[var(--bg-card)] p-1.5 rounded-lg border border-[var(--border-card)] text-center">
+            <span class="text-[var(--text-muted)] block text-[9px]">Niños &lt;6a</span>
+            <span class="font-bold text-cyan-400" id="card-salud-n6">747</span>
+          </div>
+          <div class="bg-[var(--bg-card)] p-1.5 rounded-lg border border-[var(--border-card)] text-center">
+            <span class="text-[var(--text-muted)] block text-[9px]">Bono &lt;5a</span>
+            <span class="font-bold text-purple-400" id="card-salud-n5">600</span>
+          </div>
+        </div>
       </div>
 
       <!-- 3. Universo Educacion s03 -->
-      <div class="p-3 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] space-y-1">
+      <div class="p-3 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] space-y-2">
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#8a5cf6]/10 text-[#8a5cf6] border border-[#8a5cf6]/20">
             Universo Educación (s03)
           </span>
-          <span class="font-mono text-xs font-bold text-purple-400" id="card-edu-val">97.9%</span>
+          <span class="font-mono text-xs font-bold text-purple-400" id="card-edu-val">4,785 alfabetizados (63.3%)</span>
         </div>
-        <p class="text-[11px] text-[var(--text-secondary)]">
-          Tasa de alfabetismo en población de 15 años o más (Var. <code class="font-mono text-purple-400">s03a_01</code>).
-        </p>
+        <div class="grid grid-cols-2 gap-2 font-mono text-[10px]">
+          <div class="bg-[var(--bg-card)] p-1.5 rounded-lg border border-[var(--border-card)]">
+            <span class="text-[var(--text-muted)] block text-[9px]">Pob. Elegible (&ge;4 años):</span>
+            <span class="font-bold text-[var(--text-main)]" id="card-edu-eleg">9,391 (95.4%)</span>
+          </div>
+          <div class="bg-[var(--bg-card)] p-1.5 rounded-lg border border-[var(--border-card)]">
+            <span class="text-[var(--text-muted)] block text-[9px]">Población &ge;15 años:</span>
+            <span class="font-bold text-purple-300" id="card-edu-pob15">7,557 evaluados</span>
+          </div>
+        </div>
       </div>
 
       <!-- 4. Universo Empleo s04 -->
-      <div class="p-3 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] space-y-1">
+      <div class="p-3 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] space-y-2">
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#3b82f6]/10 text-[#3b82f6] border border-[#3b82f6]/20">
             Universo Empleo (s04)
           </span>
-          <span class="font-mono text-xs font-bold text-blue-400" id="card-emp-val">60.5%</span>
+          <span class="font-mono text-xs font-bold text-blue-400" id="card-emp-val">4,849 ocupados (54.1%)</span>
         </div>
-        <p class="text-[11px] text-[var(--text-secondary)]">
-          Población en edad de trabajar con actividad remunerada (Var. <code class="font-mono text-blue-400">s04a_01</code>).
-        </p>
+        <div class="grid grid-cols-2 gap-2 font-mono text-[10px]">
+          <div class="bg-[var(--bg-card)] p-1.5 rounded-lg border border-[var(--border-card)]">
+            <span class="text-[var(--text-muted)] block text-[9px]">Población PET (&ge;7 años):</span>
+            <span class="font-bold text-[var(--text-main)]" id="card-emp-pet">8,955 (91.0%)</span>
+          </div>
+          <div class="bg-[var(--bg-card)] p-1.5 rounded-lg border border-[var(--border-card)]">
+            <span class="text-[var(--text-muted)] block text-[9px]">Ocupación Secundaria:</span>
+            <span class="font-bold text-blue-300" id="card-emp-sec">419 casos</span>
+          </div>
+        </div>
       </div>
 
       <!-- 5. Universo Ingresos s05 -->
-      <div class="p-3 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] space-y-1">
+      <div class="p-3 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] space-y-2">
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#ff2453]/10 text-[#ff2453] border border-[#ff2453]/20">
             Universo Ingresos (s05)
           </span>
-          <span class="font-mono text-xs font-bold text-red-400" id="card-ing-val">43.7%</span>
+          <span class="font-mono text-xs font-bold text-red-400" id="card-ing-val">4,302 en pobreza (43.7%)</span>
         </div>
-        <p class="text-[11px] text-[var(--text-secondary)]">
-          Incidencia de pobreza moderada respecto a la línea de ingreso (Var. <code class="font-mono text-red-400">p0</code>).
-        </p>
+        <div class="grid grid-cols-2 gap-2 font-mono text-[10px]">
+          <div class="bg-[var(--bg-card)] p-1.5 rounded-lg border border-[var(--border-card)]">
+            <span class="text-[var(--text-muted)] block text-[9px]">Con Ingreso Laboral:</span>
+            <span class="font-bold text-emerald-400" id="card-ing-conlab">4,264 personas</span>
+          </div>
+          <div class="bg-[var(--bg-card)] p-1.5 rounded-lg border border-[var(--border-card)]">
+            <span class="text-[var(--text-muted)] block text-[9px]">Mediana Ingreso Laboral:</span>
+            <span class="font-bold text-amber-400" id="card-ing-med">Bs 2,598 / mes</span>
+          </div>
+        </div>
       </div>
 
     </div>
 
     <!-- Quick Footer Tip -->
     <div class="pt-2 border-t border-[var(--border-card)] text-[10px] text-[var(--text-muted)] font-mono flex items-center justify-between">
-      <span>Fuente: persona.csv (Secciones s01-s05)</span>
-      <span class="text-amber-400">INE Bolivia</span>
+      <span>Microdatos: <code class="text-cyan-400">persona.csv</code></span>
+      <span class="text-amber-400">INE Bolivia &bull; 9 Deptos</span>
     </div>
   </div>
 
@@ -272,38 +315,41 @@
         <tr class="bg-[var(--table-header-bg)] text-[var(--table-header-text)] font-medium">
           <th class="py-2.5 px-3 rounded-l-lg">Depto</th>
           <th class="py-2.5 px-3 font-mono text-amber-400">Muestra (s01)</th>
-          <th class="py-2.5 px-3 font-mono text-amber-400">Urbano / Rural</th>
           <th class="py-2.5 px-3 font-mono text-cyan-400">Salud (s02)</th>
           <th class="py-2.5 px-3 font-mono text-purple-400">Educación (s03)</th>
           <th class="py-2.5 px-3 font-mono text-blue-400">Empleo (s04)</th>
-          <th class="py-2.5 px-3 rounded-r-lg font-mono text-red-400">Ingresos / Pobreza (s05)</th>
+          <th class="py-2.5 px-3 rounded-r-lg font-mono text-red-400">Ingresos & Pobreza (s05)</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-[var(--border-card)] text-[var(--text-secondary)]">
         {% for d in region_data.departamentos %}
         <tr class="hover:bg-[var(--table-row-hover)] transition-colors cursor-pointer group table-dept-row" data-dept-id="{{ d.id }}" title="Clic para seleccionar {{ d.name }}">
-          <td class="py-3 px-3 font-bold text-[var(--text-main)] flex items-center gap-2">
-            <span class="w-5 h-5 rounded-md bg-[var(--bg-card-subtle)] border border-[var(--border-card)] flex items-center justify-center font-mono text-[10px] text-amber-400">{{ d.code }}</span>
-            <span>{{ d.name }}</span>
+          <td class="py-3 px-3 font-bold text-[var(--text-main)]">
+            <div class="flex items-center gap-2">
+              <span class="w-5 h-5 rounded-md bg-[var(--bg-card-subtle)] border border-[var(--border-card)] flex items-center justify-center font-mono text-[10px] text-amber-400 font-bold">{{ d.code }}</span>
+              <span>{{ d.name }}</span>
+            </div>
+            <span class="text-[10px] text-[var(--text-muted)] font-normal block pl-7">{{ d.capital }}</span>
           </td>
           <td class="py-3 px-3 font-mono">
-            <span class="font-bold text-[var(--text-main)]">{{ "{:,}".format(d.demografia.n_encuestados) }}</span>
-            <span class="text-[10px] text-[var(--text-muted)]">({{ d.demografia.pct_nacional }}%)</span>
+            <div class="font-bold text-[var(--text-main)]">{{ "{:,}".format(d.demografia.n_encuestados) }} pers.</div>
+            <div class="text-[10px] text-[var(--text-muted)]">{{ "{:,}".format(d.demografia.n_hogares) }} hog. &bull; {{ d.demografia.pct_nacional }}%</div>
           </td>
-          <td class="py-3 px-3 font-mono text-[11px]">
-            <span class="text-cyan-400">{{ d.demografia.urbano_pct }}% Urb</span> / <span class="text-emerald-400">{{ d.demografia.rural_pct }}% Rur</span>
+          <td class="py-3 px-3 font-mono">
+            <div class="font-semibold text-cyan-400">{{ "{:,}".format(d.salud.n_con_seguro) }} con seguro</div>
+            <div class="text-[10px] text-[var(--text-muted)]">{{ d.salud.valor }}% cobertura &bull; {{ d.salud.n_mef_13_50 }} MEF</div>
           </td>
-          <td class="py-3 px-3 font-mono font-semibold text-cyan-400">
-            {{ d.salud.valor }}%
+          <td class="py-3 px-3 font-mono">
+            <div class="font-semibold text-purple-400">{{ "{:,}".format(d.educacion.n_alfabetizados) }} alfabetizados</div>
+            <div class="text-[10px] text-[var(--text-muted)]">{{ d.educacion.valor }}% &bull; {{ "{:,}".format(d.educacion.n_elegibles_4mas) }} elegibles &ge;4a</div>
           </td>
-          <td class="py-3 px-3 font-mono font-semibold text-purple-400">
-            {{ d.educacion.valor }}%
+          <td class="py-3 px-3 font-mono">
+            <div class="font-semibold text-blue-400">{{ "{:,}".format(d.empleo.n_ocupados) }} ocupados</div>
+            <div class="text-[10px] text-[var(--text-muted)]">{{ d.empleo.valor }}% PET &bull; {{ "{:,}".format(d.empleo.n_pet_7mas) }} PET</div>
           </td>
-          <td class="py-3 px-3 font-mono font-semibold text-blue-400">
-            {{ d.empleo.valor }}%
-          </td>
-          <td class="py-3 px-3 font-mono font-semibold text-red-400">
-            {{ d.ingresos.valor }}%
+          <td class="py-3 px-3 font-mono">
+            <div class="font-semibold text-red-400">{{ "{:,}".format(d.ingresos.n_pobreza_moderada) }} pobres ({{ d.ingresos.valor }}%)</div>
+            <div class="text-[10px] text-amber-300">Mediana: Bs {{ "{:,}".format(d.ingresos.mediana_ingreso_laboral) }}</div>
           </td>
         </tr>
         {% endfor %}

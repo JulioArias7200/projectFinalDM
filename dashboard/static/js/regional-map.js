@@ -211,35 +211,64 @@
     const capitalEl = document.getElementById('card-dept-capital');
     const nameEl = document.getElementById('card-dept-name');
     const sampleEl = document.getElementById('card-dept-sample');
+    const hogEl = document.getElementById('card-dept-hogares');
 
     if (codeEl) codeEl.textContent = dept.code;
     if (capitalEl) capitalEl.textContent = `Capital: ${dept.capital}`;
     if (nameEl) nameEl.textContent = dept.name;
-    if (sampleEl) sampleEl.textContent = `${dept.demografia.n_encuestados.toLocaleString()} encuestados (${dept.demografia.pct_nacional}%)`;
+    if (sampleEl) sampleEl.textContent = `${dept.demografia.n_encuestados.toLocaleString()} personas`;
+    if (hogEl) hogEl.textContent = `${dept.demografia.n_hogares.toLocaleString()} hogares (${dept.demografia.pct_nacional}% nac.)`;
 
     // 1. Demografia s01
     const popEl = document.getElementById('card-dem-pop');
     const urbEl = document.getElementById('card-dem-urb');
     const rurEl = document.getElementById('card-dem-rur');
+    const sexEl = document.getElementById('card-dem-sex');
+    const edadEl = document.getElementById('card-dem-edad');
+
     if (popEl) popEl.textContent = `${dept.demografia.poblacion_estimada.toLocaleString()} hab. proyectados`;
-    if (urbEl) urbEl.textContent = `${dept.demografia.urbano_pct}%`;
-    if (rurEl) rurEl.textContent = `${dept.demografia.rural_pct}%`;
+    if (urbEl) urbEl.textContent = `${dept.demografia.n_urbano.toLocaleString()} (${dept.demografia.urbano_pct}%)`;
+    if (rurEl) rurEl.textContent = `${dept.demografia.n_rural.toLocaleString()} (${dept.demografia.rural_pct}%)`;
+    if (sexEl) sexEl.textContent = `${dept.demografia.n_hombres.toLocaleString()} H / ${dept.demografia.n_mujeres.toLocaleString()} M`;
+    if (edadEl) edadEl.textContent = `${dept.demografia.edad_promedio} años`;
 
     // 2. Salud s02
     const saludEl = document.getElementById('card-salud-val');
-    if (saludEl) saludEl.textContent = `${dept.salud.valor}%`;
+    const saludMef = document.getElementById('card-salud-mef');
+    const saludN6 = document.getElementById('card-salud-n6');
+    const saludN5 = document.getElementById('card-salud-n5');
+
+    if (saludEl) saludEl.textContent = `${dept.salud.n_con_seguro.toLocaleString()} con seguro (${dept.salud.valor}%)`;
+    if (saludMef) saludMef.textContent = dept.salud.n_mef_13_50.toLocaleString();
+    if (saludN6) saludN6.textContent = dept.salud.n_ninos_menor_6.toLocaleString();
+    if (saludN5) saludN5.textContent = dept.salud.n_ninos_menor_5.toLocaleString();
 
     // 3. Educacion s03
     const eduEl = document.getElementById('card-edu-val');
-    if (eduEl) eduEl.textContent = `${dept.educacion.valor}%`;
+    const eduEleg = document.getElementById('card-edu-eleg');
+    const eduPob15 = document.getElementById('card-edu-pob15');
+
+    if (eduEl) eduEl.textContent = `${dept.educacion.n_alfabetizados.toLocaleString()} alfabetizados (${dept.educacion.valor}%)`;
+    if (eduEleg) eduEleg.textContent = `${dept.educacion.n_elegibles_4mas.toLocaleString()} (${dept.educacion.pct_elegibles_4mas}%)`;
+    if (eduPob15) eduPob15.textContent = `${dept.educacion.n_pob_15mas.toLocaleString()} evaluados`;
 
     // 4. Empleo s04
     const empEl = document.getElementById('card-emp-val');
-    if (empEl) empEl.textContent = `${dept.empleo.valor}%`;
+    const empPet = document.getElementById('card-emp-pet');
+    const empSec = document.getElementById('card-emp-sec');
+
+    if (empEl) empEl.textContent = `${dept.empleo.n_ocupados.toLocaleString()} ocupados (${dept.empleo.valor}%)`;
+    if (empPet) empPet.textContent = `${dept.empleo.n_pet_7mas.toLocaleString()} (${dept.empleo.pct_pet_7mas}%)`;
+    if (empSec) empSec.textContent = `${dept.empleo.n_ocupacion_secundaria.toLocaleString()} casos`;
 
     // 5. Ingresos s05
     const ingEl = document.getElementById('card-ing-val');
-    if (ingEl) ingEl.textContent = `${dept.ingresos.valor}%`;
+    const ingConlab = document.getElementById('card-ing-conlab');
+    const ingMed = document.getElementById('card-ing-med');
+
+    if (ingEl) ingEl.textContent = `${dept.ingresos.n_pobreza_moderada.toLocaleString()} en pobreza (${dept.ingresos.valor}%)`;
+    if (ingConlab) ingConlab.textContent = `${dept.ingresos.n_con_ingreso_laboral.toLocaleString()} personas`;
+    if (ingMed) ingMed.textContent = `Bs ${dept.ingresos.mediana_ingreso_laboral.toLocaleString()} / mes`;
 
     // Highlight selected in Table
     document.querySelectorAll('.table-dept-row').forEach((row) => {
