@@ -47,6 +47,41 @@
     </div>
   </div>
 
+  <!-- Comparative Paradigm: Naive Deletion vs Thematic Views Approach -->
+  <div class="bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)] space-y-4">
+    <div class="flex items-center gap-2">
+      <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <h2 class="text-sm font-bold text-[var(--text-main)] uppercase tracking-wider">Fundamentación Metodológica: ¿Por qué preservar 275 columnas y derivar 11 vistas?</h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+      <!-- Enfoque Ingenuo -->
+      <div class="p-4 rounded-xl border border-red-500/20 bg-red-500/5 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-red-400 uppercase text-[11px]">✕ Enfoque Ingenuo (Eliminación L-80 Global)</span>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/20">Destructivo</span>
+        </div>
+        <p class="text-[var(--text-secondary)]">
+          Evalúa la completitud sobre los 39,497 registros sin considerar los saltos del cuestionario. Habría <strong>eliminado 125 variables legítimas</strong> (maternidad, guardería, empleo secundario) asumiendo que los valores vacíos eran errores, cuando en realidad eran personas no elegibles.
+        </p>
+      </div>
+
+      <!-- Enfoque Metodológico Implementado -->
+      <div class="p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-emerald-400 uppercase text-[11px]">✓ Enfoque Metodológico Implementado (Master + 11 Vistas)</span>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Recomendado</span>
+        </div>
+        <p class="text-[var(--text-secondary)]">
+          Preserva el <strong>100% de las 275 columnas en el dataset maestro</strong> (formato Parquet/CSV inmutable) y deriva <strong>11 vistas temáticas</strong> aplicando los filtros exactos de cada módulo (mujeres 13–50, PET $\ge 7$, niños $<6$). Cada pregunta se evalúa sobre su universo real.
+        </p>
+      </div>
+    </div>
+  </div>
+
+
   <!-- Interactive Sankey Flow Diagram -->
   {% include 'dashboard/components/sankey_diagram.html' %}
 

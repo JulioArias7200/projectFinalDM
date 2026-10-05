@@ -1,41 +1,53 @@
 # Análisis exploratorio descriptivo de `persona.csv`
 
-## Objetivo y estado
+## Estado y alcance
 
-La siguiente etapa tras construir vistas por universo es caracterizar las variables y observar distribuciones dentro del universo válido de cada módulo. Se añadió `data/proprosessing/exploratory_analysis.py` para generar un informe reproducible desde la versión candidata vigente y sus 11 vistas temáticas. La implementación está escrita, pero **todavía no se ha ejecutado ni verificado** en este entorno: `py -3.12` informa que no hay una instalación global de Python disponible. No se utilizó `venv`, que está reservado a otro trabajo. Por ello aún no existen resultados exploratorios atribuibles a esta etapa.
+El análisis exploratorio descriptivo fue ejecutado el 4 de octubre de 2026 sobre la corrida candidata `data/proprosessing/output/20261004T215218Z_568e82e3039d_d3abfb0b5f/`, en `exploratory_analysis/20261004T225208Z/`. Se examinaron las 11 vistas temáticas derivadas del maestro candidato. El análisis es local y no ponderado; no utiliza otros archivos de microdatos ni realiza análisis del cuestionario. El JSON del diccionario se usa para nombres y tipos declarados, no para inventar reglas o universos no presentes en los datos.
 
-## Fuente y límites
+Esta etapa describe los datos y señala patrones para revisión. No constituye certificación de limpieza semántica completa, estimación poblacional, inferencia estadística ni publicación de una versión limpia. Se conservan como objetivo las 39.497 filas y las 275 columnas del maestro `persona.csv`; las vistas temáticas son subconjuntos analíticos y no reemplazan ese maestro.
 
-- Fuente única: maestro candidato `data/proprosessing/output/20261004T215218Z_568e82e3039d_d3abfb0b5f/` y sus CSV temáticos, derivados exclusivamente de `data/persona.csv`.
-- Antes de leer una vista, el programa compara su SHA-256 y sus dimensiones con `views_manifest.json`; también comprueba el hash del maestro.
-- El diccionario JSON que acompaña la corrida proporciona etiquetas y tipo semántico. Los códigos se tratan como categorías. Estadísticos de magnitud se calculan únicamente cuando el tipo del diccionario indica una variable cuantitativa o monetaria.
-- El análisis reporta conteos no ponderados. `factor`, `estrato` y `upm` no se interpretan como diseño certificado; no hay estimaciones poblacionales, intervalos ni pruebas de hipótesis.
-- Ausencia/vacío/`NA` se describen en cada vista; el porcentaje no se llama tasa de no respuesta porque algunos faltantes son saltos estructurales.
-- Los gráficos y tablas de frecuencia agregadas aplican umbral mínimo de 10 observaciones. Las categorías inferiores se agrupan en gráficos o se omiten de la exportación. Aun así, los artefactos son microanálisis internos y requieren control de acceso antes de compartirse.
-- La vista `empleo_secundario_casos` retiene una excepción de filtro; su análisis es diagnóstico y no una estimación del subuniverso.
-- La vista `hogar_resumen_persona_candidato` cuenta hogares, no personas; no se calculará una media ni tasa de hogares ponderada sin confirmar el ponderador y `totper`.
+## Linaje y validaciones
 
-## Productos que generará una ejecución
+- El programa lee el maestro candidato, `views_manifest.json`, las 11 vistas verificadas por hash y el diccionario JSON que acompaña la corrida.
+- Hash SHA-256 del maestro examinado: `1dbf937c73972a78746b1106d2e591dc46ea487b943112afb406887801bf8fee`.
+- Comprueba el hash del maestro y de cada vista antes de analizarlos, además de las dimensiones de las vistas declaradas en el manifiesto.
+- La corrida de origen documenta la fuente raw `data/persona.csv` con SHA-256 `568e82e3039d991a1ee0d8e2056448f8c465c03ffa838330c4f1522dd77bddc8`; el archivo fuente no se modifica.
+- Resultado verificado: 11 universos, 410 filas de resumen columna-vista, 21 gráficos y 112 archivos de frecuencias agregadas.
 
-Cada corrida crea una carpeta nueva `exploratory_analysis/<UTC>/` dentro de la corrida candidata, sin sobrescribir resultados anteriores:
+## Método
 
-- `README.md`: versión, hash, universos, método, advertencias y listado de vistas.
-- `analysis_manifest.json`: linaje, ficheros examinados y política de cálculo.
-- `column_descriptives.csv`: cobertura, observaciones, vacíos, token literal `NA`, token exacto `0`, cardinalidad, categoría más frecuente y estadísticos permitidos por tipo semántico, una fila por variable y vista.
-- `view_universes.csv`: unidad de análisis, filtro, tamaño y cautelas de cada vista.
-- `plots/`: gráficos de distribución seleccionados por tema, titulados con nombre del diccionario, universo y tamaño no ponderado.
-- `frequency__*.csv`: frecuencias agregadas de variables no clasificadas como sensibles, con celdas pequeñas omitidas.
+- Registra por columna y universo: número observado, vacíos, token literal `NA`, token exacto `0`, porcentaje no observado y cardinalidad. Esas ausencias se describen dentro de cada vista y no se interpretan automáticamente como no respuesta.
+- Calcula mínimo, cuartiles, mediana, máximo y media sin ponderar solo para variables cuyo tipo en el diccionario está declarado cuantitativo/monetario. No calcula medias de códigos categóricos.
+- Produce gráficos seleccionados por tema con títulos legibles del diccionario, universo y tamaño de muestra no ponderado. Las categorías con menos de 10 casos se agrupan en gráficos.
+- Las frecuencias exportadas excluyen identificadores, variables de diseño y columnas sensibles por nombre/prefijo; se omiten categorías con menos de 10 casos.
+- El perfil descriptivo suprime `top_category` y `top_category_n` de identificadores y columnas sensibles, así como de cualquier categoría cuya frecuencia sea inferior a 10. Se verificó esta condición en el resultado nuevo.
+- No se estiman resultados ponderados, errores estándar, intervalos de confianza, relaciones causales ni significancia estadística. El diseño muestral no está certificado para esta corrida.
 
-## Ejecución pendiente
+## Artefactos
 
-Desde la raíz y con Python 3.11+ y dependencias declaradas en `requirements.txt` disponibles globalmente:
+En `data/proprosessing/output/20261004T215218Z_568e82e3039d_d3abfb0b5f/exploratory_analysis/20261004T225208Z/`:
+
+- `README.md`: universos, método y cautelas de interpretación.
+- `analysis_manifest.json`: versión de origen, hash del maestro, parámetros y lista de vistas.
+- `column_descriptives.csv`: diagnóstico agregado de cada columna dentro de cada vista.
+- `view_universes.csv`: unidad, tamaño, filtro y cautelas de las 11 vistas.
+- `plots/`: 21 imágenes por tema, no gráficos de todas las 275 columnas; los gráficos individuales del perfil global se conservan en la corrida de origen.
+- `frequency__*.csv`: 112 tablas de frecuencias permitidas con supresión de celdas pequeñas.
+
+## Ejecución y revisión
+
+Desde la raíz del proyecto, usando Python global 3.12.9 y las dependencias ya disponibles:
 
 ```powershell
-python data/proprosessing/exploratory_analysis.py
+& 'C:\Users\julio\AppData\Local\Programs\Python\Python312\python.exe' data/proprosessing/exploratory_analysis.py
 ```
 
-Para otra corrida candidata se admite `--candidate <ruta>`. La ejecución requiere revisar luego las distribuciones y dominios con el cuestionario/diccionario aplicable; generar estadísticas descriptivas no confirma errores ni autoriza correcciones. `data/persona.csv` permanece de solo lectura. La reconciliación de esquema con F27, el significado local de `totper` y el diseño muestral siguen pendientes antes de inferencia o publicación.
+La validación local confirmó 410 resúmenes, 11 universos, 21 gráficos, 112 tablas y supresión de categorías identificadoras/sensibles. No se afirma que se haya ejecutado una suite de pruebas automatizadas para esta etapa.
 
-## Siguiente decisión analítica
+Hay una carpeta de una ejecución exploratoria anterior, `exploratory_analysis/20261004T224908Z/`, que debe considerarse restringida y no compartirse: se generó antes de aplicar la supresión de identificadores al perfil descriptivo. Se conservó como artefacto histórico inmutable; la carpeta `20261004T225208Z/` es el resultado corregido.
 
-Tras obtener las salidas, priorizar revisión por tema y registrar hipótesis descriptivas, excepciones y variables de interés. Para salud, educación y trabajo respetar los filtros de sus vistas; para ingresos reportar también el número observado y no observado. Solo después de validar procedencia, universos, ponderadores y diseño se considerarán estimaciones o análisis de relaciones.
+## Limitaciones y pasos siguientes
+
+Los conteos describen la copia local y no prueban por sí solos que un valor sea erróneo, extremo o semánticamente inválido. No se ejecutó depuración adicional a partir de estos gráficos. La versión técnica se publicó después mediante catálogo JSON para uso interno; la limpieza semántica integral de las 275 columnas, la resolución de conflictos entre procedencia/metadatos y la validación del diseño de encuesta siguen pendientes. Si no se dispone de cuestionario, diccionario validado u otra fuente autorizada, los resultados deben registrarse como patrones empíricos o hipótesis; no se deben convertir en correcciones automáticas.
+
+No comparar porcentajes entre vistas con denominadores diferentes. Las vistas de hogar y de personas tienen unidades distintas, y cualquier análisis inferencial requeriría verificar ponderador y diseño muestral. Las vistas temáticas no alteran el requisito del proyecto de preservar todas las filas y columnas en el maestro.

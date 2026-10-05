@@ -1,87 +1,56 @@
-# Arquitectura del sistema Flask (por implementar)
+# Arquitectura Flask con persistencia JSON
 
-## Principios
+## Decisión vigente
 
-El sistema se centra en `persona.csv` y separa archivos originales, datos preparados, metadatos y resultados. Flask sirve las vistas y endpoints; PostgreSQL conserva la bitácora y las transacciones de metadatos. Cada ejecución identifica archivo, contrato, reglas, fundamento de `curso/` y versión de código. El dashboard lee únicamente la versión limpia publicada. Una falla no modifica lo que ven los usuarios.
+Por decisión del usuario, la persistencia de metadatos, bitácora y puntero de publicación se realiza en documentos JSON locales. No se usa PostgreSQL, SQLAlchemy ni Alembic. Los microdatos viven como archivos CSV/Parquet versionados; el JSON guarda hashes, linaje, estado de versiones y eventos, no registros de personas.
+
+La aplicación web es Flask con vistas Jinja. El pipeline de datos se ejecuta como comando independiente para no bloquear solicitudes web. Los documentos JSON se escriben en archivo temporal y se reemplazan atómicamente; una exclusión mutua por archivo evita actualizaciones perdidas entre procesos locales. Los archivos de versión se crean en staging, se validan por hash y se renombran al área inmutable. Solo después el catálogo JSON cambia el puntero publicado y agrega el evento de publicación en una única escritura atómica.
 
 ```mermaid
 flowchart LR
-  U[Usuario] --> A[Flask: blueprints, vistas Jinja y endpoints]
-  A --> F[HTML, CSS, JavaScript y Plotly]
-  A --> S[Servicios y SQLAlchemy]
-  S --> P[(PostgreSQL: bitácora, contratos, trabajos y versiones)]
-  S --> Q[Cola persistente en PostgreSQL]
-  Q --> W[Worker Python: perfil, limpieza y validación]
-  C[Contrato de persona y reglas basadas en curso] --> W
-  W --> O[(Almacenamiento inmutable: CSV raw y Parquet)]
-  W --> P
-  S --> D[Servicio pandas sobre Parquet publicado]
-  D --> O
+  U[Usuario autorizado] --> A[Flask y Jinja]
+  A --> J[(JSON: catálogo, versiones y bitácora)]
+  A --> V[Servicio de versión publicada]
+  V --> F[(Archivos CSV / Parquet inmutables)]
+  C[Contrato, diccionario y reglas basadas en curso] --> W[Pipeline Python]
+  W --> S[Staging]
+  S --> V
+  V --> J
 ```
 
-La primera entrega usa un worker como proceso separado y trabajos persistidos en PostgreSQL. Debe reclamar trabajos con bloqueo transaccional, registrar intentos y recuperar trabajos interrumpidos sin duplicar la publicación. No ejecutar la limpieza del archivo de 34.568.646 bytes dentro de una petición HTTP ni depender de tareas en memoria del servidor Flask. Una cola independiente es una evolución posterior.
+## Componentes y persistencia
 
-## Componentes
+| Componente | Responsabilidad | Implementación |
+|---|---|---|
+| Flask | Presentar dashboard y bitácora, consultar el puntero vigente | `dashboard/`, blueprint Jinja |
+| Pipeline | Leer solo `data/persona.csv`, perfilar, aplicar reglas justificadas y validar | `data/proprosessing/preprocessing.py` y notebook equivalente |
+| Catálogo | Guardar `published_version_id`, versiones y eventos append-only | `data/audit_log.json` |
+| Almacenamiento de versiones | Conservar corrida completa, manifiesto, CSV/Parquet y reportes | `data/proprosessing/versions/<version_id>/` |
+| Candidatas | Salidas no publicadas del pipeline | `data/proprosessing/output/<run_id>/` |
+| Pruebas | Verificar reglas, locks JSON, persistencia y publicación | `tests/`, datos sintéticos inventados |
 
-| Componente | Función | Tecnología inicial propuesta |
-| --- | --- | --- |
-| Interfaz web | Carga, calidad antes/después, dashboard y bitácora | Templates Jinja servidos por Flask, HTML/CSS, JavaScript y Plotly |
-| Aplicación web | Autenticación, autorización, contratos, filtros, propuestas y exportaciones | Python, Flask, blueprints y servicios |
-| Conexión y migraciones | Modelos, sesiones y transacciones | SQLAlchemy, controlador PostgreSQL y Alembic |
-| Worker | Perfil, limpieza, validación, materialización y cálculos | Python y pandas; dependencias fijadas al implementar |
-| Base transaccional | Cargas, reglas, impactos, decisiones, versiones y bitácora append-only | PostgreSQL |
-| Almacenamiento | Archivos originales y salidas de cada versión | Sistema de archivos controlado en local; S3 compatible en producción |
-| Servicio analítico | Filtros y agregaciones sobre versión limpia publicada | pandas sobre Parquet; límites y caché por versión |
-| Observabilidad | Estado, duración, errores, métricas y alertas | Logs estructurados y métricas |
+El catálogo JSON usa un único documento para el evento de publicación y el puntero, para que ambos cambien en la misma sustitución atómica. Eventos nuevos se agregan a `events`; el programa no ofrece edición ni borrado de eventos. El lock local usa creación exclusiva de un archivo auxiliar. Si queda un lock huérfano tras una terminación abrupta, se debe revisar y retirar manualmente después de confirmar que no haya un proceso activo.
 
-PostgreSQL administra la bitácora y las transacciones. Los microdatos de las 275 columnas permanecen en archivos versionados; una tabla de eventos no sustituye el dataset. Los parches manuales conservan clave, columna y valores protegidos; las reglas masivas conservan configuración, conteos e indicadores antes/después.
+## Flujo de validación y publicación
 
-## Organización y conexión a base de datos
+1. Mantener `data/persona.csv` inmutable y calcular su SHA-256.
+2. Generar una corrida nueva en `output/` sin sobrescribir corridas anteriores.
+3. Validar esquema, dimensiones, clave, filas, transformaciones, bitácora de celdas y hashes de artefactos.
+4. Copiar la corrida completa a un directorio staging bajo `versions/`, volver a comprobar todos los hashes y completar el manifiesto de publicación.
+5. Renombrar staging a un directorio con el identificador lógico de versión, sin reemplazar una versión existente.
+6. Bajo lock, escribir atómicamente `published_version_id`, la entrada de versión y `PUBLISH_VERSION` en `data/audit_log.json`.
+7. Flask resuelve exclusivamente el identificador publicado desde JSON; no selecciona una corrida candidata por orden alfabético ni por fecha.
 
-Usar una factoría `create_app`, configuración por entorno y blueprints de autenticación, importación, calidad, cambios, bitácora y dashboard. Las rutas llaman servicios; los servicios coordinan sesiones SQLAlchemy y no contienen credenciales. Versionar modelos y migraciones Alembic antes de cargar datos.
+Si una validación falla, no se cambia el puntero. Si el proceso se interrumpe después del renombrado de archivos y antes de cambiar el JSON, queda un directorio huérfano que no es visible como publicado y puede reconciliarse. Una publicación repetida de la misma versión es idempotente. Un cambio posterior produce una nueva versión; no modifica la publicada anterior.
 
-La conexión se configura con `DATABASE_URL`; el secreto de sesión con `SECRET_KEY`; el almacenamiento con `DATA_STORAGE_ROOT` relativo al proyecto o definido por entorno. Mantener un `.env.example` sin secretos. PostgreSQL es obligatorio para la bitácora de la primera entrega; una base en memoria no cumple persistencia. Separar la cuenta de migraciones de la cuenta de aplicación y restringir UPDATE/DELETE de eventos de auditoría. Las acciones web que modifican estado requieren autenticación, permisos y protección CSRF.
+## Estados
 
-Una operación auditable debe confirmar sus metadatos y evento en la misma transacción. Si falla la conexión o la escritura de bitácora, no confirmar una corrección, publicación o exportación sensible. Cerrar sesiones y revertir transacciones ante errores. Los esquemas JSON de solicitudes/respuestas y la especificación OpenAPI se versionan explícitamente; Flask no los genera por esta documentación.
+- Corrida: `candidate` → `validated` → `published_internal_with_semantic_limitations`.
+- Versiones anteriores: `superseded`; ejecuciones fallidas no mueven el puntero.
+- Las limitaciones semánticas quedan en el manifiesto y en el registro JSON. Una publicación interna no certifica que todo dominio, salto o valor sea verdadero ni autoriza inferencia oficial.
 
-## Flujo de carga y preparación
+## Alcance y límites de JSON
 
-1. El usuario autorizado registra fuente, finalidad y contrato de personas. Flask crea el trabajo `pipeline_run` con identificador y clave de idempotencia, y registra la solicitud en la bitácora.
-2. El worker conserva el CSV exacto como raw, calcula SHA-256 y comprueba tamaño, codificación, delimitador y encabezados. Una solicitud repetida con la misma clave y contenido devuelve el trabajo existente; la misma clave con otro contenido produce conflicto. El mismo hash permite reutilizar el raw. Una ejecución nueva con otro contrato o reglas puede producir otra versión y queda auditada.
-3. Un parser de CSV maneja comillas, saltos internos y codificación. Registra filas ilegibles en cuarentena con número de línea y motivo. El archivo original permanece intacto.
-4. Se crea un perfil: tipos candidatos, nulos y tokens faltantes, cardinalidad, rangos, valores frecuentes, claves duplicadas, filas con errores y distribuciones. El perfil no transforma los datos.
-5. El worker aplica reglas declaradas y versionadas según [la metodología](cleaning-methodology.md): tokens, tipado, dominios, duplicados, atípicos y correcciones aprobadas. La imputación exige justificación específica. Cada regla registra referencia del curso, universo, condición, acción, filas afectadas y métricas antes/después en PostgreSQL; los ejemplos visibles se enmascaran.
-6. Se valida la salida: esquema, claves, dominios, conteos, invariantes y pruebas de reconciliación. Las filas rechazadas quedan en cuarentena; una política de calidad decide si bloquear o permitir publicación parcial.
-7. Se materializa Parquet en una ruta temporal, se verifica hash y conteos y se mueve a ruta final inmutable. PostgreSQL cambia el puntero `published_version_id` en una transacción. Si algo falla, se conserva la versión previa.
-8. Se calculan estadísticas y cachés por versión. La API invalida vistas antiguas; el dashboard muestra versión, fecha y estado.
+Este modo está diseñado para ejecución local, una instancia y volumen moderado. El lock por archivo serializa escrituras entre procesos del mismo equipo, pero JSON no ofrece transacciones distribuidas, consultas complejas, réplicas ni alta disponibilidad. Se deben hacer copias de seguridad coordinadas del catálogo y los artefactos, revisar permisos del directorio de datos y no escribir valores sensibles de celdas en la bitácora general. El catálogo registra referencias restringidas por ID/hash; la bitácora por celda existente queda en la corrida versionada con acceso controlado a archivos.
 
-## Flujo de edición
-
-Una edición se propone sobre una versión base y una clave de registro estable. El servidor presenta el valor actual, valida el nuevo valor y genera un diff. Tras aprobación, el worker aplica el parche sobre una copia lógica de la versión base, ejecuta de nuevo las validaciones afectadas y crea otra versión. Si la versión publicada cambió o el valor anterior no coincide, la propuesta queda en conflicto y requiere revisión. Una restauración también crea una nueva versión.
-
-## Estados de trabajo y versión
-
-`pipeline_run`: `queued → running → profiled → validating → succeeded` o `failed/cancelled`. Un trabajo de solo perfil pasa de `profiled` a `succeeded` sin crear una versión limpia, dejando constancia del tipo de trabajo. Una versión: `draft → validated → published → superseded`. `rejected` y `failed` nunca se consultan como versión publicada. Cada transición tiene fecha, actor y motivo en PostgreSQL.
-
-## Interfaces principales (propuesta)
-
-| Método y ruta | Acción | Resultado |
-| --- | --- | --- |
-| `POST /datasets` | Registrar dataset y contrato | `dataset_id` |
-| `POST /datasets/{id}/imports` | Cargar original y crear trabajo | `job_id` (202) |
-| `GET /jobs/{id}` | Consultar estado y errores | Estado, progreso y contadores |
-| `GET /datasets/{id}/versions` | Consultar linaje | Versiones y hashes |
-| `GET /datasets/{id}/versions/{v}/profile` | Ver calidad | Perfil y excepciones |
-| `POST /datasets/{id}/versions/{v}/publish` | Publicar versión validada | Versión publicada |
-| `POST /datasets/{id}/changes` | Proponer parche | `change_request_id` |
-| `POST /changes/{id}/decision` | Aprobar o rechazar | Decisión auditada |
-| `POST /datasets/{id}/analyses` | Pedir cálculo con filtros | `analysis_id`/resultado |
-| `GET /datasets/{id}/dashboard` | Leer métricas publicadas | Versión, definiciones, datos |
-| `GET /datasets/{id}/audit` | Consultar bitácora con permisos y filtros | Eventos paginados por fecha, actor, regla y versión |
-| `POST /datasets/{id}/exports` | Exportar versión/resultado | Trabajo y archivo autorizado |
-
-Los endpoints se detallarán con OpenAPI al implementarlos. Usar paginación y filtros validados; limitar exportaciones y consultas costosas. Los trabajos largos devuelven 202 y un identificador.
-
-## Despliegue inicial y evolución
-
-Primera entrega: Flask con vistas Jinja, worker independiente, PostgreSQL y almacenamiento persistente; variables de entorno, migraciones y pruebas sintéticas. El servidor de desarrollo se reserva para desarrollo; el despliegue requiere servidor WSGI configurado para el entorno. Posteriormente: copias de seguridad verificadas, programación, almacenamiento S3 compatible y cola independiente. El despliegue no forma parte del estado actual del repositorio.
+La API del prototipo no implementa todavía autenticación completa, autorización por rol, ciclo de propuestas/aprobaciones, copias restaurables probadas ni un worker persistente. No anunciar esas funciones como operativas. La persistencia JSON y el flujo local de publicación sí se prueban mediante tests sintéticos; Flask lee la versión indicada por el catálogo.

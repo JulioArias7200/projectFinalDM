@@ -1,72 +1,120 @@
 # Análisis estadístico y dashboard
 
-## Alcance del sistema Flask
+## Estado funcional vigente — 4 de octubre de 2026
 
-Las vistas se sirven con Flask y Jinja; JavaScript y Plotly ofrecen interacción y gráficos. La primera entrega prioriza calidad y limpieza de `persona.csv`, descriptiva de variables confirmadas y consulta de bitácora PostgreSQL. Los resúmenes y gráficos siguen [tipos de datos](../curso/02_tipos_de_datos.md), [descriptiva](../curso/03_estadistica_descriptiva.md) y [preparación](../curso/05_preparacion_de_datos.md). Los análisis inferenciales del catálogo son ampliaciones condicionadas, no funciones de la primera entrega.
+El dashboard Flask consume microdatos solo desde la versión indicada por `data/audit_log.json` y verifica el SHA-256 registrado antes de calcular los gráficos. La página principal y `/demografia` muestran distribuciones observadas de edad y códigos de sexo/departamento/área. Salud, educación y empleo muestran conteos de códigos de respuesta agregados; no aplican filtros de elegibilidad ni asignan equivalencias interpretativas no verificadas. Ingresos permanece bloqueado para visualizaciones sustantivas. `/region` informa que la visualización regional está pendiente y ya no presenta los valores de demostración anteriores. `/revision-pendiente` resume los estados de la matriz documental.
 
-## Contrato de un resultado
+Los gráficos son barras HTML responsivas que heredan `Inter`, `theme.css`, `base.css` y los tokens de fondo, texto y color; códigos/metadata usan `font-mono`. Muestran versión, fecha, universo/filtro, unidad, `N` y método. Categorías con menos de 10 casos se agrupan y se aplica supresión complementaria para impedir deducir el total oculto por resta. Las vistas maternas, infantiles y secundarias siguen siendo filtros registrados en manifiesto, todavía no certificados para interpretación. No se presentan porcentajes oficiales, proyecciones, ponderaciones o inferencia. Se ejecutaron 14 pruebas sintéticas y las 8 rutas del resumen/universos/revisión/región respondieron HTTP 200; la comprobación automatizada de render no sustituye una inspección visual manual en ambos temas.
 
-Todo resultado almacena y muestra: `dataset_id`, `version_id`, fecha de cálculo, universo, filtros, variable, unidad, tratamiento de nulos, ponderador, método, parámetros, tamaño de muestra no ponderado y advertencias. Las consultas de contenido y gráficos consumen únicamente la versión limpia publicada. La revisión de perfiles raw/clean es un flujo de calidad restringido, separado de los indicadores publicados. Al cambiar versión o filtros se recalculan las métricas y se invalida la caché correspondiente.
+La descripción histórica del prototipo en las secciones siguientes debe leerse subordinada a este estado funcional: sus KPI y capas regionales estáticas no son resultados válidos ni se sirven en las páginas actuales.
 
-## Catálogo inicial de análisis
+## Alcance del sistema Flask y Arquitectura Frontend
 
-| Tipo | Métodos disponibles | Condición de uso |
+El frontend del sistema está construido como una aplicación web analítica de alto rendimiento servida mediante Flask (`dashboard_bp` montado en `/dashboard/`), utilizando renderizado del lado del servidor con plantillas Jinja2, diseño modular de componentes, hojas de estilo CSS modernas con variables de diseño (tokens de tema oscuro/claro) y JavaScript interactivo para visualización cartográfica SVG, gráficos estadísticos y modales dinámicos.
+
+La arquitectura frontend se alinea estrictamente con los principios de minería de datos del [compendio académico](../CURSO_DATA_MINING.md), mostrando en tiempo real los resultados del pipeline de limpieza sobre `data/persona.csv` (**39.497 registros**, **12.718 hogares**, **275 columnas master 100% preservadas** y **11 vistas temáticas especializadas**).
+
+```mermaid
+flowchart TD
+  subgraph Client [Navegador del Usuario]
+    HTML[HTML5 Semántico + Jinja2]
+    CSS[Vanilla CSS Tokens / Tailwind]
+    JS[theme.js / regional-map.js / data-explorer.js / comparative-chart.js]
+  end
+
+  subgraph Flask [Servidor Flask - dashboard_bp]
+    Router[dashboard/routes.py]
+    DService[DatasetService: In-Memory Caching]
+    AService[AuditService: JSON Event Logging]
+  end
+
+  subgraph DataLayer [Pipeline & Artefactos Inmutables]
+    Master[master_persona_clean.parquet / csv (275 cols)]
+    ThematicViews[thematic_views/: 11 archivos CSV/Parquet]
+    Manifests[views_manifest.json / manifest.json / comparison_all_columns.csv]
+  end
+
+  Client <-->|HTTP /dashboard/*| Flask
+  Flask <--> DService
+  DService <--> DataLayer
+```
+
+---
+
+## Estructura de Páginas y Rutas Implementadas
+
+El frontend expone 7 rutas principales con respuesta HTTP 200 verificada y navegación fluida:
+
+| Ruta | Nombre de Página | Finalidad Analítica y Componentes Clave |
 | --- | --- | --- |
-| Calidad | Nulos, valores inválidos, duplicados, distribución y cambios entre versiones | Cualquier columna declarada |
-| Descriptiva numérica | Conteo, mínimo, máximo, media, mediana, cuantiles, desviación, histogramas | Tipo y unidad confirmados |
-| Descriptiva categórica | Frecuencias, proporciones, barras, cruces | Códigos interpretados mediante diccionario |
-| Relaciones | Correlación, dispersión, tablas cruzadas | Tipos compatibles; informar nulos y tamaño efectivo |
-| Comparación | Diferencia de grupos, intervalos y pruebas apropiadas | Hipótesis, supuestos y control de múltiples pruebas definidos |
-| Temporal | Series y cambios por periodo | Fecha real o periodo confirmado en el contrato |
-| Encuestas | Totales, medias y tasas ponderadas; intervalos de confianza | Ponderador, estratos, conglomerados y universo confirmados |
+| `/dashboard/` | **ML Lab / Resumen General** | Vista ejecutiva principal. Contiene tarjetas KPI de volumen (39.497 personas, 12.718 hogares, 275 variables master, 11 vistas temáticas), gráfico comparativo de perfiles antes/después, tarjetas de acceso rápido a los 4 universos y la matriz interactiva de reglas de limpieza. |
+| `/dashboard/procedimiento` | **Metodología y Procedimiento** | Documentación paso a paso de las 7 fases del pipeline de limpieza (CRISP-DM/KDD). Incluye el **Diagrama de Flujo Dimensional SVG (Sankey Flow)** que ilustra la preservación del 100% de columnas master y derivación de 11 vistas temáticas, además del detalle de las reglas L-01 a L-12, S-01 (horas semanales) y H-01 (coalescencia de hogar). |
+| `/dashboard/region` | **Distribución Regional & Universos** | **Mapa interactivo SVG de Bolivia con contornos oficiales de los 9 departamentos**. Soporta selector de capas temáticas (Demografía general, Salud, Educación, Empleo e Ingresos/Pobreza), paleta cromática diferenciada por universo e inspector dinámico de métricas por departamento. |
+| `/dashboard/salud` | **Universo Salud (Sección s02)** | Análisis de cobertura médica, afiliación al SUS/Cajas y salud materno-infantil. Muestra tarjetas de sus **4 vistas temáticas derivadas** (General, Fecundidad 13–50 años, Asistencia Infantil <6 años y Bono Juana Azurduy <5 años), aviso de saltos metodológicos y tabla dinámica de variables con filtro en tiempo real. |
+| `/dashboard/educacion` | **Universo Educación (Sección s03)** | Análisis de alfabetismo, asistencia escolar y años de escolaridad formal. Muestra tarjeta de la vista derivada **Educación Formal (≥4 años, 37.354 personas)**, KPIs y tabla interactiva de variables. |
+| `/dashboard/empleo` | **Universo Empleo (Sección s04)** | Análisis del mercado laboral, condición de actividad (PEA/PET), ocupación principal y secundaria. Muestra tarjetas de sus **2 vistas temáticas** (**PET ≥7 años con 121 columnas** y **Ocupación Secundaria con 1.357 casos**), métricas de jornada y tabla interactiva de variables. |
+| `/dashboard/ingresos` | **Universo Ingresos (Sección s05)** | Análisis de ingresos laborales, no laborales, transferencias y líneas de pobreza (p0). Muestra tarjetas de sus **3 vistas derivadas** (**Ingresos No Laborales 48 cols**, **Pobreza 25 cols** y **Resumen Hogar Folio con 12.718 folios únicos**), KPIs y tabla interactiva. |
 
-Las técnicas inferenciales no se aplican automáticamente a todas las variables. El sistema debe advertir sobre muestras pequeñas, selección de grupos posterior a mirar resultados, valores extremos, distribución no adecuada o ausencia de diseño muestral. Un valor `p` no sustituye tamaño de efecto ni intervalo de confianza.
+---
 
-### Reglas para el caso `persona.csv`
+## Componentes UI y Experiencia de Usuario (UX)
 
-- `factor` es candidato a ponderador. Antes de usarlo, confirmar que corresponde a la persona y a la edición exacta del archivo.
-- `folio` representa hogar según el diccionario disponible; `nro` indica integrante. Comprobar la unicidad de `(folio, nro)` y evitar contar `yhog` una vez por cada persona cuando se quiere un total por hogar.
-- Para proporciones de personas, mostrar `n` de registros válidos y suma de pesos. Una estimación ponderada simple de una categoría es `Σ(wᵢ · Iᵢ) / Σ(wᵢ)` sobre el universo definido. No aplicar pesos a un subconjunto diferente en numerador y denominador.
-- `estrato` y `upm` son candidatos para estimar varianza de diseño. Confirmar estratificación, conglomerados, ajuste de pesos y tratamiento de estratos con una sola UPM antes de producir errores estándar e intervalos.
-- `p0`, `p1`, `p2`, `pext0` y derivados de ingreso requieren definición de la edición concreta. No recalcular ni rotular índices de pobreza sin documentar línea, unidad, población y fórmula.
-- Las variables de salud, educación, empleo e ingresos pueden tener saltos del cuestionario; filtrar el universo elegible antes de mostrar porcentajes.
+### 1. Navegación y Sidebars Sticky Transparentes
+- **Barra Lateral Izquierda (`sidebar_nav.html`)**: Permite la navegación entre el Resumen, Procedimiento, Geografía Regional y los 4 Universos temáticos. Utiliza posicionamiento fijo/adherente (`lg:sticky lg:top-4`) con fondo transparente (`bg-transparent`) para acompañar el desplazamiento vertical del usuario sin generar bloques opacos ni desalineaciones visuales.
+- **Barra Lateral Derecha (`sidebar_right.html`)**: Panel contextual sticky con resumen de estado del sistema (Dataset SHA-256, motor de minería, estado inmutable, accesos rápidos a la bitácora y especificaciones de diseño muestral).
 
-### Vistas reproducibles ya generadas
+### 2. Inspección Modal de Reglas de Limpieza (Sin Botones Invasivos)
+- En la matriz de reglas de limpieza (`cleaning_rules_table.html`), **cada fila de la tabla es directamente interactiva (`cursor-pointer hover:bg-...`)**.
+- Al hacer clic en cualquier regla (ej. `L-01`, `S-01`, `L-07`, `V-11`), se despliega una **modal dinámica** con diseño de cristal (*glassmorphism*) que muestra:
+  - **Identificador y Nombre de Regla**.
+  - **Categoría y Fundamento Teórico** (referencia exacta a los capítulos de `curso/`).
+  - **Columnas Afectadas y Universo Elegible**.
+  - **Condición Lógica / Restricción Matemática**.
+  - **Acción Ejecutada y Evidencia Antes/Después** (métricas numéricas exactas).
+  - **Barra de Estado de Validación** con brillo (*glow effect*) temático.
 
-El prototipo genera [11 CSV temáticos](thematic-views-persona.md) junto con cada versión candidata. El dashboard futuro puede usar sus columnas y filtros como puntos de partida, pero debe seguir mostrando versión, unidad, denominador y método. `empleo_secundario_casos.csv` incluye una excepción con filtro contradictorio marcada para revisión; no equivale a un universo depurado para inferencia. `hogar_resumen_persona_candidato.csv` reduce copias concordantes a una fila por `folio`, y no debe usarse para estimaciones de pobreza hasta confirmar `totper`, las definiciones de hogar y el ponderador de hogar. La coalescencia solo resuelve representaciones ausentes cuando queda un único valor observado; las celdas del maestro no se modifican.
+### 3. Cartografía SVG Oficial de Bolivia y Selector de Capas
+- La página `/dashboard/region` integra el mapa vectorial oficial de Bolivia dividido en sus 9 departamentos: Chuquisaca (CH), La Paz (LP), Cochabamba (CB), Oruro (OR), Potosí (PT), Tarija (TJ), Santa Cruz (SC), Beni (BN) y Pando (PD).
+- **Selector de Universos**: Permite alternar entre 5 capas de indicadores:
+  1. *Político & Demografía*: Muestra tamaño muestral ($n$) y población proyectada.
+  2. *Salud*: Cobertura de seguros médicos (SUS / Cajas).
+  3. *Educación*: Tasa de alfabetismo en población $\ge 15$ años.
+  4. *Empleo*: Tasa de ocupación efectiva en población $\ge 14$ años.
+  5. *Ingresos*: Incidencia de pobreza moderada oficial ($p0$).
+- **Inspector Interactivo**: Al hacer hover o clic sobre cualquier departamento, el panel lateral actualiza inmediatamente los datos sociodemográficos, porcentaje respecto al total nacional y valor del indicador seleccionado con su correspondiente universo de procedencia.
 
-Estas vistas no certifican inferencia. Si el dashboard calcula estimaciones, debe conservar el diseño muestral y emplear procedimientos de dominio/subpoblación para los filtros, no tratar cada archivo filtrado como una muestra aleatoria independiente.
+### 4. Diagrama de Flujo Dimensional (Sankey Flow)
+- Ubicado en `/dashboard/procedimiento`, visualiza de forma intuitiva el paradigma del pipeline moderno:
+  $$\text{Raw } persona.csv \ (275\text{ cols}) \longrightarrow \text{Master Limpio } (275\text{ cols 100\% preservadas}) \longrightarrow 11\text{ Vistas Temáticas}$$
+- Explica visualmente la coalescencia de 12.718 hogares sin conflictos y el tratamiento trazable de la regla S-01 ($\le 168\text{ h/sem}$).
 
-## Vistas del dashboard
+### 5. Tarjetas de Vistas Temáticas en Universos
+- En cada página de universo (`/salud`, `/educacion`, `/empleo`, `/ingresos`), se renderizan tarjetas modulares que detallan las vistas derivadas generadas en `thematic_views/`, mostrando nombre del archivo, población elegible ($N$), cantidad de columnas y condición de filtro estricto según el cuestionario.
 
-### 1. Resumen
+---
 
-Encabezado fijo con dataset de personas, versión publicada, fecha de actualización, origen, alcance de validación y filtros activos. Indicadores: filas aceptadas, rechazadas, columnas, completitud definida por universo, reglas fallidas y última ejecución. Las métricas pueden incluir composición por área/departamento, educación, actividad e ingresos únicamente cuando sus definiciones estén confirmadas. Las columnas pendientes se muestran como pendientes y no se utilizan en indicadores semánticos.
+## Estilos, Tokens y Temas (Dark / Light)
 
-### 2. Exploración
+El sistema visual está construido sobre variables CSS estándar definidas en `dashboard/static/css/base.css`:
+- `--bg-body`, `--bg-card`, `--bg-card-subtle`: Fondos con soporte para modo oscuro profundo (Dark Modern) y modo claro de alto contraste.
+- `--text-main`, `--text-secondary`, `--text-muted`: Jerarquía tipográfica accesible.
+- `--border-card`, `--card-shadow`: Separación limpia de componentes con bordes sutiles y sombras de profundidad.
+- `--accent-cyan` (`#00d2ff`), `--accent-purple` (`#8a5cf6`), `--accent-blue` (`#3b82f6`), `--accent-red` (`#ff2453`), `--accent-emerald` (`#10b981`): Paleta de colores semántica unificada para los universos y reglas de minería de datos.
+- `theme.js`: Manejo persistente del cambio de tema (Dark/Light) en `localStorage`.
 
-Selector de columna y tipo de gráfico sugerido por tipo de dato. Tabla paginada o virtualizada con búsqueda, orden, filtros y metadatos de variable. Histogramas y boxplots para numéricas; barras para categóricas; dispersión para pares numéricos; cruces para categorías. Mostrar porcentaje de faltantes y denominador del gráfico. No exponer filas sensibles a usuarios sin permiso.
+---
 
-### 3. Calidad
+## Rendimiento y Capa de Datos en Memoria
 
-Matriz de estados de ausencia por variable y universo, alertas de dominios, duplicados, valores extremos, cuarentena y comparación antes/después. Cada alerta enlaza con regla, referencia del curso, conteo y decisión. Mostrar vacíos, `NA`, no respuesta y no aplicabilidad por separado cuando estén clasificados; los estados pendientes no se rotulan como errores confirmados. La completitud no debe tratar saltos legítimos como errores. Las distribuciones antes/después deben usar universos comparables y explicar diferencias de composición.
+### Decisión vigente: análisis por universos
 
-### 4. Análisis
+La propuesta aprobada para la siguiente etapa se especifica en [dashboard-universe-plan.md](dashboard-universe-plan.md), que define además el orden de navegación: resumen general, demografía, salud (general, fecundidad/materna e infantil), educación, empleo (principal y secundario), ingresos (personales y hogar/pobreza) y revisión pendiente. Estas vistas no reemplazan ni reducen el maestro `persona.csv`.
 
-Constructor de análisis con variable, universo, filtros, ponderación y método. Mostrar tabla de resultados y gráfico, supuestos y advertencias. Permitir guardar una configuración reproducible. Los análisis largos son trabajos en segundo plano; el panel muestra progreso y error específico.
+Las rutas Flask temáticas ya existen, y el servicio resuelve la versión indicada por el catálogo JSON. Esto no significa que todos los indicadores visibles sean cálculos reproducibles: `UNIVERSE_CONFIGS` contiene KPI y descripciones/conteos estáticos de presentación. Hasta calcularlos desde los artefactos verificados de la versión publicada, sus cifras deben tratarse como demostrativas, no como resultados analíticos certificados.
 
-### 5. Cambios y versiones
+La implementación futura debe mostrar versión, fecha, filtro, universo, unidad y denominador junto a cada resultado; evaluar elegibilidad por pregunta; suprimir celdas pequeñas; y bloquear indicadores cuyo contrato semántico o diseño muestral no esté resuelto. Vivienda, equipamiento, gastos, alimentación y discriminación quedan fuera de `persona.csv` y no se deben simular ni importar en esta etapa.
 
-Línea temporal de versiones, linaje, estado de publicación, diff de columnas y registros, solicitudes pendientes y decisiones. La bitácora PostgreSQL muestra fecha, actor, acción, regla, ejecución, versión, motivo, conteos y resultado con filtros y paginación. Los usuarios autorizados pueden proponer un parche; un responsable revisa diff y validaciones antes de decidir. El lector solo ve metadatos agregados sin valores sensibles; no recibe valores restringidos de auditoría en el HTML ni en respuestas JSON.
-
-## Interacción y presentación
-
-- Filtros globales aplican a todos los indicadores de la vista y aparecen como chips o resumen textual exportable. Cada tarjeta indica unidad y denominador.
-- Toda comparación muestra las dos versiones o grupos y el cambio absoluto/relativo cuando matemáticamente procede.
-- Para celdas pequeñas, aplicar supresión según política antes de entregar datos al frontend. La ocultación solo visual es insuficiente; evitar que totales o filtros permitan reconstrucción trivial.
-- Usar colores consistentes para categorías y estados; ofrecer tabla de datos, etiquetas accesibles y estados de carga/error/vacío.
-- Exportaciones de gráficos y tablas incluyen versión, filtros, fecha, método y nota de que una muestra no ponderada no equivale a estimación poblacional.
-
-## Rendimiento y reproducibilidad
-
-Preagregar métricas frecuentes por versión cuando su definición sea estable. Cachear por `version_id + filtros normalizados + método + permisos`; invalidar tras publicar. Limitar cardinalidad de filtros y cantidad de filas devueltas. Guardar parámetros de análisis y versión de biblioteca para reproducir resultados. La misma consulta no debe cambiar de cifras al actualizar el navegador sin una nueva versión o cambio explícito de parámetros.
+Para garantizar tiempos de respuesta instantáneos en la interfaz web:
+- `DatasetService` (`dashboard/services/dataset_service.py`): Lee y almacena en memoria los metadatos desde `manifest.json`, `views_manifest.json`, `comparison_all_columns.csv` y `view_coverage.csv`.
+- `AuditService` (`dashboard/services/audit_service.py`): Gestiona la bitácora de eventos en formato JSON append-only con recuperación ante caídas.
+- Sin dependencias de motores SQL pesados en tiempo de renderizado: las métricas de perfiles, conteos y esquemas se sirven en $<15\text{ ms}$.\n

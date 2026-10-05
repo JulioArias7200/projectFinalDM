@@ -1,0 +1,41 @@
+{% if chart_model and chart_model.get('available') %}
+<section class="bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)] space-y-4" data-purpose="aggregate-chart" style="--chart-accent: {{ chart_model.get('accent', '#00d2ff') }}">
+  {% if chart_model.get('dataset') %}
+  <div class="text-[10px] text-[var(--text-muted)] font-mono border-b border-[var(--border-card)] pb-2">
+    {{ chart_model.dataset }} · {{ chart_model.version_id }} · {{ chart_model.updated_at or 'fecha no registrada' }} · {{ chart_model.universe }} · {{ chart_model.filter }} · {{ chart_model.method }}
+  </div>
+  {% endif %}
+  <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+    {% for panel in chart_model.panels %}
+    <article class="rounded-xl border border-[var(--border-card)] bg-[var(--bg-card-subtle)] p-4" aria-label="Gráfico: {{ panel.title }}">
+      <h2 class="text-sm font-semibold text-[var(--text-main)]">{{ panel.title }}</h2>
+      {% if panel.variable %}<p class="text-[10px] font-mono text-[var(--text-muted)] mt-1">{{ panel.variable }}{% if panel.variable_label %} — {{ panel.variable_label }}{% endif %} · Unidad: {{ panel.unit }} · N={{ panel.n }}</p>{% endif %}
+      <p class="text-xs text-[var(--text-secondary)] mt-2 mb-4">{{ panel.description }}</p>
+      <ol class="space-y-2" role="list">
+        {% for item in panel.entries %}
+        <li class="grid grid-cols-[minmax(7rem,1fr)_3fr_auto] gap-3 items-center text-xs" title="{{ item.label }}: {{ item.display_count }}">
+          <span class="text-[var(--text-secondary)] truncate" title="{{ item.label }}">{{ item.label }}</span>
+          <span class="h-2 rounded-full bg-[var(--border-card)] overflow-hidden" aria-hidden="true"><span class="block h-full rounded-full bg-[var(--chart-accent,var(--accent-cyan,#00d2ff))]" style="width: {{ item.bar_pct }}%"></span></span>
+          <span class="font-mono text-[var(--text-main)] tabular-nums">{{ item.display_count }}</span>
+        </li>
+        {% else %}
+        <li class="text-xs text-[var(--text-muted)]">No hay categorías que superen el umbral de publicación.</li>
+        {% endfor %}
+      </ol>
+    </article>
+    {% endfor %}
+  </div>
+  {% if chart_model.updated_at %}<p class="text-[10px] text-[var(--text-muted)] font-mono">Versión publicada: {{ chart_model.updated_at }} · La visualización usa conteos observados no ponderados.</p>{% endif %}
+</section>
+{% elif chart_model and chart_model.get('blocked') %}
+<section class="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5" data-purpose="chart-blocked">
+  <h2 class="text-sm font-semibold text-[var(--text-main)]">Visualización pendiente de validación</h2>
+  <p class="text-xs text-[var(--text-secondary)] mt-2">{{ chart_model.message }}</p>
+  <p class="text-[10px] font-mono text-[var(--text-muted)] mt-3">Versión: {{ chart_model.version_id or 'sin versión publicada' }}</p>
+</section>
+{% else %}
+<section class="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5" data-purpose="chart-unavailable">
+  <h2 class="text-sm font-semibold text-[var(--text-main)]">No se puede representar una versión publicada</h2>
+  <p class="text-xs text-[var(--text-secondary)] mt-2">No se generaron gráficos desde el CSV fuente ni desde candidatas. Verifique el puntero JSON, la ruta del archivo publicado y su SHA-256.</p>
+</section>
+{% endif %}

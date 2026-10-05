@@ -1,6 +1,6 @@
 # Escenarios de prueba
 
-Usar fixtures sintéticas con nombres de columnas y estructura pertinente a `persona.csv`, sin copiar registros reales. Incluir identificadores, estados de ausencia, comillas y codificaciones problemáticas. Las rutas se prueban con el cliente de pruebas de Flask y la persistencia/bitácora con PostgreSQL en un entorno de pruebas aislado y migraciones Alembic. Todos los escenarios son **planeados**, no ejecutados todavía.
+Usar fixtures sintéticas con nombres de columnas y estructura pertinente a `persona.csv`, sin copiar registros reales. Incluir identificadores, estados de ausencia, comillas y codificaciones problemáticas. Las rutas se prueban con el cliente de Flask y la persistencia JSON con archivos temporales aislados. Los escenarios marcados como ejecutados tienen evidencia; los demás siguen planeados.
 
 | ID | Entrada y acción | Resultado esperado | Criterio |
 | --- | --- | --- | --- |
@@ -23,9 +23,9 @@ Usar fixtures sintéticas con nombres de columnas y estructura pertinente a `per
 | T-17 | Filtrar grupos pequeños o combinar filtros que revelen un valor suprimido | Respuesta mantiene supresión y evita recuperación obvia | CA-13 |
 | T-18 | Reiniciar worker durante trabajo y reintentarlo | Estado consistente; no publicación duplicada | CA-02, CA-14 |
 | T-19 | Restaurar copia de seguridad en entorno limpio | Hashes, versión publicada y referencias de auditoría recuperados | CA-15 |
-| T-20 | Instalar con instrucciones del README en entorno limpio | Flask, templates, worker y PostgreSQL arrancan con migraciones aplicadas | CA-16, CA-17 |
+| T-20 | Instalar con instrucciones del README en entorno limpio | Flask, templates, pipeline y persistencia JSON arrancan con configuración documentada | CA-16, CA-17 |
 | T-21 | Cargar, limpiar, corregir y publicar; reiniciar Flask y consultar bitácora | Eventos, actores, motivos, reglas y versiones persisten con filtros y paginación | CA-18 |
-| T-22 | Intentar UPDATE/DELETE de `audit_event` con credenciales de aplicación | PostgreSQL deniega; la cuenta de migraciones queda separada | CA-18 |
+| T-22 | Intentar editar/borrar eventos usando el servicio de bitácora | La interfaz de servicio solo agrega eventos; el historial existente se conserva | CA-18 |
 | T-23 | Interrumpir conexión/escritura de bitácora durante aprobación o publicación | No se confirma el cambio ni se sustituye versión publicada; reintento no duplica eventos lógicos | CA-06, CA-18 |
 | T-24 | Reusar clave de idempotencia con contenido distinto; luego ejecutar mismo raw con reglas nuevas y clave nueva | Primera solicitud queda en conflicto; segunda reutiliza raw y registra nueva ejecución | CA-02, CA-07 |
 | T-25 | Fixture con pregunta no aplicable, no respuesta, vacío, `NA` y cero válido | Estados y universos conservados; ninguna imputación por defecto | CA-03, CA-19 |
@@ -38,6 +38,6 @@ Usar fixtures sintéticas con nombres de columnas y estructura pertinente a `per
 | T-32 | Consultar perfil raw, cuarentena o diff sensible sin permiso; enviar cambio web sin CSRF | Flask deniega acceso/cambio; no filtra valores restringidos en JSON, HTML ni bitácora visible | CA-13, CA-17 |
 | T-33 | Construir vistas con fixture sintético que combine universos, filtro secundario discordante y copias de hogar faltantes/concordantes | Filtros dan denominadores esperados; excepción secundaria se conserva marcada; una observación única se consolida solo en vista hogar; valores observados contradictorios se excluyen y auditan; fuente no cambia y destino existente no se sobrescribe | CA-03, CA-05, CA-19 |
 
-El escenario T-33 se implementó como prueba unitaria en `tests/test_thematic_views.py` y pasó el 4 de octubre de 2026 con tres casos sintéticos. El resto de escenarios Flask/PostgreSQL de esta tabla continúan planificados y no se consideran ejecutados.
+T-33 se implementó en `tests/test_thematic_views.py`. Las pruebas de publicación JSON, reintento, fallo de validación y concurrencia de bitácora se implementaron en `tests/test_json_publication.py`; ambas suites pasan. El resto de escenarios de esta tabla continúa planificado y no se considera ejecutado.
 
 Para el caso real, añadir el reporte del pipeline de `persona.csv`: 39.497 registros y 275 encabezados son controles de esta copia, no restricciones para todas las cargas futuras. La [revisión técnica inicial](cleaning-methodology.md#diagnóstico-técnico-de-referencia) ya midió estructura, clave textual y algunos tokens; no sustituye estas pruebas ni el perfil por columna/universo. Validar dominios y coherencia tras confirmar el contrato; documentar diferencias explicadas sin exponer personas.

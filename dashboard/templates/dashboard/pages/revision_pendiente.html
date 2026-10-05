@@ -1,0 +1,28 @@
+{% extends 'dashboard/layout.html' %}
+{% block title %}DM Lab - Revisión semántica pendiente{% endblock %}
+{% block content %}
+<div class="space-y-5 animate-fade-in">
+  <header class="bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)]">
+    <p class="text-[10px] uppercase tracking-wider font-mono text-amber-400">Calidad y trazabilidad</p>
+    <h1 class="text-xl font-bold text-[var(--text-main)] mt-1">Revisión semántica pendiente</h1>
+    <p class="text-xs text-[var(--text-secondary)] mt-2">Estado documental de las definiciones y universos por variable. Estos recuentos no describen a las personas ni sustituyen la conciliación con la versión local del instrumento.</p>
+  </header>
+  {% if summary.available %}
+  <section class="bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)]" data-purpose="semantic-review-status-chart">
+    <h2 class="text-sm font-semibold text-[var(--text-main)]">Variables por estado de revisión</h2>
+    <p class="text-[10px] font-mono text-[var(--text-muted)] mt-1">{{ summary.source }} · {{ summary.total_variables }} variables · {{ summary.method }}</p>
+    <ol class="mt-5 space-y-3">
+      {% for item in summary.entries %}
+      <li class="grid grid-cols-[minmax(9rem,1fr)_3fr_auto] gap-3 items-center text-xs">
+        <span class="text-[var(--text-secondary)] break-all">{{ item.label }}</span>
+        <span class="h-2 rounded-full bg-[var(--border-card)] overflow-hidden"><span class="block h-full rounded-full bg-amber-400" style="width: {{ item.bar_pct }}%"></span></span>
+        <span class="font-mono tabular-nums text-[var(--text-main)]">{{ item.display_count }}</span>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+  {% else %}
+  <section class="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5 text-xs text-[var(--text-secondary)]">No se encontró una columna de estado reconocida en la matriz de revisión.</section>
+  {% endif %}
+</div>
+{% endblock %}

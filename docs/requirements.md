@@ -2,13 +2,13 @@
 
 ## Convenciones
 
-`RF` designa una función, `RD` una regla de datos y `RNF` una condición operativa. El comportamiento descrito es **objetivo de implementación**, no funcionalidad ya existente. El alcance inicial es el sistema Flask de limpieza de `data/persona.csv`, conectado a PostgreSQL para la bitácora. Su contrato define columnas, tipos, claves, universos y métricas; las reglas se justifican con `curso/` y el diccionario de la encuesta. Los identificadores de dataset se conservan para vincular versiones, no implican un catálogo genérico como requisito inicial.
+`RF` designa una función, `RD` una regla de datos y `RNF` una condición operativa. El alcance es el sistema Flask de limpieza de `data/persona.csv`; por decisión del usuario, catálogo, versiones y bitácora persisten en JSON local, sin PostgreSQL. Su contrato define columnas, tipos, claves, universos y métricas; las reglas se justifican con `curso/` y el diccionario aplicable.
 
 ## Requisitos funcionales
 
 | ID | Requisito | Resultado observable |
 | --- | --- | --- |
-| RF-01 | Registrar el dataset de personas, propietario, fuente, licencia/permiso y contrato | Ficha de personas con historial persistido en PostgreSQL |
+| RF-01 | Registrar el dataset de personas, propietario, fuente, licencia/permiso y contrato | Ficha de personas con historial persistido en catálogo JSON |
 | RF-02 | Importar CSV sin alterar el original | Archivo raw con hash, fecha, usuario y trabajo asociado |
 | RF-03 | Detectar estructura y perfilar datos antes de limpiar | Informe de tipos, faltantes, duplicados, rangos y errores de parseo |
 | RF-04 | Configurar y ejecutar reglas de limpieza de persona con orden, versión y fundamento de `curso/` | Salida preparada y reporte por regla con registros afectados y comparación antes/después |
@@ -23,7 +23,7 @@
 | RF-13 | Exportar datos limpios, cuarentena y resultados según permisos | Archivo con versión, filtros, fecha y método en metadatos |
 | RF-14 | Programar importaciones y reejecuciones | Trabajo recurrente con estado, reintentos y alertas de fallos |
 | RF-15 | Registrar eventos de lectura/exportación sensible y cambios de configuración | Bitácora consultable por administradores |
-| RF-16 | Consultar bitácora PostgreSQL desde Flask con filtros y paginación | Cargas, reglas, impactos, fallos, cambios, decisiones y versiones conservados tras reiniciar la aplicación |
+| RF-16 | Consultar bitácora JSON desde Flask con filtros y paginación | Cargas, reglas, impactos, fallos, cambios, decisiones y versiones conservados tras reiniciar la aplicación |
 | RF-17 | Evaluar y documentar la limpieza según la teoría del curso | Informe por columna y universo, decisiones justificadas y limitaciones pendientes |
 
 ## Reglas de datos
@@ -46,13 +46,13 @@
 | --- | --- | --- |
 | RNF-01 | Seguridad | Autenticación, permisos por rol y dataset, TLS en despliegue, secretos fuera del repositorio |
 | RNF-02 | Privacidad | Datos de identificación minimizados, agregación, supresión de celdas pequeñas y trazas sin filas completas |
-| RNF-03 | Integridad | Hashes, escrituras inmutables, publicación atómica, bitácora PostgreSQL append-only y copias de seguridad verificadas |
+| RNF-03 | Integridad | Hashes, artefactos de versión inmutables, catálogo JSON reemplazado atómicamente, eventos append-only desde el servicio y copias de seguridad verificadas |
 | RNF-04 | Reproducibilidad | Parámetros, dependencia de código, contrato y versión visibles en cada ejecución |
 | RNF-05 | Rendimiento | Cargas asíncronas, paginación, análisis con límites, caché por versión/filtros |
 | RNF-06 | Observabilidad | Logs estructurados con `job_id`, métricas, alertas y estado accesible |
-| RNF-07 | Portabilidad | Configuración por entorno, rutas relativas y migraciones versionadas |
+| RNF-07 | Portabilidad | Configuración por entorno y rutas relativas; esquema JSON versionado |
 | RNF-08 | Accesibilidad | Tablas navegables, contraste y textos alternativos para gráficos principales |
-| RNF-09 | Arquitectura requerida | Flask con vistas Jinja, conexión SQLAlchemy a PostgreSQL, migraciones Alembic y worker separado; configuración mediante variables de entorno |
+| RNF-09 | Arquitectura requerida | Flask con vistas Jinja, persistencia JSON local con escrituras atómicas y pipeline Python independiente; rutas configurables y portables |
 
 La primera entrega prioriza carga, perfil, limpieza, publicación, correcciones auditadas y análisis descriptivo de personas. RF-09 (restauración), RF-11 (inferencia) y RF-14 (programación) son ampliaciones posteriores. Los permisos y la bitácora se implementan desde la primera carga, no después del dashboard.
 

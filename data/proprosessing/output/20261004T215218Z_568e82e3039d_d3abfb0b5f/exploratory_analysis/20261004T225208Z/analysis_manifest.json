@@ -1,0 +1,23 @@
+{
+  "created_at_utc": "2026-10-04T22:53:06.913935+00:00",
+  "source_candidate": "data\\proprosessing\\output\\20261004T215218Z_568e82e3039d_d3abfb0b5f",
+  "source_master_sha256": "1dbf937c73972a78746b1106d2e591dc46ea487b943112afb406887801bf8fee",
+  "source_version_id": "persona-1dbf937c73972a78",
+  "source_run_id": "20261004T215218Z_568e82e3039d_d3abfb0b5f",
+  "minimum_cell_size": 10,
+  "weighted_estimation": false,
+  "inferential_status": "not certified",
+  "input_files": [
+    "demografia_persona.csv",
+    "salud_general_persona.csv",
+    "salud_fecundidad_mujeres_13_50.csv",
+    "salud_asistencia_infantil_menores_6.csv",
+    "salud_bono_menores_5.csv",
+    "educacion_personas_4_mas.csv",
+    "empleo_personas_7_mas.csv",
+    "empleo_secundario_casos.csv",
+    "ingresos_no_laborales_persona.csv",
+    "ingresos_pobreza_persona.csv",
+    "hogar_resumen_persona_candidato.csv"
+  ]
+}

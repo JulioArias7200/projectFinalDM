@@ -1,111 +1,111 @@
 <!-- BEGIN: EstructuraUniversosDetallada -->
-<div class="bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)] flex flex-col justify-between space-y-3">
+<div class="bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)] flex flex-col justify-between space-y-4">
   <!-- Card Header -->
   <div class="flex items-center justify-between">
     <div>
-      <h2 class="text-sm font-semibold text-[var(--text-main)] tracking-wide">Estructura por Universo</h2>
-      <p class="text-[11px] text-[var(--text-muted)]">Distribución de variables y población elegible</p>
+      <h2 class="text-sm font-semibold text-[var(--text-main)] tracking-wide">Estructura por Universos</h2>
+      <p class="text-[11px] text-[var(--text-muted)]">5 Universos · 11 Vistas Temáticas Especializadas</p>
     </div>
-    <span class="bg-[var(--bg-card-subtle)] text-emerald-400 text-[10px] px-2.5 py-1 rounded-lg border border-emerald-500/20 font-mono font-semibold">
-      150 Retenidas
+    <span class="bg-emerald-500/10 text-emerald-400 text-[10px] px-2.5 py-1 rounded-lg border border-emerald-500/20 font-mono font-semibold">
+      275 Master (100%)
     </span>
   </div>
 
-  <!-- Universe Rows with Rich Metrics & Progress Bars -->
+  <!-- Universe Rows with Rich Metrics & Sub-views Breakdown -->
   <div class="space-y-2.5 text-xs">
     
-    <!-- 1. Empleo (s04) -->
-    <a href="{{ url_for('dashboard.empleo') }}" class="block p-2.5 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] hover:border-[#3b82f6]/50 transition-all group">
-      <div class="flex items-center justify-between mb-1">
-        <div class="flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-[#3b82f6] shadow-[0_0_6px_#3b82f6]"></span>
-          <span class="font-bold text-[var(--text-main)] group-hover:text-[#3b82f6] transition-colors">Empleo (s04)</span>
-          <span class="text-[10px] text-[var(--text-muted)] font-mono">PET ≥10 años</span>
-        </div>
-        <span class="font-mono text-[11px] font-bold text-[#3b82f6]">45 vars <span class="text-[9px] font-normal text-[var(--text-muted)]">(+65 saltos)</span></span>
-      </div>
-      <div class="w-full bg-[var(--bg-card)] h-1.5 rounded-full overflow-hidden">
-        <div class="bg-[#3b82f6] h-full rounded-full" style="width: 41%;"></div>
-      </div>
-      <div class="flex justify-between text-[10px] text-[var(--text-muted)] mt-1 font-mono">
-        <span>PEA: 68.4%</span>
-        <span>45 / 110 Totales</span>
-      </div>
-    </a>
-
-    <!-- 2. Demografía e Identificación -->
+    <!-- 1. Demografía & Hogar (2 Vistas) -->
     <div class="p-2.5 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)]">
       <div class="flex items-center justify-between mb-1">
         <div class="flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-[#00d2ff] shadow-[0_0_6px_#00d2ff]"></span>
-          <span class="font-bold text-[var(--text-main)]">Demografía &amp; Claves</span>
-          <span class="text-[10px] text-[var(--text-muted)] font-mono">Población Total</span>
+          <span class="font-bold text-[var(--text-main)]">Demografía &amp; Hogar</span>
+          <span class="text-[10px] text-cyan-400 font-mono font-semibold">2 Vistas</span>
         </div>
-        <span class="font-mono text-[11px] font-bold text-[#00d2ff]">37 vars <span class="text-[9px] font-normal text-[var(--text-muted)]">(+9 saltos)</span></span>
+        <span class="font-mono text-[11px] font-bold text-[#00d2ff]">33 / 18 cols</span>
       </div>
       <div class="w-full bg-[var(--bg-card)] h-1.5 rounded-full overflow-hidden">
-        <div class="bg-[#00d2ff] h-full rounded-full" style="width: 80%;"></div>
+        <div class="bg-[#00d2ff] h-full rounded-full" style="width: 100%;"></div>
       </div>
       <div class="flex justify-between text-[10px] text-[var(--text-muted)] mt-1 font-mono">
-        <span>Completitud: 99.8%</span>
-        <span>37 / 46 Totales</span>
+        <span>39,497 pers. · 12,718 hog.</span>
+        <span>Clave (folio, nro)</span>
       </div>
     </div>
 
-    <!-- 3. Ingresos (s05) -->
-    <a href="{{ url_for('dashboard.ingresos') }}" class="block p-2.5 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] hover:border-[#ff2453]/50 transition-all group">
-      <div class="flex items-center justify-between mb-1">
-        <div class="flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-[#ff2453] shadow-[0_0_6px_#ff2453]"></span>
-          <span class="font-bold text-[var(--text-main)] group-hover:text-[#ff2453] transition-colors">Ingresos (s05)</span>
-          <span class="text-[10px] text-[var(--text-muted)] font-mono">Hogares/Perceptores</span>
-        </div>
-        <span class="font-mono text-[11px] font-bold text-[#ff2453]">28 vars <span class="text-[9px] font-normal text-[var(--text-muted)]">(+17 saltos)</span></span>
-      </div>
-      <div class="w-full bg-[var(--bg-card)] h-1.5 rounded-full overflow-hidden">
-        <div class="bg-[#ff2453] h-full rounded-full" style="width: 62%;"></div>
-      </div>
-      <div class="flex justify-between text-[10px] text-[var(--text-muted)] mt-1 font-mono">
-        <span>Media: 3,420 Bs</span>
-        <span>28 / 45 Totales</span>
-      </div>
-    </a>
-
-    <!-- 4. Salud (s02) -->
+    <!-- 2. Salud (4 Vistas) -->
     <a href="{{ url_for('dashboard.salud') }}" class="block p-2.5 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] hover:border-[#06b6d4]/50 transition-all group">
       <div class="flex items-center justify-between mb-1">
         <div class="flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-[#06b6d4] shadow-[0_0_6px_#06b6d4]"></span>
           <span class="font-bold text-[var(--text-main)] group-hover:text-[#06b6d4] transition-colors">Salud (s02)</span>
-          <span class="text-[10px] text-[var(--text-muted)] font-mono">Población &amp; Materna</span>
+          <span class="text-[10px] text-cyan-400 font-mono font-semibold">4 Vistas</span>
         </div>
-        <span class="font-mono text-[11px] font-bold text-[#06b6d4]">22 vars <span class="text-[9px] font-normal text-[var(--text-muted)]">(+22 saltos)</span></span>
+        <span class="font-mono text-[11px] font-bold text-[#06b6d4]">31 cols</span>
       </div>
       <div class="w-full bg-[var(--bg-card)] h-1.5 rounded-full overflow-hidden">
-        <div class="bg-[#06b6d4] h-full rounded-full" style="width: 50%;"></div>
+        <div class="bg-[#06b6d4] h-full rounded-full" style="width: 75%;"></div>
       </div>
       <div class="flex justify-between text-[10px] text-[var(--text-muted)] mt-1 font-mono">
+        <span>Fecundidad: 11,328 · Niñez: 3,434</span>
         <span>Seguro: 74.8%</span>
-        <span>22 / 44 Totales</span>
       </div>
     </a>
 
-    <!-- 5. Educación (s03) -->
+    <!-- 3. Educación (1 Vista) -->
     <a href="{{ url_for('dashboard.educacion') }}" class="block p-2.5 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] hover:border-[#8a5cf6]/50 transition-all group">
       <div class="flex items-center justify-between mb-1">
         <div class="flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-[#8a5cf6] shadow-[0_0_6px_#8a5cf6]"></span>
           <span class="font-bold text-[var(--text-main)] group-hover:text-[#8a5cf6] transition-colors">Educación (s03)</span>
-          <span class="text-[10px] text-[var(--text-muted)] font-mono">Población ≥4 años</span>
+          <span class="text-[10px] text-purple-400 font-mono font-semibold">1 Vista</span>
         </div>
-        <span class="font-mono text-[11px] font-bold text-[#8a5cf6]">18 vars <span class="text-[9px] font-normal text-[var(--text-muted)]">(+7 saltos)</span></span>
+        <span class="font-mono text-[11px] font-bold text-[#8a5cf6]">43 cols</span>
       </div>
       <div class="w-full bg-[var(--bg-card)] h-1.5 rounded-full overflow-hidden">
-        <div class="bg-[#8a5cf6] h-full rounded-full" style="width: 72%;"></div>
+        <div class="bg-[#8a5cf6] h-full rounded-full" style="width: 95%;"></div>
       </div>
       <div class="flex justify-between text-[10px] text-[var(--text-muted)] mt-1 font-mono">
+        <span>37,354 Pers. (≥4 años)</span>
         <span>Alfabetismo: 94.6%</span>
-        <span>18 / 25 Totales</span>
+      </div>
+    </a>
+
+    <!-- 4. Empleo (2 Vistas) -->
+    <a href="{{ url_for('dashboard.empleo') }}" class="block p-2.5 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] hover:border-[#3b82f6]/50 transition-all group">
+      <div class="flex items-center justify-between mb-1">
+        <div class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-[#3b82f6] shadow-[0_0_6px_#3b82f6]"></span>
+          <span class="font-bold text-[var(--text-main)] group-hover:text-[#3b82f6] transition-colors">Empleo (s04)</span>
+          <span class="text-[10px] text-blue-400 font-mono font-semibold">2 Vistas</span>
+        </div>
+        <span class="font-mono text-[11px] font-bold text-[#3b82f6]">121 / 45 cols</span>
+      </div>
+      <div class="w-full bg-[var(--bg-card)] h-1.5 rounded-full overflow-hidden">
+        <div class="bg-[#3b82f6] h-full rounded-full" style="width: 90%;"></div>
+      </div>
+      <div class="flex justify-between text-[10px] text-[var(--text-muted)] mt-1 font-mono">
+        <span>PET: 35,366 · Secundario: 1,357</span>
+        <span>PEA: 68.4%</span>
+      </div>
+    </a>
+
+    <!-- 5. Ingresos & Pobreza (2 Vistas) -->
+    <a href="{{ url_for('dashboard.ingresos') }}" class="block p-2.5 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] hover:border-[#ff2453]/50 transition-all group">
+      <div class="flex items-center justify-between mb-1">
+        <div class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-[#ff2453] shadow-[0_0_6px_#ff2453]"></span>
+          <span class="font-bold text-[var(--text-main)] group-hover:text-[#ff2453] transition-colors">Ingresos &amp; Pobreza</span>
+          <span class="text-[10px] text-red-400 font-mono font-semibold">2 Vistas</span>
+        </div>
+        <span class="font-mono text-[11px] font-bold text-[#ff2453]">48 / 25 cols</span>
+      </div>
+      <div class="w-full bg-[var(--bg-card)] h-1.5 rounded-full overflow-hidden">
+        <div class="bg-[#ff2453] h-full rounded-full" style="width: 85%;"></div>
+      </div>
+      <div class="flex justify-between text-[10px] text-[var(--text-muted)] mt-1 font-mono">
+        <span>Media: 3,420 Bs · Pobreza: 36.4%</span>
+        <span>No Lab. &amp; Pobreza</span>
       </div>
     </a>
 
@@ -113,8 +113,8 @@
 
   <!-- Bottom Info Tag -->
   <div class="pt-2 border-t border-[var(--border-card)] flex items-center justify-between text-[10px] text-[var(--text-muted)] font-mono">
-    <span>150 Candidatas L-80</span>
-    <span class="text-amber-400 font-semibold">125 en Cuarentena Metodológica</span>
+    <span class="text-emerald-400 font-semibold">11 Archivos CSV Generados</span>
+    <span class="text-[var(--text-main)]">0 Exclusiones Forzadas</span>
   </div>
 </div>
 <!-- END: EstructuraUniversosDetallada -->

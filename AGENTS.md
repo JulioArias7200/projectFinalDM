@@ -2,7 +2,7 @@
 
 ## Propósito y estado
 
-Implementar el sistema Flask de limpieza de `data/persona.csv` descrito en `README.md` y `docs/`, conectado a PostgreSQL para la bitácora del dataset. Fundamentar las reglas en `curso/` y en el diccionario confirmado de la encuesta, siguiendo `docs/cleaning-methodology.md`. A fecha de esta documentación solo existen documentos y el archivo de datos; no afirmar que una función está operativa sin código y pruebas que lo demuestren. Registrar avances verificables en `docs/progress.md`.
+Completar el sistema Flask de limpieza de `data/persona.csv` descrito en `README.md` y `docs/`, usando archivos JSON locales para catálogo, versiones y bitácora. No usar PostgreSQL. Fundamentar reglas en `curso/` y el diccionario aplicable, siguiendo `docs/cleaning-methodology.md`. Afirmar funciones operativas solo con código y pruebas que lo demuestren. Registrar avances verificables en `docs/progress.md`.
 
 ## Fuentes de verdad
 
@@ -11,7 +11,7 @@ Implementar el sistema Flask de limpieza de `data/persona.csv` descrito en `READ
 3. `docs/architecture.md`, `docs/data-contract.md` y `docs/versioning-and-audit.md` para decisiones técnicas.
 4. `docs/implementation-plan.md` para el orden de trabajo. Si una decisión cambia, actualizar el documento afectado junto con el código.
 
-La arquitectura acordada usa Flask con vistas Jinja, SQLAlchemy/Alembic y PostgreSQL. Cada regla de limpieza debe declarar referencia teórica, columnas, universo, condición, acción y evidencia antes/después. La teoría orienta el método; el diccionario confirma la semántica. No extrapolar los ejemplos del curso a todo `persona.csv` ni marcar todos los `NA` como errores.
+La arquitectura vigente usa Flask/Jinja, persistencia JSON con reemplazo atómico y archivos CSV/Parquet versionados. El usuario eligió JSON y descartó PostgreSQL. Cada regla de limpieza declara referencia teórica, columnas, universo, condición, acción y evidencia antes/después. La teoría orienta el método; el diccionario confirma la semántica. No extrapolar los ejemplos del curso a todo `persona.csv` ni marcar todos los `NA` como errores.
 
 ## Reglas de datos
 
@@ -28,7 +28,7 @@ La arquitectura acordada usa Flask con vistas Jinja, SQLAlchemy/Alembic y Postgr
 - No ofrecer edición directa sobre raw ni UPDATE manual sobre versiones publicadas. Una propuesta de cambio incluye dataset, versión base, clave de fila, columna, valor anterior, valor nuevo, razón y actor.
 - Validar permisos, tipo, dominio, reglas de negocio y conflicto de versión antes de aprobar. Guardar rechazo o aprobación y el resultado en un historial append-only. Las acciones administrativas también se auditan.
 - Aplicar cambios como parches sobre una nueva versión. Restaurar significa publicar otra versión derivada de una anterior, nunca borrar el historial.
-- Mantener transacciones de metadatos consistentes con la publicación del archivo; una versión incompleta no debe ser visible en el dashboard.
+- Preparar y verificar una versión completa en staging; el puntero JSON y el evento de publicación se escriben juntos en una sustitución atómica. Una versión incompleta no debe ser visible en el dashboard.
 
 ## Reglas de análisis y dashboard
 
@@ -39,7 +39,7 @@ La arquitectura acordada usa Flask con vistas Jinja, SQLAlchemy/Alembic y Postgr
 
 ## Calidad de implementación
 
-- Añadir pruebas para reglas de limpieza, idempotencia de importación, conflictos de edición, publicación atómica, permisos, cálculos ponderados y contratos de API. Usar datos sintéticos en pruebas; no copiar registros reales al repositorio.
-- Versionar migraciones de PostgreSQL, esquemas de API y configuración de datasets. Los secretos van en variables de entorno o gestor de secretos, nunca en Git.
+- Añadir pruebas para reglas de limpieza, idempotencia, conflictos de edición, publicación JSON atómica, permisos, cálculos ponderados y contratos de API. Usar datos sintéticos en pruebas; no copiar registros reales al repositorio.
+- Versionar esquemas JSON de catálogo/API y configuración de datasets. Los secretos van en variables de entorno o gestor de secretos, nunca en Git.
 - Mantener rutas relativas y configuración portable; no codificar rutas de esta computadora en el código.
 - Al cerrar una etapa, documentar el comando real para ejecutarla, las pruebas realizadas y las limitaciones pendientes. No marcar como completado un criterio solo por tener documentación.

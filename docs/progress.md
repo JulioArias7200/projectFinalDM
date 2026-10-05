@@ -1,5 +1,102 @@
 # Progreso del proyecto
 
+## Publicación interna con catálogo JSON — 4 de octubre de 2026
+
+Por indicación del usuario, la persistencia definida para este proyecto es JSON local, sin PostgreSQL. Se implementaron escritura JSON atómica con lock entre procesos, servicio de eventos append-only, registro de versiones y publicación desde candidatas verificadas. La corrida completa se copió a `data/proprosessing/versions/persona-317279aafe9023a2/`; el catálogo `data/audit_log.json` apunta a ella y contiene el evento `PUBLISH_VERSION`. La copia conserva 39.497 filas, 275 columnas y SHA-256 `317279aafe9023a2b17b8a7da69c87de75ea04e28d5c121cedc30b6392975ffc`.
+
+Antes y después de copiar se verificaron los 10 controles censales y los 300 hashes de artefactos. El dashboard Flask resuelve la versión desde el catálogo JSON; sus siete rutas principales respondieron HTTP 200. Las 11 pruebas automatizadas pasaron, incluidas pruebas sintéticas de fallo de validación, publicación, reintento idempotente y 12 escrituras concurrentes a bitácora temporal. El detalle está en [arquitectura](architecture.md), [versionado/bitácora](versioning-and-audit.md) y [validación/publicación](final-validation-sampling-persona.md).
+
+El estado publicado es `published_internal_with_semantic_limitations`. Esto cierra la versión técnica conservadora, no la auditoría semántica de los 275 campos: `totper`, dominios y universos sin evidencia concluyente permanecen sin modificación y no deben respaldar inferencias oficiales. No se modificó `data/persona.csv` ni la corrida candidata original.
+
+## Dictamen semántico y estado de publicación — 4 de octubre de 2026
+
+Se revisaron las anomalías pendientes frente al diccionario local y los capítulos de tipos, estadística descriptiva, preparación de datos y calidad del curso. Ninguna alerta restante autoriza por sí misma una modificación: `totper` no tiene definición confirmada y no coincide con el roster observado en 10.285/12.718 hogares; edad/año depende de fecha de referencia; cuatro referencias de roster requieren confirmar códigos; máximos/rangos del DDI presentan conflictos; e IQR solo es diagnóstico. No se añadieron cambios de valor. Se preservan los registros y variables cuestionados.
+
+La candidata mantiene únicamente las transformaciones respaldadas (S-01: 3 celdas de horas >168 marcadas como inválidas; S-02: 12.516 respuestas en 13 campos abiertos designados pasadas a minúsculas) y validación de clave/duplicados sin eliminación. La auditoría independiente obtuvo 10/10 controles PASS sobre 39.497 × 275, bitácora y hashes; la muestra de QA de 381 hogares se conserva aparte. La disposición detallada está en [auditoría semántica](semantic-cleaning-audit.md) y [validación y muestreo](final-validation-sampling-persona.md).
+
+**Estado anterior de esta nota, supersedido por la publicación JSON:** la versión técnica validada se publicó para uso interno como `persona-317279aafe9023a2`. El catálogo y evento `PUBLISH_VERSION` se guardan en `data/audit_log.json`; el dashboard resuelve el puntero desde ese archivo. La limitación semántica sigue vigente y CA-19 permanece parcial. No se modificó `data/persona.csv` ni el candidato original.
+
+## Validación censal y muestra de control ejecutadas — 4 de octubre de 2026
+
+Se ejecutó `data/proprosessing/final_validation_sampling.py` contra la candidata `persona-317279aafe9023a2`, sin modificar `data/persona.csv` ni la candidata. Los 10 controles censales pasaron: hash de la fuente y manifiesto, dimensiones/esquema, secuencia de `(folio,nro)`, duplicados y claves incompletas, conciliación exclusiva de S-01/S-02, bitácora de 12.519 celdas y 300 hashes de artefactos. Raw y candidata conservan 39.497 filas y 275 columnas. Se seleccionaron reproduciblemente 381 hogares de 12.718, estratificados por departamento × área, con sus 1.216 filas persona; la muestra sirve para QA, no para estimación o entrenamiento.
+
+La revisión intrahogar encontró valores constantes en los campos candidatos de hogar, pero `totper` difiere del número de filas persona en 312/381 hogares de la muestra. Es una alerta que concuerda con la revisión censal previa (2.433/12.718 hogares con coincidencia), no una corrección autorizada: `totper` es una extensión local sin definición confirmada en F27 y se conserva intacta. El reporte completo, límites, comandos y ubicación de artefactos están en [validación y muestreo](final-validation-sampling-persona.md). Ese reporte se creó antes de la publicación; la versión técnica quedó publicada después con persistencia JSON. La limpieza semántica integral continúa pendiente.
+
+## Validación final estructural y normalización textual — 4 de octubre de 2026
+
+Se incorporó L-06 al pipeline: cuenta filas idénticas, duplicados de la clave candidata `(folio,nro)` y claves incompletas; cualquier conflicto detiene la candidata en lugar de borrar filas. En `data/persona.csv` se verificaron **0 filas exactas repetidas, 0 claves duplicadas y 0 claves incompletas** entre 39.497 registros. No se ejecutó deduplicación porque no había filas repetidas.
+
+Se agregó S-02: convierte a minúsculas únicamente respuestas de 13 columnas abiertas etiquetadas “Especifique”, conserva `NA`, códigos e identificadores, preserva el raw y audita cada cambio en el archivo restringido. No se convierte indiscriminadamente toda la matriz porque `folio`/`upm` son identificadores y muchas columnas contienen códigos; en las respuestas libres la capitalización puede ser relevante al revisar el texto original. La comparación independiente encontró **12.516 celdas** normalizadas por S-02 y **3 celdas** corregidas por S-01; ninguna otra celda difiere.
+
+La candidata `data/proprosessing/output/20261004T231539Z_568e82e3039d_d3abfb0b5f/` (`persona-317279aafe9023a2`) conserva las **39.497 filas y 275 columnas**, el orden/valores de `(folio,nro)` y el SHA-256 original `568e82e3039d991a1ee0d8e2056448f8c465c03ffa838330c4f1522dd77bddc8`. Se generaron 275 gráficos y se registraron 300 hashes de artefactos. Sigue siendo candidata, no está publicada.
+
+Se actualizaron `preprocessing.py` y `preprocessing.ipynb`; comparación AST confirma equivalencia del código. `python -m unittest discover -s tests -v` pasó **5/5 pruebas sintéticas**, incluyendo preservación del raw, normalización de texto y bloqueo ante duplicados. No se realizó análisis del cuestionario ni se añadieron fuentes de microdatos. La limpieza semántica total no se puede certificar con solo evidencia de `persona.csv`: rangos, códigos y universos aún no confirmados permanecen sin alteración y requieren evidencia autorizada. Ver [auditoría semántica](semantic-cleaning-audit.md) y [metodología](cleaning-methodology.md).
+
+## Análisis exploratorio descriptivo ejecutado — 4 de octubre de 2026
+
+Se ejecutó `data/proprosessing/exploratory_analysis.py` con Python global 3.12.9 sobre la corrida candidata `data/proprosessing/output/20261004T215218Z_568e82e3039d_d3abfb0b5f/`. El resultado corregido está en `exploratory_analysis/20261004T225208Z/`: 11 universos temáticos, 410 perfiles columna-vista, 21 gráficos y 112 tablas de frecuencias agregadas. La validación confirmó el hash/dimensiones de las vistas y suprimió categorías del perfil descriptivo para identificadores y columnas sensibles, además de aplicar umbral de 10 casos.
+
+Esta fase usa exclusivamente `persona.csv` y los metadatos/diccionario ya asociados a esa corrida; no analiza el cuestionario ni incorpora otros microdatos. No modifica el CSV raw ni cambia las 39.497 filas o 275 columnas del maestro. Las vistas son subconjuntos de análisis. El análisis es descriptivo, sin ponderadores ni inferencia, y no completa ni certifica la limpieza semántica de todas las columnas. Comando reproducido:
+
+```powershell
+& 'C:\Users\julio\AppData\Local\Programs\Python\Python312\python.exe' data/proprosessing/exploratory_analysis.py
+```
+
+Una ejecución exploratoria anterior (`exploratory_analysis/20261004T224908Z/`) quedó marcada como restringida/no compartible porque precedió a la supresión de categorías de identificadores en el perfil. Se conservó sin alterarla como artefacto histórico inmutable. El detalle del método, validación y limitaciones consta en [exploratory-analysis-persona.md](exploratory-analysis-persona.md).
+
+## Estado del dashboard verificado con la candidata anterior — 4 de octubre de 2026
+
+En una verificación anterior se probaron rutas del prototipo Flask (`dashboard/`) con los artefactos de `data/proprosessing/output/20261004T215218Z_568e82e3039d_d3abfb0b5f/`. Esa verificación antecede a la candidata `20261004T231539Z_...` documentada arriba y no demuestra que el dashboard consuma dicha candidata ni que exista publicación persistente en PostgreSQL. Los detalles siguientes describen aquella revisión de interfaz, no la corrida limpia más reciente.
+
+### Componentes y Funcionalidades Verificadas
+
+1. **Rutas y Vistas del Sistema**: Se verificaron los 7 endpoints principales con respuestas HTTP 200 OK fluidas:
+   - `GET /dashboard/` (Resumen general, KPIs de volumen, balance antes/después y matriz de reglas).
+   - `GET /dashboard/procedimiento` (Metodología paso a paso, diagrama de flujo dimensional Sankey SVG y catálogo de reglas L-01 a L-12, S-01, H-01 y V-11).
+   - `GET /dashboard/region` (Cartografía SVG interactiva oficial de los 9 departamentos de Bolivia con selector de capas de universos).
+   - `GET /dashboard/salud` (Sección s02: Cobertura médica y 4 vistas temáticas derivadas).
+   - `GET /dashboard/educacion` (Sección s03: Alfabetismo, asistencia y vista de 37.354 personas $\ge 4$ años).
+   - `GET /dashboard/empleo` (Sección s04: Mercado laboral, PET $\ge 7$ años con 121 cols y 1.357 casos de empleo secundario).
+   - `GET /dashboard/ingresos` (Sección s05: Ingresos no laborales, pobreza y resumen de 12.718 hogares).
+2. **Cartografía Oficial de Bolivia**: Se implementó el mapa vectorial SVG con contornos geográficos exactos de los 9 departamentos (Chuquisaca, La Paz, Cochabamba, Oruro, Potosí, Tarija, Santa Cruz, Beni, Pando), selector dinámico de indicadores por universo y panel lateral de inspección en tiempo real.
+3. **Inspección Modal de Reglas sin Botones Invasivos**: En la matriz de reglas de limpieza, las filas son directamente interactivas (`cursor-pointer`). Al hacer clic sobre cualquier regla se abre una modal *glassmorphism* con fundamento del curso, columnas, condición, acción, evidencia antes/después y métricas de validación.
+4. **Navegación Sticky y Transparente**: Las barras laterales izquierda (`sidebar_nav.html`) y derecha (`sidebar_right.html`) cuentan con comportamiento adherente (`lg:sticky lg:top-4`) y fondos transparentes (`bg-transparent`), evitando contenedores oscuros opacos y manteniendo accesibilidad durante el scroll vertical.
+5. **Vistas Temáticas en Universos**: Cada página de universo incorpora tarjetas modulares que detallan las sub-vistas generadas en `thematic_views/`, población elegible ($N$), número de variables y filtros según saltos de cuestionario.
+
+### Comando y Evidencia de Pruebas Automatizadas
+
+Se ejecutó un script de verificación automatizada contra el servidor activo:
+
+```powershell
+python -c "
+import urllib.request
+BASE = 'http://127.0.0.1:5000/dashboard'
+for p in ['', '/procedimiento', '/region', '/salud', '/educacion', '/empleo', '/ingresos']:
+    with urllib.request.urlopen(f'{BASE}{p}') as r:
+        print(f'{r.status} OK - {BASE}{p}')
+"
+```
+
+Resultado: **7 de 7 rutas respondieron 200 OK con renderizado completo Jinja2 y cero errores 500**.
+
+---
+
+## Estado consolidado y revisión documental — 4 de octubre de 2026
+
+La corrida vigente es `data/proprosessing/output/20261004T215218Z_568e82e3039d_d3abfb0b5f/`. Su manifiesto registra fuente `data/persona.csv`, SHA-256 `568e82e3039d991a1ee0d8e2056448f8c465c03ffa838330c4f1522dd77bddc8`, 39.497 filas y 275 columnas. `profile_before.csv`, `profile_after.csv` y `comparison_all_columns.csv` contienen 275 fichas cada uno; existen 275 gráficos individuales y 11 vistas temáticas derivadas. El maestro conserva el esquema completo; la corrida histórica `20261004T171822Z_...` de 150 columnas queda expresamente superada y no debe presentarse como dataset maestro.
+
+La corrida vigente aplica S-01 a tres celdas de horas semanales imposibles, conserva todas las filas/columnas y registra los cambios. L-80 es solo una alerta global; las 125 columnas identificadas siguen en el maestro. L-03 revisó campos tipados y no encontró cambios. La matriz `docs/universe-matrix-persona.csv` cubre 125 columnas, con 66 universos pendientes, 30 precondiciones por mapear, 19 máscaras cotejadas provisionalmente, 4 reglas cotejadas contra datos locales, 3 patrones locales pendientes, 1 extensión local, 1 hipótesis y 1 conflicto que requiere resolver procedencia. La auditoría semántica no está completa.
+
+Los perfiles y gráficos por columna ya se generaron. El informe exploratorio adicional sobre las 11 vistas está implementado en `data/proprosessing/exploratory_analysis.py`, pero no se ha ejecutado; no hay resultados de esa etapa en la corrida vigente. La interfaz Flask del directorio `dashboard/` es un prototipo: PostgreSQL, migraciones, bitácora persistente, worker y publicación controlada siguen pendientes. Las actualizaciones de esta revisión corrigen estados contradictorios en `AGENTS.md`, `README.md` y documentos de `docs/`; no se modificaron datos, código ni candidatos.
+
+## Revisión para culminar limpieza semántica — 4 de octubre de 2026
+
+Se volvió a consultar `data_dictionary.json` y `profile_after.csv` de la corrida vigente. El JSON contiene 276 entradas oficiales; 273 nombres coinciden con el CSV local, 3 variables F27 no están en la copia y existen 2 extensiones locales. El perfil de las 275 columnas clasifica 2 dominios como confirmados por diccionario local, 162 como formato numérico revisado sin dominio/rango semántico confirmado y 111 como dominio aún no evaluado. El perfilado cubre el dataset, pero la validación semántica integral todavía no se realizó.
+
+Se localizó en ANDA el [cuestionario EH 2025](https://anda.ine.gob.bo/index.php/catalog/256/download/1859) y los manuales oficiales de encuestador, supervisor y monitoreo; sus enlaces están en `docs/source-reconciliation-persona.md`. La descripción oficial especifica que el instrumento incluye flujos, saltos y cortes por grupos. Los documentos habilitan el cotejo de las variables coincidentes, pero no resuelven la procedencia/diferencia de esquema de `persona.csv`; las reglas derivadas de F27 siguen siendo candidatas hasta contrastarlas con la copia local.
+
+El entorno actual solo expone `py.exe` y `py -0p` informa que no hay instalaciones de Python; no se usó `venv`. Por tanto no se pudo ejecutar el análisis exploratorio complementario ni nuevas pruebas Python. No se cambió ninguna celda, fila o columna. El trabajo semántico siguiente es revisar cuestionario/manual por módulo, consolidar dominios y máscaras en la matriz, auditar excepciones sobre las 39.497 filas del CSV y habilitar solo reglas con evidencia y pruebas.
+
 ## Preparación del análisis exploratorio descriptivo — código añadido, ejecución pendiente
 
 Tras confirmar `persona.csv` como la fuente oficial de trabajo del proyecto, se añadió `data/proprosessing/exploratory_analysis.py` para describir las 11 vistas derivadas, respetando el universo de cada una y las etiquetas del JSON. El script valida los SHA-256 y dimensiones antes de leerlas, produce cobertura por variable, frecuencias agregadas y gráficos temáticos; limita el uso de estadísticos de magnitud a tipos cuantitativos declarados. Reporta conteos no ponderados y agrupa/omite celdas con menos de 10 casos en sus gráficos/tablas agregadas. No cambia ni el raw ni el maestro candidato.
@@ -214,3 +311,28 @@ Verificaciones ejecutadas: el script compiló con `py_compile`; las 10 celdas de
 Diagnóstico agregado de esta corrida: 125 columnas superan 80 % de ausencia/formato técnico global; todas se conservan. Se registran 49 variables con alertas IQR exploratorias y 0 registros mal formados detectados por los chequeos limitados implementados (dominios de `area`/`depto` y formato numérico solo donde el tipo está confirmado). Esos ceros no significan que los 275 dominios estén validados. Por tanto esta salida es una **versión maestra técnica**, no una limpieza semántica completa ni una publicación. No se imputaron, corrigieron ni eliminaron registros. El usuario confirma el CSV como fuente definitiva del proyecto; las diferencias con F27 y las reglas de cuestionario aún limitan interpretación y limpieza por universo. Flask/PostgreSQL y bitácora persistente no se ejecutaron.
 
 Seguimiento de metadatos de versión: el manifiesto de la corrida también contiene `source_file_id`, `version_id` (`persona-705a06e2840f9dc0`), `output_dataset_sha256` (`705A06E2840F9DC0AAEF82BFEED8DB6D41349F7BE433A15D1C630FD4C6665321`) y hashes SHA-256 de 284 artefactos (sin auto-hash del manifiesto). El código se ajustó para incluir esos metadatos automáticamente en las próximas ejecuciones. La versión hash diferencia la serialización CSV inmutable; al comparar celdas CSV con raw, el contenido y orden de filas no cambiaron.
+
+## Propuesta de universos para la siguiente etapa del dashboard — 4 de octubre de 2026
+
+Se documentó y fijó la propuesta para analizar `persona.csv` por universos en `docs/dashboard-universe-plan.md`, y se enlazó desde el README, la visión del proyecto y la documentación de análisis/dashboard. La propuesta organiza demografía; salud general, fecundidad/salud materna y salud infantil; educación; empleo y ocupación secundaria; ingresos personales; pobreza a nivel hogar; y un inventario de extensiones/semántica pendiente. Define que las vistas son analíticas y no sustituyen el maestro íntegro de 39.497 × 275.
+
+Se especificaron cautelas y orden de trabajo: reportar elegibles/respondidos/faltantes por pregunta; no convertir ausencia estructural en error; mantener análisis no ponderado mientras el diseño no se confirme; no afirmar tasas poblacionales; proteger identificadores y celdas pequeñas; y bloquear KPI semánticamente no resueltos, incluyendo `s02b_10` y `totper`. También se aclaró que las rutas Flask existen pero que los KPI estáticos de `UNIVERSE_CONFIGS` deben considerarse demostrativos hasta calcularse y reconciliarse con la versión JSON publicada.
+
+Se actualizó el plan de implementación y se añadió CA-20 para verificar universo, unidad, filtro, denominador, reconciliación con versión, supresión y bloqueo seguro. Esta entrega es exclusivamente documental: no se modificó código, microdato, vistas ni publicación; no se ejecutaron pruebas del dashboard. La etapa queda especificada, pendiente de implementación y validación.
+## Reordenamiento de la propuesta del dashboard — 4 de octubre de 2026
+
+Se regeneró la estructura de navegación de `docs/dashboard-universe-plan.md` según el orden de análisis acordado: resumen, demografía, salud general y subuniversos materno/infantiles, educación, empleo principal/secundario, ingresos personales y del hogar, y revisión de variables pendientes. Se precisaron el contenido y las cautelas de cada sección, además de los metadatos comunes y la limitación del mapa regional. Se enlazó este orden desde `docs/analytics-and-dashboard.md`. No hubo cambios de código ni datos; la implementación sigue pendiente.
+
+## Especificación visual de gráficos del dashboard — 4 de octubre de 2026
+
+Se amplió `docs/dashboard-universe-plan.md` con una propuesta de visualizaciones por sección: perfil estructural, demografía, salud general/materna/infantil, educación, empleo principal/secundario, ingresos personales/hogar, revisión semántica y vista regional condicionada. Para cada gráfico se anotaron la pregunta que responde, los datos/universo requeridos y sus cautelas estadísticas. Se añadieron requisitos de denominadores, etiquetas/unidades, escalas, supresión de celdas pequeñas, estados vacíos/bloqueados y validación previa con datos sintéticos.
+
+La guía de estilo identifica `Inter` como tipografía base existente, `font-mono` para metadatos/códigos y los tokens ya definidos en `dashboard/static/css/base.css` y `dashboard/static/css/theme.css` para soportar temas claro/oscuro. Se reflejó la secuencia y las restricciones en `docs/implementation-plan.md`. Esta entrega actualiza solo el plan: no se implementaron gráficos, cálculos, rutas ni cambios a datos, y no se ejecutaron pruebas funcionales del dashboard.
+
+## Implementación inicial de gráficos seguros en Flask — 4 de octubre de 2026
+
+Se actualizó `DatasetService` para leer columnas seleccionadas únicamente del CSV asociado a `published_version_id` en el catálogo JSON, verificando su SHA-256 contra el registro antes de usarla. La página principal y la nueva ruta `/dashboard/demografia` grafican edad en intervalos de cinco años y conteos de códigos observados de sexo, departamento y área. Las rutas de salud, educación y empleo muestran frecuencias agregadas de códigos (incluidos campos vacíos y token `NA` como estados separados), sin filtrar elegibilidad ni interpretar códigos no confirmados. En empleo se separa además el código reportado en `s04e_25`.
+
+Las categorías con menos de 10 casos se agrupan y no exponen conteo ni barra individual; se aplica supresión complementaria para que `N` menos las categorías visibles no revele la suma oculta. Se muestran versión, fecha, universo/filtro, unidad, N y método. Se retiraron los KPI de demostración del resumen y las tarjetas de universos. La ruta regional ya no muestra porcentajes/poblaciones de demostración: presenta que esa vista está pendiente. Ingresos está bloqueado con la razón semántica, y `/dashboard/revision-pendiente` presenta el resumen agregado del estado en `docs/universe-matrix-persona.csv`. Las vistas registradas del módulo toman filas/columnas/filtros del manifiesto de la versión publicada, no de los conteos codificados antes en plantillas.
+
+Los gráficos usan HTML/CSS responsivo, heredan `Inter` y los tokens claro/oscuro de `dashboard/static/css/base.css` y `theme.css`; `font-mono` se limita a metadatos. Se añadieron pruebas sintéticas para supresión, distinción de `NA`/vacío y rechazo de archivos publicados con hash discordante. Aunque `python` no está en PATH y `py -0p` no descubre intérpretes, se ejecutó la suite con el Python global 3.12 disponible en una ruta externa al workspace: `& '<Python-global>\python.exe' -m unittest discover -s tests -v`; resultado **14/14 PASS**. Un cliente de pruebas Flask solicitó resumen, demografía, salud, educación, empleo, ingresos, revisión y región: **8/8 respondieron HTTP 200**; comprobaciones adicionales confirmaron la presencia de cada gráfico/bloqueo y la ausencia de KPI de demostración. `git diff --check` no detectó errores de whitespace. No se hizo inspección visual manual en navegador/ambos temas. `data/persona.csv` y los artefactos publicados no se modificaron.

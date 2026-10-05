@@ -53,4 +53,4 @@ Desde la raíz del repositorio, con PowerShell y Python global 3.12 (el entorno 
 
 En notebook, ejecutar en orden las celdas de `data/proprosessing/preprocessing.ipynb`. Cada corrida genera una carpeta candidata nueva e inmutable bajo `data/proprosessing/output/`, con maestro, vistas y manifiestos.
 
-Pruebas realizadas para esta entrega: máscaras sintéticas y conteos esperados de universos, unicidad de claves en todas las vistas, tamaño/columnas del maestro, diff raw→maestro, SHA-256, hashes de artefactos, registro de conflictos intrahogar y equivalencia AST de las funciones temáticas/ejecución entre script y notebook. La estructura Flask/PostgreSQL y el método inferencial de la encuesta siguen fuera de esta etapa.
+Pruebas realizadas para esta entrega: máscaras sintéticas y conteos esperados de universos, unicidad de claves en todas las vistas, tamaño/columnas del maestro, diff raw→maestro, SHA-256, hashes de artefactos, registro de conflictos intrahogar y equivalencia AST de las funciones temáticas/ejecución entre script y notebook. La integración inferencial de la encuesta sigue fuera de esta etapa; Flask consulta la versión publicada usando el catálogo JSON.

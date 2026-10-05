@@ -7,7 +7,7 @@ Estos criterios indican cómo evaluar una futura implementación. **Ninguno se c
 | CA-01 | Una carga conserva el CSV original byte a byte y registra SHA-256, tamaño, actor, fecha y procedencia | Comparación de hash y consulta de metadatos |
 | CA-02 | La repetición de la misma solicitud de carga con clave de idempotencia no crea dos versiones | Prueba de repetición y conteo de versiones |
 | CA-03 | El perfil informa filas, columnas, nulos, tipos, duplicados y errores de parseo; distingue `NA`, vacío y cero según contrato | Reporte y casos de prueba sintéticos |
-| CA-04 | Cada regla de limpieza tiene versión, orden, parámetros, fundamento de `curso/`, universo y conteo de filas afectadas | Manifiesto, bitácora PostgreSQL y reporte antes/después |
+| CA-04 | Cada regla de limpieza tiene versión, orden, parámetros, fundamento de `curso/`, universo y conteo de filas afectadas | Manifiesto JSON, bitácora JSON y reporte antes/después |
 | CA-05 | Una fila o valor inválido queda en cuarentena o bloquea publicación de acuerdo con política | Prueba con entrada inválida y estado de trabajo |
 | CA-06 | Una versión fallida o incompleta no sustituye la publicada | Inyección de fallo antes de publicación |
 | CA-07 | Una versión publicada se puede reproducir desde raw, contrato, reglas, parches y código identificados | Reejecución y comparación de hash lógico/conteos |
@@ -20,9 +20,12 @@ Estos criterios indican cómo evaluar una futura implementación. **Ninguno se c
 | CA-14 | Los trabajos largos informan estado, errores y reintentos sin bloquear la API | Ejecución y fallo controlado |
 | CA-15 | Copia de seguridad y restauración recuperan metadatos y artefactos de una versión publicada | Ensayo de restauración documentado |
 | CA-16 | La instalación desde cero usa configuración de entorno, migraciones y comandos documentados | Despliegue limpio reproducido por otra persona |
-| CA-17 | El sistema web usa Flask y se conecta a PostgreSQL con configuración externa y migraciones versionadas | Prueba de integración de rutas Flask, conexión y esquema aplicado |
-| CA-18 | La bitácora registra cargas, reglas, fallos, cambios, decisiones y publicación; persiste tras reiniciar y no admite UPDATE/DELETE con la cuenta de aplicación | Flujo completo, reinicio, consulta filtrada y prueba de permisos PostgreSQL |
+| CA-17 | El sistema web Flask usa persistencia JSON local con rutas configurables y esquema versionado | Prueba de rutas Flask, escritura atómica, bloqueo concurrente y lectura del catálogo |
+| CA-18 | La bitácora JSON registra cargas, reglas, fallos, cambios, decisiones y publicación; persiste tras reiniciar y el servicio solo agrega eventos | Flujo completo, reinicio, consulta filtrada y prueba de ausencia de operaciones de edición/borrado en el servicio |
 | CA-19 | La limpieza de `persona.csv` produce reporte por columna/universo antes/después, distingue faltantes legítimos y conserva excepciones | Reglas L-01 a L-12 aplicables, pruebas sintéticas y reporte técnico real sin microdatos expuestos |
+
+| CA-20 | Cada universo visible tiene población/unidad/filtro/denominador declarados; los agregados se reconcilian con la versión publicada; cifras no verificadas quedan bloqueadas o etiquetadas; las celdas pequeñas se suprimen | Pruebas de denominadores y supresión, recálculo independiente de KPI, metadatos visibles y manejo seguro de universo pendiente |
+| CA-21 | Los gráficos usan la tipografía/tokens visuales compartidos, indican versión, universo/filtro, unidad, N y método, preservan estados de ausencia distintos y no revelan celdas <10 | Revisión en tema claro/oscuro, pruebas sintéticas de estados y supresión, verificación de checksum de la fuente publicada y lectura visual accesible |
 
 ## Entrega mínima útil
 

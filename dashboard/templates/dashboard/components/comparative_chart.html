@@ -1,34 +1,56 @@
 <!-- BEGIN: BottomQualityChartSection -->
-<section class="bg-[var(--bg-card)] rounded-2xl p-6 border border-[var(--border-card)] shadow-[var(--card-shadow)]" data-purpose="comparative-quality-curves">
+<section class="bg-[var(--bg-card)] rounded-2xl p-6 border border-[var(--border-card)] shadow-[var(--card-shadow)] space-y-5" data-purpose="comparative-quality-curves">
   <!-- Header & Controls -->
-  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
     <div>
-      <h2 class="text-sm font-semibold text-[var(--text-main)] tracking-wide">Perfil de Calidad y Completitud (Raw vs Candidato Limpio)</h2>
-      <p class="text-xs text-[var(--text-muted)] mt-0.5">Evolución de completitud y normalización de variables a través de las secciones de la encuesta</p>
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-[#3b82f6] to-[#10b981]"></span>
+        <h2 class="text-sm font-bold text-[var(--text-main)] tracking-wide">Perfil Dimensional por Universos de Encuesta (Raw vs Vistas Temáticas)</h2>
+      </div>
+      <p class="text-xs text-[var(--text-muted)] mt-0.5">Comportamiento de completitud sobre los 5 Universos y sus 11 Vistas Temáticas especializadas</p>
     </div>
-    <div class="flex items-center gap-6">
-      <!-- Curve Legend -->
-      <div class="flex items-center gap-4 text-xs">
-        <div class="flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-[#3b82f6] shadow-[0_0_6px_#3b82f6]"></span>
-          <span class="text-[var(--text-secondary)] text-xs">Datos Originales (Raw)</span>
-        </div>
-        <div class="flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-[#ff2453] shadow-[0_0_6px_#ff2453]"></span>
-          <span class="text-[var(--text-secondary)] text-xs">Candidato Limpio (L-80)</span>
-        </div>
-      </div>
-      <!-- View Filter Dropdown -->
-      <div id="chart-time-filter" class="bg-[var(--bg-card-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-main)] text-xs px-3 py-1.5 rounded-lg border border-[var(--border-card)] flex items-center gap-1.5 cursor-pointer select-none transition-colors">
-        <span class="filter-label">Todas las Secciones (275 vars)</span>
-        <svg class="w-3.5 h-3.5 text-[var(--text-muted)]" fill="currentColor" viewBox="0 0 20 20">
-          <path clip-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" fill-rule="evenodd"></path>
-        </svg>
-      </div>
+    
+    <!-- Interactive Universe Tabs / Filter -->
+    <div class="flex flex-wrap items-center gap-2" id="universe-chart-tabs">
+      <button class="chart-tab-btn active px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all bg-[#3b82f6]/20 border border-[#3b82f6] text-[#3b82f6]" data-universe="todos">
+        Todos (275 vars · 11 Vistas)
+      </button>
+      <button class="chart-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all bg-[var(--bg-card-subtle)] border border-[var(--border-card)] text-[var(--text-secondary)] hover:text-[var(--text-main)]" data-universe="demografia">
+        Demografía &amp; Hogar (2 V.)
+      </button>
+      <button class="chart-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all bg-[var(--bg-card-subtle)] border border-[var(--border-card)] text-[var(--text-secondary)] hover:text-[var(--text-main)]" data-universe="salud">
+        Salud (4 V.)
+      </button>
+      <button class="chart-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all bg-[var(--bg-card-subtle)] border border-[var(--border-card)] text-[var(--text-secondary)] hover:text-[var(--text-main)]" data-universe="educacion">
+        Educación (1 V.)
+      </button>
+      <button class="chart-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all bg-[var(--bg-card-subtle)] border border-[var(--border-card)] text-[var(--text-secondary)] hover:text-[var(--text-main)]" data-universe="empleo">
+        Empleo (2 V.)
+      </button>
+      <button class="chart-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all bg-[var(--bg-card-subtle)] border border-[var(--border-card)] text-[var(--text-secondary)] hover:text-[var(--text-main)]" data-universe="ingresos">
+        Ingresos (2 V.)
+      </button>
     </div>
   </div>
 
-  <!-- Large Dual Wave Graph Canvas -->
+  <!-- Legend & Active Metrics Bar -->
+  <div class="flex flex-wrap items-center justify-between gap-3 text-xs pt-1 border-t border-[var(--border-card)]">
+    <div class="flex items-center gap-5">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-[#3b82f6] shadow-[0_0_8px_#3b82f6]"></span>
+        <span class="text-[var(--text-secondary)]">Completitud Global Aparente (Raw: 39,497)</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-[#10b981] shadow-[0_0_8px_#10b981]"></span>
+        <span class="text-[var(--text-secondary)]">Completitud Efectiva en Universo Elegible (Vistas Temáticas)</span>
+      </div>
+    </div>
+    <div class="font-mono text-[11px] text-[var(--text-muted)] flex items-center gap-2">
+      <span id="active-tab-desc" class="text-emerald-400 font-semibold">100% Columnas Preservadas en Master Limpio</span>
+    </div>
+  </div>
+
+  <!-- Dual Curve Wave Graph Canvas -->
   <div class="relative w-full h-[220px]">
     <!-- Y-Axis Ticks -->
     <div class="absolute left-0 top-0 bottom-6 flex flex-col justify-between text-[10px] text-[var(--svg-axis)] font-mono">
@@ -50,51 +72,97 @@
         <div class="w-full border-t border-[var(--border-card)]/50"></div>
       </div>
       <!-- Curves SVG -->
-      <svg class="absolute inset-0 w-full h-[calc(100%-24px)] overflow-visible" preserveAspectRatio="none" viewBox="0 0 900 180">
+      <svg id="chart-svg" class="absolute inset-0 w-full h-[calc(100%-24px)] overflow-hidden" preserveAspectRatio="none" viewBox="0 0 900 180">
         <defs>
-          <!-- Blue Gradient Fill -->
+          <!-- Blue Gradient Fill (Raw) -->
           <linearGradient id="blueWaveGrad" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35"></stop>
+            <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.25"></stop>
             <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.0"></stop>
           </linearGradient>
-          <!-- Red Gradient Fill -->
-          <linearGradient id="redWaveGrad" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stop-color="#ff2453" stop-opacity="0.3"></stop>
-            <stop offset="100%" stop-color="#ff2453" stop-opacity="0.0"></stop>
+          <!-- Emerald Gradient Fill (Clean/Universe) -->
+          <linearGradient id="emeraldWaveGrad" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="#10b981" stop-opacity="0.30"></stop>
+            <stop offset="100%" stop-color="#10b981" stop-opacity="0.0"></stop>
           </linearGradient>
         </defs>
-        <!-- Blue Curve Area Fill (Raw Profile) -->
-        <path d="M0,130 Q70,20 150,45 T300,90 T450,40 T600,120 T750,30 T900,40 L900,180 L0,180 Z" fill="url(#blueWaveGrad)"></path>
+        
+        <!-- Blue Curve Area Fill (Raw Profile with apparent drops due to skips, strictly bounded) -->
+        <path id="curve-area-raw" d="M 0,14 C 100,16 150,22 250,88 C 320,135 380,30 460,25 C 530,22 580,50 630,45 C 700,38 730,130 810,125 C 850,120 870,20 900,15 L 900,180 L 0,180 Z" fill="url(#blueWaveGrad)"></path>
         <!-- Blue Wave Curve Line -->
-        <path class="glow-drop-blue" d="M0,130 Q70,20 150,45 T300,90 T450,40 T600,120 T750,30 T900,40" fill="none" stroke="#3b82f6" stroke-linecap="round" stroke-width="3"></path>
-        <!-- Red Curve Area Fill (Clean Profile) -->
-        <path d="M0,140 Q80,135 150,150 T300,105 T450,140 T600,155 T750,140 T900,145 L900,180 L0,180 Z" fill="url(#redWaveGrad)"></path>
-        <!-- Red Wave Curve Line -->
-        <path class="glow-drop" d="M0,140 Q80,135 150,150 T300,105 T450,140 T600,155 T750,140 T900,145" fill="none" stroke="#ff2453" stroke-linecap="round" stroke-width="2.5"></path>
+        <path id="curve-line-raw" class="glow-drop-blue" d="M 0,14 C 100,16 150,22 250,88 C 320,135 380,30 460,25 C 530,22 580,50 630,45 C 700,38 730,130 810,125 C 850,120 870,20 900,15" fill="none" stroke="#3b82f6" stroke-linecap="round" stroke-width="2.5"></path>
+        
+        <!-- Emerald Curve Area Fill (True Elegible Universe Profile, strictly bounded) -->
+        <path id="curve-area-clean" d="M 0,10 C 150,12 300,15 450,12 C 600,14 750,10 900,11 L 900,180 L 0,180 Z" fill="url(#emeraldWaveGrad)"></path>
+        <!-- Emerald Wave Curve Line -->
+        <path id="curve-line-clean" class="glow-drop" d="M 0,10 C 150,12 300,15 450,12 C 600,14 750,10 900,11" fill="none" stroke="#10b981" stroke-linecap="round" stroke-width="3"></path>
+        
         <!-- Interactive Highlight Marker -->
-        <circle id="chart-marker" cx="450" cy="40" fill="#ff2453" r="5" stroke="#ffffff" stroke-width="2" style="filter: drop-shadow(0 0 8px #ff2453);"></circle>
+        <circle id="chart-marker" cx="460" cy="12" fill="#10b981" r="5.5" stroke="#ffffff" stroke-width="2" style="filter: drop-shadow(0 0 8px #10b981);"></circle>
       </svg>
+      
       <!-- Tooltip Badge over marker -->
-      <div id="chart-tooltip-badge" class="absolute left-1/2 -translate-x-1/2 top-4 flex flex-col items-center pointer-events-none">
-        <span class="text-[10px] font-mono text-[var(--tooltip-text)] font-semibold bg-[var(--tooltip-bg)] px-1.5 py-0.5 rounded border border-[var(--tooltip-border)] shadow-lg">89.4% Completitud Media</span>
+      <div id="chart-tooltip-badge" class="absolute left-1/2 -translate-x-1/2 top-2 flex flex-col items-center pointer-events-none transition-all duration-300">
+        <span id="tooltip-completeness" class="text-[10px] font-mono text-[var(--tooltip-text)] font-semibold bg-[var(--tooltip-bg)] px-2 py-0.5 rounded border border-[var(--tooltip-border)] shadow-lg">
+          98.2% Completitud en Universo Elegible
+        </span>
         <!-- Vertical guideline to X axis -->
-        <div class="w-px h-16 bg-gradient-to-b from-[#ff2453]/80 via-[var(--border-subtle)] to-transparent my-1"></div>
+        <div class="w-px h-16 bg-gradient-to-b from-[#10b981]/80 via-[var(--border-subtle)] to-transparent my-1"></div>
         <!-- Section pill -->
         <div class="bg-[var(--tooltip-bg)] border border-[var(--tooltip-border)] text-center px-2 py-0.5 rounded text-[10px] shadow-sm">
-          <div class="text-[var(--text-main)] font-bold text-[10px] leading-tight">s04</div>
-          <div class="text-[var(--text-muted)] text-[9px] leading-tight">Empleo</div>
+          <div id="tooltip-code" class="text-[var(--text-main)] font-bold text-[10px] leading-tight">s04 / PET</div>
+          <div id="tooltip-title" class="text-[var(--text-muted)] text-[9px] leading-tight">35,366 Personas ≥ 7 años</div>
         </div>
       </div>
-      <!-- X-Axis Labels: Survey Sections -->
+      
+      <!-- X-Axis Labels: Survey Sections / Universes -->
       <div class="absolute bottom-0 inset-x-0 flex justify-between text-[11px] text-[var(--svg-axis)] font-medium pt-2 font-mono">
-        <span>Identif.</span>
-        <span>Demogr.</span>
-        <span>Salud (s02)</span>
-        <span>Educación (s03)</span>
-        <span>Empleo (s04)</span>
-        <span>Ingresos (s05)</span>
-        <span>Pobreza</span>
+        <span class="hover:text-cyan-400 cursor-pointer">1. Demografía (33c)</span>
+        <span class="hover:text-cyan-400 cursor-pointer">2. Salud (31c)</span>
+        <span class="hover:text-purple-400 cursor-pointer">3. Educación (43c)</span>
+        <span class="hover:text-blue-400 cursor-pointer">4. Empleo (121c)</span>
+        <span class="hover:text-red-400 cursor-pointer">5. Ingresos (48c)</span>
+        <span class="hover:text-emerald-400 cursor-pointer">6. Hogar (18c)</span>
       </div>
+    </div>
+  </div>
+
+  <!-- Interactive Detail Strip of the 11 Specialized Thematic Views -->
+  <div id="universe-detail-strip" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 pt-2 border-t border-[var(--border-card)]">
+    <!-- 1. Demografía -->
+    <div class="p-2.5 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] text-xs">
+      <span class="text-[10px] font-mono text-cyan-400 block font-semibold">demografia_persona</span>
+      <span class="font-bold text-[var(--text-main)] text-[11px] block mt-0.5">39,497 pers.</span>
+      <span class="text-[10px] text-[var(--text-muted)] font-mono">33 cols · Toda la base</span>
+    </div>
+    <!-- 2. Hogar Resumen -->
+    <div class="p-2.5 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] text-xs">
+      <span class="text-[10px] font-mono text-emerald-400 block font-semibold">hogar_resumen</span>
+      <span class="font-bold text-[var(--text-main)] text-[11px] block mt-0.5">12,718 hogares</span>
+      <span class="text-[10px] text-[var(--text-muted)] font-mono">18 cols · 0 conflictos</span>
+    </div>
+    <!-- 3. Salud General & Sub-vistas -->
+    <div class="p-2.5 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] text-xs">
+      <span class="text-[10px] font-mono text-cyan-400 block font-semibold">salud_4_vistas</span>
+      <span class="font-bold text-[var(--text-main)] text-[11px] block mt-0.5">11,328 fecundidad</span>
+      <span class="text-[10px] text-[var(--text-muted)] font-mono">3,434 niñez &lt;6 · 2,781 bono</span>
+    </div>
+    <!-- 4. Educación -->
+    <div class="p-2.5 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] text-xs">
+      <span class="text-[10px] font-mono text-purple-400 block font-semibold">educacion_personas</span>
+      <span class="font-bold text-[var(--text-main)] text-[11px] block mt-0.5">37,354 elegibles</span>
+      <span class="text-[10px] text-[var(--text-muted)] font-mono">43 cols · ≥ 4 años</span>
+    </div>
+    <!-- 5. Empleo PET & Secundario -->
+    <div class="p-2.5 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] text-xs">
+      <span class="text-[10px] font-mono text-blue-400 block font-semibold">empleo_2_vistas</span>
+      <span class="font-bold text-[var(--text-main)] text-[11px] block mt-0.5">35,366 PET (≥7)</span>
+      <span class="text-[10px] text-[var(--text-muted)] font-mono">121 cols · 1,357 sec.</span>
+    </div>
+    <!-- 6. Ingresos & Pobreza -->
+    <div class="p-2.5 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)] text-xs">
+      <span class="text-[10px] font-mono text-red-400 block font-semibold">ingresos_2_vistas</span>
+      <span class="font-bold text-[var(--text-main)] text-[11px] block mt-0.5">39,497 pers.</span>
+      <span class="text-[10px] text-[var(--text-muted)] font-mono">48 no lab. · 25 pobreza</span>
     </div>
   </div>
 </section>

@@ -1,0 +1,65 @@
+{
+  "candidate_run_id": "20261004T231539Z_568e82e3039d_d3abfb0b5f",
+  "candidate_version_id": "persona-317279aafe9023a2",
+  "candidate_path": "data/proprosessing/output/20261004T231539Z_568e82e3039d_d3abfb0b5f",
+  "validation": {
+    "source_sha256_matches_manifest": true,
+    "raw_rows": 39497,
+    "raw_columns": 275,
+    "candidate_rows": 39497,
+    "candidate_columns": 275,
+    "same_schema_and_dimensions": true,
+    "same_key_sequence": true,
+    "raw_exact_duplicate_extras": 0,
+    "candidate_exact_duplicate_extras": 0,
+    "raw_duplicate_key_extras": 0,
+    "candidate_duplicate_key_extras": 0,
+    "raw_blank_key_cells": 0,
+    "candidate_blank_key_cells": 0,
+    "raw_sha256": "568e82e3039d991a1ee0d8e2056448f8c465c03ffa838330c4f1522dd77bddc8",
+    "candidate_csv_sha256": "317279aafe9023a2b17b8a7da69c87de75ea04e28d5c121cedc30b6392975ffc",
+    "candidate_version_id": "persona-317279aafe9023a2",
+    "artifact_hashes_passed": 300,
+    "artifact_hashes_expected": 300,
+    "all_artifact_hashes_match": true,
+    "transformation_reconciliation": {
+      "passed": true,
+      "expected_s02_cells": 12516,
+      "expected_s01_cells": 3,
+      "total_differences": 0,
+      "changed_columns": {}
+    },
+    "cell_audit_reconciliation": {
+      "passed": true,
+      "entries": 12519,
+      "entries_by_rule": {
+        "S-01": 3,
+        "S-02": 12516
+      }
+    },
+    "checks": {
+      "source hash matches manifest": true,
+      "candidate preserves 39,497 rows × 275 columns": true,
+      "schema and dimensions match raw": true,
+      "(folio,nro) sequence preserved": true,
+      "no exact duplicate rows in source": true,
+      "no duplicate candidate person keys": true,
+      "no blank candidate key components": true,
+      "only declared S-01/S-02 transformations exist": true,
+      "restricted cell audit matches raw and candidate": true,
+      "all candidate artifact hashes match": true
+    },
+    "validation_status": "passed"
+  },
+  "sample": {
+    "sampled_households": 381,
+    "population_households": 12718,
+    "sampled_person_records": 1216,
+    "populated_strata": 18,
+    "sample_key_duplicates": 0,
+    "sample_raw_candidate_key_sequence_matches": true,
+    "sample_frame_selection_reproducible_seed": 6237066445484562714,
+    "sample_unit": "household; all person rows from each selected household are included",
+    "sampling_scope": "quality audit only; not an analytical or model-training subset"
+  }
+}

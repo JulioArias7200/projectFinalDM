@@ -6,7 +6,7 @@ El único archivo de datos de entrada de esta etapa es `data/persona.csv`, que s
 
 ## Contrato específico de `persona.csv`
 
-El contrato de personas registra: identificador, propietario, finalidad, origen, licencia/permiso, formato, codificación, delimitador, encabezado, clave de registro, versión de esquema, columnas y tipos, nivel persona/hogar, universos de preguntas, tokens de origen, dominios, reglas de calidad, política de publicación, campos sensibles y métricas permitidas. Flask y el worker consumen la misma configuración versionada; PostgreSQL conserva el contrato y su asociación a cada ejecución. Rechazar o solicitar mapeo si cambia un encabezado requerido. La generalización a otros datasets no es requisito de esta entrega.
+El contrato de personas registra: identificador, propietario, finalidad, origen, licencia/permiso, formato, codificación, delimitador, encabezado, clave de registro, versión de esquema, columnas y tipos, nivel persona/hogar, universos, tokens, dominios, reglas de calidad, política de publicación, campos sensibles y métricas permitidas. Flask y el pipeline consumen la misma configuración versionada en JSON; `data/audit_log.json` guarda linaje y eventos. Rechazar o solicitar mapeo si cambia un encabezado requerido. La generalización a otros datasets no es requisito de esta entrega.
 
 Ejemplo ilustrativo de configuración (no ejecutable aún):
 
@@ -43,7 +43,7 @@ El [INE publica el diccionario EH2025_Persona](https://anda.ine.gob.bo/index.php
 
 La ficha oficial declara 39.485 casos y 276 variables, mientras `data/persona.csv` contiene 39.497 registros y 275 columnas. La comparación exacta de encabezados encontró solo en F27 `s01b_10a`, `s05c_09be` y `s05c_09aa`; solo en el CSV local `s05c_09e` y `totper`. No se deben equiparar esos campos por parecido de nombre ni tratar el CSV como la misma versión sin confirmar su procedencia. El diccionario oficial puede rotular las variables coincidentes, pero las reglas semánticas y los dominios para limpieza requieren reconciliar esta diferencia, el año/licencia del archivo y el cuestionario aplicable.
 
-La ejecución histórica `20261004T171822Z_568e82e3039d_d3abfb0b5f` conservó 39.497 filas y solo 150 columnas al aplicar L-80 global. No es el maestro recomendado: el denominador global excluyó variables condicionales como `s04c_17a`. El código vigente retiene el esquema completo y convierte L-80 en alerta. Su nueva ejecución y validación están pendientes; el raw no se modifica. Flask/PostgreSQL y la publicación controlada siguen pendientes.
+La ejecución histórica `20261004T171822Z_568e82e3039d_d3abfb0b5f` conservó 39.497 filas y solo 150 columnas al aplicar L-80 global; no es el maestro recomendado. La versión vigente `persona-317279aafe9023a2` conserva 39.497 filas y 275 columnas. L-80 es una alerta y las correcciones semánticas son las tres celdas S-01; S-02 cambia solo texto abierto designado. El raw no se modifica. La revisión de universos y dominios sigue incompleta. Flask consume la versión apuntada por el catálogo JSON.
 
 ## Perfil inicial requerido
 
@@ -74,7 +74,7 @@ Estas son verificaciones del futuro pipeline. La revisión técnica de lectura d
 
 No aplicar una misma regla universal a todas las columnas: un `NA` puede ser dato faltante o salto legítimo del cuestionario. Conservar columnas de origen y registrar columnas derivadas con nombres y fórmulas documentadas. Las reglas de limpieza pueden ser deterministas o parametrizadas; si hay aleatoriedad, guardar semilla y versión de dependencias.
 
-Aplicar el catálogo L-01 a L-12 de [la metodología](cleaning-methodology.md), fundamentado en `curso/`. El contrato debe registrar la definición de cada regla y sus condiciones; la bitácora PostgreSQL conserva sus resultados. La lectura inicial no convierte automáticamente tokens en nulos y la salida analítica mantiene metadatos o marcas de estado para distinguir vacío, `NA`, cero y no aplicabilidad. La imputación está deshabilitada por defecto.
+Aplicar el catálogo L-01 a L-12 de [la metodología](cleaning-methodology.md), fundamentado en `curso/`. El contrato JSON registra la definición de cada regla y sus condiciones; la bitácora JSON conserva sus resultados. La lectura inicial no convierte automáticamente tokens en nulos y la salida analítica mantiene metadatos o marcas de estado para distinguir vacío, `NA`, cero y no aplicabilidad. La imputación está deshabilitada por defecto.
 
 ## Reconciliación y salida
 
@@ -84,8 +84,8 @@ Cada ejecución debe cumplir `registros_parseados = registros_aceptados + regist
 
 Confirmar: año y versión de la Encuesta de Hogares, procedencia y derechos del archivo, clave de persona, significado de códigos, universo de cada pregunta, factor de expansión, estratos, conglomerados, tratamientos de no respuesta y umbral de supresión. Sin estas confirmaciones, el dashboard puede mostrar perfil técnico interno, pero no atribuir estimaciones oficiales a la encuesta.
 
-La versión maestra derivada vigente debe conservar 39.497 filas y 275 columnas. El pipeline puede recortar espacios exteriores solo en campos tipados autorizados; registra cambios por celda y valida la clave `(folio,nro)`. No realiza imputación, correcciones de dominio, deduplicación ni eliminación de outliers. Los artefactos solo se consideran candidatos hasta verificar manifiesto y conteos.
+La versión maestra derivada vigente conserva 39.497 filas y 275 columnas. El pipeline registra cambios por celda y valida la clave `(folio,nro)`. No realiza imputación, correcciones de dominio, deduplicación ni eliminación de outliers. La versión fue copiada como artefacto inmutable y publicada internamente tras verificar manifiesto, clave, conteos y hashes; quedan explícitas las limitaciones semánticas.
 
 ## Ejecución vigente del maestro técnico
 
-La versión candidata vigente es `data/proprosessing/output/20261004T215218Z_568e82e3039d_d3abfb0b5f/`, `persona-1dbf937c73972a78`: 39.497 filas y 275 columnas; aplica S-01 a tres celdas con horas semanales físicamente imposibles (>168) y genera 11 vistas temáticas en `thematic_views/`. El resumen hogar tiene una fila por `folio`; consolida una copia observada única si las demás son ausencias explícitas y reporta la operación. No se detectaron conflictos entre valores observados distintos. Los manifiestos registran filtros, denominadores, procedencia y hashes. La versión es candidata, no publicada; los métodos inferenciales de la encuesta y la reconciliación con F27 siguen pendientes. Ver [progreso](progress.md), [vistas temáticas](thematic-views-persona.md) y [auditoría semántica](semantic-cleaning-audit.md).
+La versión publicada internamente es `data/proprosessing/versions/persona-317279aafe9023a2/`, con 39.497 filas y 275 columnas, S-01/S-02 y 11 vistas temáticas. Los manifiestos registran procedencia, reglas, artefactos y hashes. Los métodos inferenciales de la encuesta, universos y reconciliación con F27 siguen pendientes; la publicación no habilita inferencia oficial. Ver [progreso](progress.md), [vistas temáticas](thematic-views-persona.md) y [auditoría semántica](semantic-cleaning-audit.md).

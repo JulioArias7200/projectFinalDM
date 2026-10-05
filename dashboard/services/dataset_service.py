@@ -4,6 +4,9 @@ Includes universe categorization (Salud, Educación, Empleo, Ingresos) and in-me
 """
 import os
 import glob
+import hashlib
+import math
+import re
 import pandas as pd
 from typing import Any, Dict, List, Optional
 from .json_store import read_json_file
@@ -12,6 +15,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 DATA_DIR = os.path.join(BASE_DIR, "data")
 PROPROCESSING_DIR = os.path.join(DATA_DIR, "proprosessing")
 OUTPUT_DIR = os.path.join(PROPROCESSING_DIR, "output")
+VERSIONS_DIR = os.path.join(PROPROCESSING_DIR, "versions")
+REGISTRY_FILE = os.path.join(DATA_DIR, "audit_log.json")
 
 UNIVERSE_CONFIGS = {
     "salud": {
@@ -21,22 +26,23 @@ UNIVERSE_CONFIGS = {
         "icon_color": "#00d2ff",
         "badge_class": "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",
         "description": "Cobertura de seguros de salud, consulta médica ambulatoria, morbilidad reciente y salud materno-infantil.",
-        "eligibility": "Población general, mujeres de 13 a 50 años (maternidad) y menores de 5 a 6 años (nutrición y vacunas).",
+        "eligibility": "Población general (39,497), mujeres de 13 a 50 años (maternidad: 11,328), menores de 6 años (atención infantil: 3,434) y menores de 5 años (bono: 2,781).",
+        "methodological_note": "En el Universo Salud, los valores NA en fecundidad y maternidad corresponden a hombres y personas fuera del rango 13–50 años; en nutrición y bono corresponden a mayores de 5 años. Representan saltos legítimos de cuestionario y no errores de completitud.",
         "prefix": "s02",
         "kpi1_title": "Cobertura de Salud Declarada",
         "kpi1_val": "74.8%",
-        "kpi1_sub": "Seguro público o privado",
+        "kpi1_sub": "Seguro público (SUS) o Cajas",
         "kpi2_title": "Consulta Médica Reciente",
         "kpi2_val": "28.3%",
         "kpi2_sub": "Últimos 30 días",
         "kpi3_title": "Vistas Temáticas Derivadas",
         "kpi3_val": "4 Vistas",
-        "kpi3_sub": "Fecundidad, Niñez y Bono",
+        "kpi3_sub": "General, Maternidad, Niñez y Bono",
         "subviews": [
             {"id": "salud_general_persona", "name": "Salud General (Todos)", "rows": 39497, "cols": 31, "filter": "Todos los registros de la encuesta"},
-            {"id": "salud_fecundidad_mujeres_13_50", "name": "Maternidad & Fecundidad", "rows": 11328, "cols": 24, "filter": "Mujeres de 13 a 50 años"},
-            {"id": "salud_asistencia_infantil_menores_6", "name": "Asistencia Infantil", "rows": 3434, "cols": 10, "filter": "Menores de 6 años"},
-            {"id": "salud_bono_menores_5", "name": "Bono Juana Azurduy", "rows": 2781, "cols": 12, "filter": "Menores de 5 años"}
+            {"id": "salud_fecundidad_mujeres_13_50", "name": "Maternidad & Fecundidad", "rows": 11328, "cols": 24, "filter": "Mujeres de 13 a 50 años (s01a_02=2 ∧ 13 ≤ edad ≤ 50)"},
+            {"id": "salud_asistencia_infantil_menores_6", "name": "Asistencia Infantil", "rows": 3434, "cols": 10, "filter": "Menores de 6 años (edad < 6)"},
+            {"id": "salud_bono_menores_5", "name": "Bono Juana Azurduy", "rows": 2781, "cols": 12, "filter": "Menores de 5 años (edad < 5)"}
         ],
         "default_vars": [
             {"name": "s02a_01a", "label": "Afiliación a Seguro de Salud (SUS / Caja)", "data_type": "int64", "type_category": "categorical", "completeness": 99.4, "range_info": "{1=Sí, 2=No}", "is_retained": True},
@@ -53,11 +59,12 @@ UNIVERSE_CONFIGS = {
         "icon_color": "#8a5cf6",
         "badge_class": "text-purple-400 bg-purple-500/10 border-purple-500/20",
         "description": "Alfabetismo, asistencia a educación formal, nivel educativo alcanzado y años acumulados de estudio.",
-        "eligibility": "Personas de 4 años o más (asistencia escolar) y personas de 15 años o más (alfabetismo y nivel superior).",
+        "eligibility": "Personas de 4 años o más (asistencia escolar: 37,354) y personas de 15 años o más (alfabetismo y nivel superior: 28,140).",
+        "methodological_note": "En el Universo Educación, la asistencia escolar se evalúa para la población de 4 años o más (37,354 personas), mientras que el alfabetismo y años de escolaridad (aestudio) se calculan sobre personas de 15 años o más. El denominador debe ajustarse a cada indicador.",
         "prefix": "s03",
         "kpi1_title": "Tasa de Alfabetismo (>= 15 años)",
         "kpi1_val": "94.6%",
-        "kpi1_sub": "Sabe leer y escribir",
+        "kpi1_sub": "Sabe leer y escribir un recado",
         "kpi2_title": "Asistencia Escolar Actual",
         "kpi2_val": "86.2%",
         "kpi2_sub": "Población de 4 a 17 años",
@@ -65,7 +72,7 @@ UNIVERSE_CONFIGS = {
         "kpi3_val": "37,354 Pers.",
         "kpi3_sub": "Vista educacion_personas_4_mas",
         "subviews": [
-            {"id": "educacion_personas_4_mas", "name": "Educación Formal (≥ 4 años)", "rows": 37354, "cols": 43, "filter": "Población de 4 años o más"}
+            {"id": "educacion_personas_4_mas", "name": "Educación Formal (≥ 4 años)", "rows": 37354, "cols": 43, "filter": "Población de 4 años o más (edad ≥ 4)"}
         ],
         "default_vars": [
             {"name": "s03a_01", "label": "¿Sabe leer y escribir un recado?", "data_type": "int64", "type_category": "categorical", "completeness": 98.9, "range_info": "{1=Sí, 2=No}", "is_retained": True},
@@ -82,7 +89,8 @@ UNIVERSE_CONFIGS = {
         "icon_color": "#3b82f6",
         "badge_class": "text-blue-400 bg-blue-500/10 border-blue-500/20",
         "description": "Condición de actividad (PEA / PEI), ocupación principal, horas trabajadas semanales y categoría ocupacional.",
-        "eligibility": "Población en Edad de Trabajar (PET: personas de 7 años o más según módulo EH2025).",
+        "eligibility": "Población en Edad de Trabajar (PET: personas de 7 años o más: 35,366) y Ocupación Secundaria (1,357 casos).",
+        "methodological_note": "En el Universo Empleo, la Población en Edad de Trabajar (PET) abarca a personas de 7 años o más (35,366 personas). La regla S-01 auditó y corrigió valores atípicos que superaban el límite físico de 168 horas semanales en phrs y tothrs, registrando los cambios en la bitácora append-only.",
         "prefix": "s04",
         "kpi1_title": "Tasa de Participación Global (PEA/PET)",
         "kpi1_val": "68.4%",
@@ -92,10 +100,10 @@ UNIVERSE_CONFIGS = {
         "kpi2_sub": "Vista empleo_secundario_casos",
         "kpi3_title": "Población PET (>= 7 años)",
         "kpi3_val": "35,366 Pers.",
-        "kpi3_sub": "Vista empleo_personas_7_mas",
+        "kpi3_sub": "Vista empleo_personas_7_mas (121 cols)",
         "subviews": [
-            {"id": "empleo_personas_7_mas", "name": "Mercado Laboral PET (≥ 7 años)", "rows": 35366, "cols": 121, "filter": "Población de 7 años o más"},
-            {"id": "empleo_secundario_casos", "name": "Ocupación Secundaria", "rows": 1357, "cols": 45, "filter": "Casos con segundo trabajo (s04e_25=1)"}
+            {"id": "empleo_personas_7_mas", "name": "Mercado Laboral PET (≥ 7 años)", "rows": 35366, "cols": 121, "filter": "Población de 7 años o más (edad ≥ 7)"},
+            {"id": "empleo_secundario_casos", "name": "Ocupación Secundaria", "rows": 1357, "cols": 45, "filter": "Casos con segundo trabajo declarado (s04e_25=1)"}
         ],
         "default_vars": [
             {"name": "condact", "label": "Condición de Actividad (Ocupado / Desocupado / Inactivo)", "data_type": "int64", "type_category": "categorical", "completeness": 99.2, "range_info": "{1=Ocupado, 2=Desocupado, 3=Inactivo}", "is_retained": True},
@@ -112,21 +120,22 @@ UNIVERSE_CONFIGS = {
         "icon_color": "#ff2453",
         "badge_class": "text-red-400 bg-red-500/10 border-red-500/20",
         "description": "Ingresos laborales, ingresos no laborales (rentas, remesas, bonos), ingreso per cápita y líneas de pobreza.",
-        "eligibility": "Personas ocupadas perceptoras de ingresos, hogares con declaración de ingresos y universo de líneas de pobreza.",
+        "eligibility": "Personas ocupadas perceptoras de ingresos, hogares con declaración de ingresos (12,718) y líneas oficiales de pobreza.",
+        "methodological_note": "En el Universo Ingresos, las variables de vivienda e ingreso agregado (yhog, p0, totper) deben analizarse a nivel de hogar único (12,718 folios) mediante la regla H-01 para evitar sobreestimación de recursos familiares por conteo repetido de integrantes.",
         "prefix": "s05",
         "kpi1_title": "Ingreso Medio Laboral (Bs)",
         "kpi1_val": "3,420 Bs",
-        "kpi1_sub": "Población asalariada e independiente",
+        "kpi1_sub": "Población ocupada asalariada e independiente",
         "kpi2_title": "Incidencia Pobreza Moderada (p0)",
         "kpi2_val": "36.4%",
-        "kpi2_sub": "Línea oficial de pobreza",
+        "kpi2_sub": "Línea oficial de pobreza INE",
         "kpi3_title": "Hogares Consolidados (Folio)",
         "kpi3_val": "12,718 Hog.",
         "kpi3_sub": "Vista hogar_resumen (0 conflictos)",
         "subviews": [
-            {"id": "ingresos_pobreza_persona", "name": "Ingresos Totales & Pobreza", "rows": 39497, "cols": 25, "filter": "Todos los registros de persona"},
-            {"id": "ingresos_no_laborales_persona", "name": "Ingresos No Laborales & Bonos", "rows": 39497, "cols": 48, "filter": "Todos los registros de persona"},
-            {"id": "hogar_resumen_persona_candidato", "name": "Resumen por Hogar (Folio)", "rows": 12718, "cols": 18, "filter": "Una fila por folio único"}
+            {"id": "ingresos_pobreza_persona", "name": "Ingresos Totales & Pobreza", "rows": 39497, "cols": 25, "filter": "Todos los registros persona"},
+            {"id": "ingresos_no_laborales_persona", "name": "Ingresos No Laborales & Bonos", "rows": 39497, "cols": 48, "filter": "Todos los registros persona"},
+            {"id": "hogar_resumen_persona_candidato", "name": "Resumen por Hogar (Folio)", "rows": 12718, "cols": 18, "filter": "Una fila por folio único (invariantes de vivienda)"}
         ],
         "default_vars": [
             {"name": "ylab", "label": "Ingreso laboral líquido mensual (Bs)", "data_type": "float64", "type_category": "numeric", "completeness": 91.2, "range_info": "0.0 a 35000.0", "is_retained": True},
@@ -147,49 +156,233 @@ class DatasetService:
         self._cached_manifest: Optional[Dict[str, Any]] = None
         self._cached_dict: Optional[Dict[str, Any]] = None
         self._cached_variables: Optional[List[Dict[str, Any]]] = None
+        self._analytics_cache: Dict[str, pd.DataFrame] = {}
 
     def get_latest_run_dir(self) -> Optional[str]:
-        """Finds the most recent execution output directory."""
-        if not os.path.exists(self.output_dir):
+        """Resolve only the version selected by the JSON publication pointer."""
+        registry = read_json_file(REGISTRY_FILE, default={})
+        version_id = registry.get("published_version_id")
+        if not version_id:
             return None
-        runs = sorted(glob.glob(os.path.join(self.output_dir, "*")), reverse=True)
-        for r in runs:
-            if os.path.isdir(r):
-                return r
-        return None
+        record = next((item for item in registry.get("versions", [])
+                       if item.get("version_id") == version_id
+                       and item.get("status", "").startswith("published_internal")), None)
+        if not record:
+            return None
+        resolved = os.path.abspath(os.path.join(BASE_DIR, record.get("relative_path", "")))
+        versions_root = os.path.abspath(VERSIONS_DIR) + os.sep
+        if not resolved.startswith(versions_root) or not os.path.isfile(os.path.join(resolved, "manifest.json")):
+            return None
+        return resolved
 
     def get_manifest(self) -> Dict[str, Any]:
-        """Reads manifest.json and views_manifest.json from the latest candidate run with caching."""
-        if self._cached_manifest is not None:
-            return self._cached_manifest
-
+        """Reads manifest and views for the JSON-registered published version."""
         latest_run = self.get_latest_run_dir()
-        manifest = {
-            "dataset_name": "persona.csv",
-            "candidate_rows": 39497,
-            "candidate_columns": 275,
-            "original_columns": 275,
-            "total_households": 12718,
-            "household_conflicts": 0,
-            "thematic_views_count": 11,
-            "status": "candidate_ready"
-        }
+        manifest = {"dataset_name": "persona.csv", "status": "not_published"}
         if latest_run:
             manifest_file = os.path.join(latest_run, "manifest.json")
             if os.path.exists(manifest_file):
                 manifest = read_json_file(manifest_file, default=manifest)
+                manifest["status"] = manifest.get("pipeline_status", "published_internal_with_semantic_limitations")
+                manifest["published_version_id"] = manifest.get("version_id")
+                manifest["published_at"] = (manifest.get("publication") or {}).get("published_at")
+                publication_semantic_status = (manifest.get("publication") or {}).get("semantic_status", "")
+                manifest["semantic_status"] = (
+                    "Dominios y universos pendientes; uso interno"
+                    if publication_semantic_status else "Estado semántico pendiente de validar"
+                )
             
             views_manifest_file = os.path.join(latest_run, "thematic_views", "views_manifest.json")
             if os.path.exists(views_manifest_file):
                 views_data = read_json_file(views_manifest_file, default={})
                 manifest["thematic_views"] = views_data
-                manifest["thematic_views_count"] = 11
-                manifest["total_households"] = 12718
-                manifest["household_conflicts"] = 0
-                manifest["candidate_columns"] = 275
+                manifest["thematic_views_count"] = len(views_data.get("views", []))
         
         self._cached_manifest = manifest
         return self._cached_manifest
+
+    def _load_published_columns(self, columns: List[str]) -> Optional[pd.DataFrame]:
+        """Read requested columns only from the integrity-checked JSON-published CSV."""
+        run_dir = self.get_latest_run_dir()
+        if not run_dir:
+            return None
+        registry = read_json_file(REGISTRY_FILE, default={})
+        version_id = registry.get("published_version_id")
+        record = next((v for v in registry.get("versions", []) if v.get("version_id") == version_id), None)
+        if not record:
+            return None
+        path = os.path.abspath(os.path.join(run_dir, record.get("csv_file", "persona_clean_master.csv")))
+        if not path.startswith(os.path.abspath(run_dir) + os.sep) or not os.path.isfile(path):
+            return None
+        expected_hash = record.get("csv_sha256")
+        cache_key = f"{version_id}:{expected_hash}:{','.join(sorted(columns))}"
+        if not expected_hash:
+            return None
+        digest = hashlib.sha256()
+        try:
+            with open(path, "rb") as source:
+                for chunk in iter(lambda: source.read(1024 * 1024), b""):
+                    digest.update(chunk)
+        except OSError:
+            return None
+        if digest.hexdigest().lower() != str(expected_hash).lower():
+            return None
+        if cache_key in self._analytics_cache:
+            return self._analytics_cache[cache_key].copy()
+        try:
+            header = pd.read_csv(path, nrows=0).columns.tolist()
+            selected = [name for name in columns if name in header]
+            if not selected:
+                return None
+            frame = pd.read_csv(path, usecols=selected, dtype=str, keep_default_na=False)
+        except (OSError, ValueError, pd.errors.ParserError, UnicodeError):
+            return None
+        self._analytics_cache[cache_key] = frame
+        return frame.copy()
+
+    @staticmethod
+    def _chart_entry_rows(series: pd.Series, *, numeric_only: bool = False, preserve_labels: bool = False) -> List[Dict[str, Any]]:
+        """Build privacy-conscious aggregate bars; never return a source record."""
+        values = series.astype(str)
+        labels = []
+        for value in values:
+            if preserve_labels:
+                labels.append(value)
+            elif value == "":
+                labels.append("Celda vacía")
+            elif value == "NA":
+                labels.append("Token NA")
+            elif numeric_only and not re.fullmatch(r"-?\d+(?:\.\d+)?", value):
+                labels.append("Otro token / formato")
+            elif re.fullmatch(r"-?\d+(?:\.\d+)?", value):
+                labels.append(f"Código {value}" if numeric_only else value)
+            else:
+                labels.append("Respuesta no codificada")
+        counts = pd.Series(labels).value_counts(dropna=False).to_dict()
+        entries = [{"label": str(k), "count": int(v)} for k, v in counts.items()]
+        entries.sort(key=lambda item: (-item["count"], item["label"]))
+        common = [item for item in entries if item["count"] >= 10]
+        suppressed = sum(item["count"] for item in entries if item["count"] < 10)
+        if suppressed and common:
+            # Complementary suppression prevents reconstructing the hidden total from N.
+            min(common, key=lambda item: item["count"])["suppressed"] = True
+        if suppressed:
+            common.append({"label": "Categorías suprimidas (<10 c/u)", "count": suppressed, "suppressed": True})
+        maximum = max((item["count"] for item in common if not item.get("suppressed")), default=0)
+        for item in common:
+            if item.get("suppressed"):
+                item["bar_pct"] = 0
+                item["display_count"] = "Supresión complementaria" if item.get("label") != "Categorías suprimidas (<10 c/u)" else "Suprimido (<10 por categoría)"
+                item.pop("count", None)
+            else:
+                item["bar_pct"] = round(100 * item["count"] / maximum, 2) if maximum else 0
+                item["display_count"] = f"{item['count']:,}".replace(",", ".")
+        return common
+
+    def get_demographic_charts(self) -> Dict[str, Any]:
+        """Observed-only distributions from the published master, with no population expansion."""
+        required = ["s01a_02", "s01a_03", "depto", "area"]
+        frame = self._load_published_columns(required)
+        manifest = self.get_manifest()
+        version = manifest.get("published_version_id")
+        if frame is None or not version:
+            return {"available": False, "version_id": version, "panels": []}
+        panels = []
+        for column, title, note, numeric in [
+            ("s01a_03", "Edad declarada", "Conteos observados por grupos de 5 años; se conserva cualquier edad numérica, sin recorte por atípicos.", True),
+            ("s01a_02", "Sexo: códigos observados", "Se muestran códigos tal como aparecen; no se asignan etiquetas de sexo sin dominio validado.", True),
+            ("depto", "Departamento: códigos observados", "Conteos de la copia por código; no son estimaciones de población departamental.", True),
+            ("area", "Área: códigos observados", "Conteos de la copia por código; no se interpreta el código mientras el dominio no esté confirmado.", True),
+        ]:
+            if column not in frame:
+                continue
+            series = frame[column]
+            if column == "s01a_03":
+                def age_group(value: str) -> str:
+                    if value == "":
+                        return "Celda vacía"
+                    if value == "NA":
+                        return "Token NA"
+                    try:
+                        age = float(value)
+                    except ValueError:
+                        return "No numérico"
+                    if not math.isfinite(age):
+                        return "No numérico"
+                    return f"{int(age // 5) * 5}–{int(age // 5) * 5 + 4}" if 0 <= age < 120 else ("120+" if age >= 120 else "Valor negativo")
+                grouped = series.map(age_group)
+                entries = self._chart_entry_rows(grouped, preserve_labels=True)
+                entries.sort(key=lambda item: int(item["label"].split("–", 1)[0]) if item["label"][:1].isdigit() else 10_000)
+            else:
+                entries = self._chart_entry_rows(series, numeric_only=True)
+            panels.append({"title": title, "description": note, "variable": column,
+                           "unit": "persona", "n": len(frame), "entries": entries})
+        return {"available": bool(panels), "version_id": version, "updated_at": manifest.get("published_at"), "accent": "#00d2ff",
+                "dataset": manifest.get("dataset_name", "persona.csv"), "method": "Conteos no ponderados de registros observados",
+                "universe": "Todas las filas de la versión publicada", "filter": "Sin filtro analítico: distribución descriptiva del maestro",
+                "panels": panels}
+
+    def get_universe_charts(self, universe_id: str) -> Dict[str, Any]:
+        """Show coded responses only as exploratory counts; income stays blocked pending semantics."""
+        config = UNIVERSE_CONFIGS.get(universe_id)
+        if not config:
+            return {"available": False, "panels": []}
+        manifest = self.get_manifest()
+        version = manifest.get("published_version_id")
+        if not version:
+            return {"available": False, "version_id": None, "panels": []}
+        if universe_id == "ingresos":
+            return {"available": False, "blocked": True, "version_id": version, "panels": [],
+                    "message": "Gráficos de montos/pobreza bloqueados hasta confirmar unidad, período, valores especiales y universo de cada indicador."}
+        columns = {"salud": ["s02a_01a"], "educacion": ["s03a_01"], "empleo": ["condact", "s04e_25"]}.get(universe_id)
+        if not version or not columns:
+            return {"available": False, "panels": []}
+        frame = self._load_published_columns(columns)
+        if frame is None:
+            return {"available": False, "version_id": version, "panels": []}
+        panels = []
+        for column in columns:
+            if column not in frame:
+                continue
+            panels.append({"title": f"Frecuencia observada de códigos — {column}",
+                           "description": "Conteos exploratorios en el maestro completo; incluye estados vacíos/NA. No aplica filtro de elegibilidad ni interpreta códigos como tasas.",
+                           "variable": column, "variable_label": self.get_variable_label(column), "unit": "persona", "n": len(frame),
+                           "entries": self._chart_entry_rows(frame[column], numeric_only=True)})
+        if not panels:
+            return {"available": False, "version_id": version, "panels": []}
+        return {"available": True, "version_id": version, "updated_at": manifest.get("published_at"),
+                "dataset": "persona.csv", "method": "Conteos no ponderados de códigos observados", "accent": config.get("icon_color"),
+                "universe": config.get("section_code", universe_id), "filter": "Maestro completo; sin filtros de elegibilidad aplicados",
+                "panels": panels}
+
+    def get_variable_label(self, variable: str) -> str:
+        """Return a dictionary description, falling back to the column name."""
+        latest = self.get_latest_run_dir()
+        if not latest:
+            return variable
+        dictionary = read_json_file(os.path.join(latest, "data_dictionary.json"), default={})
+        item = (dictionary.get("variables") or {}).get(variable, {})
+        return item.get("display_name") or item.get("description") or variable
+
+    def get_review_summary(self) -> Dict[str, Any]:
+        """Aggregate semantic review states; no person-level data is read."""
+        matrix = os.path.join(BASE_DIR, "docs", "universe-matrix-persona.csv")
+        if not os.path.isfile(matrix):
+            return {"available": False, "entries": []}
+        try:
+            frame = pd.read_csv(matrix, dtype=str, keep_default_na=False)
+            status_col = next((c for c in ("universe_audit_status", "status", "universe_status", "eligibility_status") if c in frame.columns), None)
+            if not status_col:
+                return {"available": False, "entries": []}
+            entries = [{"label": str(k), "count": int(v)} for k, v in frame[status_col].value_counts().items()]
+            maximum = max((e["count"] for e in entries), default=0)
+            for entry in entries:
+                entry["bar_pct"] = round(100 * entry["count"] / maximum, 2) if maximum else 0
+                entry["display_count"] = str(entry["count"])
+            return {"available": True, "source": "docs/universe-matrix-persona.csv", "entries": entries,
+                    "total_variables": int(len(frame)), "method": "Recuento de estados documentales, no estadística de personas"}
+        except (OSError, ValueError, pd.errors.ParserError):
+            return {"available": False, "entries": []}
 
     def get_thematic_views(self) -> List[Dict[str, Any]]:
         """Returns structured list of the 11 thematic views from view_coverage.csv or views_manifest.json."""
@@ -959,6 +1152,9 @@ class DatasetService:
             config = UNIVERSE_CONFIGS.get("salud", {})
 
         result = dict(config)
+        for key in ("eligibility", "methodological_note", "kpi1_title", "kpi1_val", "kpi1_sub",
+                    "kpi2_title", "kpi2_val", "kpi2_sub", "kpi3_title", "kpi3_val", "kpi3_sub"):
+            result.pop(key, None)
         prefix = config.get("prefix", "")
 
         variables = []
@@ -986,16 +1182,56 @@ class DatasetService:
                 except Exception:
                     pass
 
-        if not variables:
-            variables = config.get("default_vars", [])
-
         result["variables"] = variables
         result["total_vars"] = len(variables)
         result["retained_vars"] = len(variables)
+        for subview in result.get("subviews", []):
+            subview["rows"] = None
+            subview["cols"] = None
+        latest_run = self.get_latest_run_dir()
+        if latest_run:
+            views_path = os.path.join(latest_run, "thematic_views", "views_manifest.json")
+            views_data = read_json_file(views_path, default={})
+            actual_views = {item.get("view_id"): item for item in views_data.get("views", [])}
+            for subview in result.get("subviews", []):
+                actual = actual_views.get(subview.get("id"))
+                if actual:
+                    subview["rows"] = actual.get("rows", 0)
+                    subview["cols"] = actual.get("columns", 0)
+                    subview["filter"] = actual.get("filter", "Filtro no documentado")
+                else:
+                    subview["rows"] = None
+                    subview["cols"] = None
+                    subview["filter"] = "Vista no registrada en el manifiesto de la versión publicada"
         return result
+
+    def get_all_variables(self) -> List[Dict[str, Any]]:
+        """Returns all 275 variables in the master clean dataset with completeness and data types."""
+        variables = []
+        latest_run = self.get_latest_run_dir()
+        if latest_run:
+            comp_file = os.path.join(latest_run, "comparison_all_columns.csv")
+            if os.path.exists(comp_file):
+                try:
+                    df = pd.read_csv(comp_file)
+                    for _, row in df.iterrows():
+                        col_name = str(row.get("column", ""))
+                        comp_pct = round(100.0 - float(row.get("raw_null_pct", 0.0)), 1)
+                        dtype_str = str(row.get("cleaned_dtype", "int64"))
+                        cat = "identifier" if col_name in ["folio", "nro"] else ("numeric" if "float" in dtype_str else "categorical")
+                        variables.append({
+                            "name": col_name,
+                            "label": str(row.get("label", col_name)) if pd.notna(row.get("label")) else col_name,
+                            "data_type": dtype_str,
+                            "type_category": cat,
+                            "completeness": comp_pct,
+                            "range_info": f"Faltantes: {round(float(row.get('raw_null_pct', 0.0)), 1)}%",
+                            "is_retained": True
+                        })
+                except Exception:
+                    pass
+
+        return variables
 
 
 dataset_service = DatasetService()
-
-
-

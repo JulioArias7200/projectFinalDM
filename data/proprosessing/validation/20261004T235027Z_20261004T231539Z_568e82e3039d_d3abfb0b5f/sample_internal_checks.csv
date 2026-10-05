@@ -1,0 +1,18 @@
+﻿check,column,households_with_observed_value,households_with_multiple_values,interpretation
+within-household nonmissing value constancy,depto,381,0,review-only; no values changed
+within-household nonmissing value constancy,area,381,0,review-only; no values changed
+within-household nonmissing value constancy,upm,381,0,review-only; no values changed
+within-household nonmissing value constancy,estrato,381,0,review-only; no values changed
+within-household nonmissing value constancy,totper,381,0,review-only; no values changed
+within-household nonmissing value constancy,yhog,381,0,review-only; no values changed
+within-household nonmissing value constancy,yhogpc,381,0,review-only; no values changed
+within-household nonmissing value constancy,z,381,0,review-only; no values changed
+within-household nonmissing value constancy,zext,381,0,review-only; no values changed
+within-household nonmissing value constancy,p0,381,0,review-only; no values changed
+within-household nonmissing value constancy,p1,381,0,review-only; no values changed
+within-household nonmissing value constancy,p2,381,0,review-only; no values changed
+within-household nonmissing value constancy,pext0,381,0,review-only; no values changed
+within-household nonmissing value constancy,pext1,381,0,review-only; no values changed
+within-household nonmissing value constancy,pext2,381,0,review-only; no values changed
+within-household nonmissing value constancy,tipohogar,381,0,review-only; no values changed
+totper versus observed persona rows per household,totper,381,312,"69 match, 312 differ, 0 unavailable/ambiguous; review-only, definition unconfirmed"

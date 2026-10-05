@@ -1,28 +1,18 @@
 {% extends 'dashboard/layout.html' %}
-
-{% block title %}ML Lab - Minería de Datos &amp; 4 Universos (persona.csv){% endblock %}
-
+{% block title %}DM Lab - Resumen persona.csv{% endblock %}
 {% block content %}
-<!-- 1. Hub de los 4 Universos (Salud, Educación, Empleo, Ingresos) -->
-{% include 'dashboard/components/universes_hub.html' %}
-
-<!-- 2. Tarjetas KPI de Calidad e Integridad de Datos -->
-{% include 'dashboard/components/kpi_cards.html' %}
-
-<!-- 3. Sección Central: Matriz de Reglas de Limpieza + Estructura de Universos -->
-<section class="grid grid-cols-1 xl:grid-cols-3 gap-5 mb-6" data-purpose="rules-and-universe-distribution">
-  {% include 'dashboard/components/cleaning_rules_table.html' %}
-  {% include 'dashboard/components/universe_distribution.html' %}
-</section>
-
-<!-- 4. Gráfico Comparativo: Perfil de Calidad Antes vs Después -->
-{% include 'dashboard/components/comparative_chart.html' %}
-
-<!-- 5. Modal de Detalle de Reglas Metodológicas (L-01 a L-80) -->
-{% include 'dashboard/components/rule_modal.html' %}
-{% endblock %}
-
-{% block scripts %}
-<script src="{{ url_for('dashboard.static', filename='js/rules-modal.js') }}"></script>
-<script src="{{ url_for('dashboard.static', filename='js/comparative-chart.js') }}"></script>
+<div class="space-y-5 animate-fade-in">
+  {% include 'dashboard/components/dataset_identity_card.html' %}
+  <section class="bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)]">
+    <h1 class="text-lg font-bold text-[var(--text-main)]">Resumen descriptivo</h1>
+    <p class="text-xs text-[var(--text-secondary)] mt-1">Gráficos calculados desde la versión JSON publicada. Son distribuciones de la copia observada; no son tasas oficiales ni estimaciones poblacionales.</p>
+  </section>
+  {% set chart_model = charts %}
+  {% include 'dashboard/components/aggregate_chart.html' %}
+  <nav class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3" aria-label="Secciones de análisis">
+    {% for endpoint, label in [('dashboard.demografia','Demografía'),('dashboard.salud','Salud'),('dashboard.educacion','Educación'),('dashboard.empleo','Empleo'),('dashboard.ingresos','Ingresos'),('dashboard.revision_pendiente','Revisión pendiente')] %}
+    <a class="rounded-xl border border-[var(--border-card)] bg-[var(--bg-card)] p-3 text-xs font-semibold text-[var(--text-main)] hover:border-cyan-400" href="{{ url_for(endpoint) }}">{{ label }} <span aria-hidden="true">→</span></a>
+    {% endfor %}
+  </nav>
+</div>
 {% endblock %}

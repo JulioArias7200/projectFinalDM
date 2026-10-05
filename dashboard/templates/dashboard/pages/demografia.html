@@ -1,0 +1,13 @@
+{% extends 'dashboard/layout.html' %}
+{% block title %}DM Lab - Demografía observada{% endblock %}
+{% block content %}
+<div class="space-y-5 animate-fade-in">
+  <header class="bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)]">
+    <p class="text-[10px] uppercase tracking-wider font-mono text-cyan-400">Universo general · persona.csv</p>
+    <h1 class="text-xl font-bold text-[var(--text-main)] mt-1">Demografía observada</h1>
+    <p class="text-xs text-[var(--text-secondary)] mt-2">Distribuciones de la versión publicada. Los códigos categóricos se muestran tal como están almacenados; no representan estimaciones poblacionales.</p>
+  </header>
+  {% set chart_model = charts %}
+  {% include 'dashboard/components/aggregate_chart.html' %}
+</div>
+{% endblock %}

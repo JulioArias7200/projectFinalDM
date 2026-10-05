@@ -86,6 +86,27 @@ class ThematicViewTests(unittest.TestCase):
             with self.assertRaises(FileExistsError):
                 PREPROCESSING.build_thematic_views(self.frame, target, self.metadata)
 
+    def test_lowercases_only_allowlisted_open_text_and_preserves_missing_and_ids(self) -> None:
+        raw = pd.DataFrame({
+            "folio": ["H-ABC", "H-DEF"], "nro": ["1", "1"],
+            "s01b_12e": ["MiXed Answer", "NA"],
+        })
+        original = raw.copy(deep=True)
+        cleaned, rule_log, cell_log = PREPROCESSING.clean_frame(raw, PREPROCESSING.CONFIG)
+        self.assertEqual(cleaned["folio"].tolist(), ["H-ABC", "H-DEF"])
+        self.assertEqual(cleaned["s01b_12e"].tolist(), ["mixed answer", "NA"])
+        self.assertEqual(len(cell_log.loc[cell_log["rule_id"].eq("S-02")]), 1)
+        self.assertEqual(int(rule_log.loc[rule_log["rule_id"].eq("S-02"), "cells_changed"].iloc[0]), 1)
+        pd.testing.assert_frame_equal(raw, original)
+
+    def test_exact_duplicates_are_audited_and_blocked_without_deletion(self) -> None:
+        duplicate = pd.DataFrame({
+            "folio": ["H-ABC", "H-ABC"], "nro": ["1", "1"],
+            "s01b_12e": ["NA", "NA"],
+        })
+        with self.assertRaisesRegex(ValueError, "No se deduplicó"):
+            PREPROCESSING.clean_frame(duplicate, PREPROCESSING.CONFIG)
+
 
 if __name__ == "__main__":
     unittest.main()

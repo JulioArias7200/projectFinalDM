@@ -143,6 +143,16 @@ SECTION_PREFIXES = (
 )
 SENSITIVE_PREFIXES = ("s02", "s04", "s05", "y", "z", "p", "folio")
 
+# Open-response fields explicitly labeled as "Especifique" in the local data
+# dictionary. Only these textual responses are case-normalized for text mining;
+# identifiers, numeric/category codes, missing tokens and all other fields stay
+# unchanged. The source CSV remains the recoverable original.
+LOWERCASE_TEXT_RESPONSE_COLUMNS = (
+    "s01b_12e", "s02a_01e", "s02a_02he", "s02b_10e",
+    "s03a_05e", "s03b_11e", "s03c_17e", "s04a_06e", "s04a_07e",
+    "s05a_02ce", "s05b_06ae", "s05b_06be", "s05b_06ce",
+)
+
 
 DATA_DICTIONARY_PATH = PROJECT_ROOT / "data" / "proprosessing" / "data_dictionary.json"
 
@@ -506,10 +516,11 @@ def profile_frame(frame: pd.DataFrame, config: PipelineConfig) -> pd.DataFrame:
 #
 # Se conserva el esquema completo. El porcentaje global >80% se reporta como
 # alerta, nunca como criterio para borrar una variable de la tabla maestra.
-# La única transformación automática es quitar espacios exteriores de campos
-# categóricos/magnitudes tipados por el diccionario; IDs, texto libre, tokens
-# de ausencia, filas y extremos se preservan. La clave se valida y un fallo
-# detiene la generación de la versión derivada.
+# Las transformaciones declaradas quitan espacios exteriores de campos
+# tipados y normalizan a minúsculas solo respuestas textuales abiertas
+# identificadas; mantienen IDs, códigos y tokens de ausencia. S-01 marca horas
+# semanales imposibles en NA. Ninguna fila repetida se elimina: duplicados o
+# conflictos de clave bloquean la nueva versión y exigen revisión.
 # %%
 def clean_frame(
     raw: pd.DataFrame, config: PipelineConfig
@@ -567,6 +578,34 @@ def clean_frame(
             "rows_examined": int(len(cleaned)), "cells_changed": int(len(positions)),
             "status": "applied" if len(positions) else "no changes",
         })
+    for column in LOWERCASE_TEXT_RESPONSE_COLUMNS:
+        if column not in cleaned.columns:
+            continue
+        original = cleaned[column].astype("string")
+        missing = missing_mask(original)
+        normalized = original.str.lower()
+        changed = (~missing & original.ne(normalized)).fillna(False)
+        positions = np.flatnonzero(changed.to_numpy())
+        for position in positions:
+            semantic_changes.append({
+                "row_number_1based": int(position + 2),
+                "column": column,
+                "old_value": str(original.iloc[position]),
+                "new_value": str(normalized.iloc[position]),
+                "rule_id": "S-02",
+                "rule_version": "1",
+                "reason": "Normalize case in an explicitly identified open-response field for consistent text analysis; preserve raw source and missing tokens.",
+                "theory_ref": "curso/05_preparacion_de_datos.md: transformación y documentación trazable; docs/cleaning-methodology.md: conservar valor de origen y universo",
+            })
+        if len(positions):
+            cleaned.loc[cleaned.index[positions], column] = normalized.iloc[positions].to_numpy()
+        changes.append({
+            "rule_id": "S-02", "rule_version": "1", "column": column,
+            "rule": "Lowercase only explicitly identified open-response text; preserve identifiers, codes, missing tokens, and raw source",
+            "theory_ref": "curso/05_preparacion_de_datos.md: transformación y documentación trazable",
+            "rows_examined": int(len(cleaned)), "cells_changed": int(len(positions)),
+            "status": "applied" if len(positions) else "no changes",
+        })
     for column in cleaned.columns:
         missing = missing_mask(cleaned[column])
         malformed, check_status = malformed_registration_mask(column, cleaned[column])
@@ -585,14 +624,27 @@ def clean_frame(
     for key in config.key_columns:
         if key not in raw.columns:
             raise ValueError(f"Falta columna de clave declarada: {key}")
-    duplicated = cleaned.duplicated(list(config.key_columns), keep=False)
     blank_key = pd.Series(False, index=cleaned.index)
     for key in config.key_columns:
         blank_key |= missing_mask(cleaned[key])
-    if bool(duplicated.any()) or bool(blank_key.any()):
+    exact_duplicate_rows = int(cleaned.duplicated(keep=False).sum())
+    exact_duplicate_extras = int(cleaned.duplicated(keep="first").sum())
+    duplicate_key_rows = int(cleaned.duplicated(list(config.key_columns), keep=False).sum())
+    duplicate_key_extras = int(cleaned.duplicated(list(config.key_columns), keep="first").sum())
+    blank_key_rows = int(blank_key.sum())
+    changes.append({
+        "rule_id": "L-06", "rule_version": "2", "column": ",".join(config.key_columns),
+        "rule": "Audit exact duplicate rows and candidate person-key duplicates; never delete or select a row automatically",
+        "theory_ref": "curso/05_preparacion_de_datos.md: duplicate exactos requieren identidad y conservación justificada; (folio,nro) como clave candidata",
+        "rows_examined": int(len(cleaned)), "exact_duplicate_rows": exact_duplicate_rows,
+        "exact_duplicate_extras": exact_duplicate_extras, "duplicate_key_rows": duplicate_key_rows,
+        "duplicate_key_extras": duplicate_key_extras, "blank_key_rows": blank_key_rows,
+        "status": "no duplicates found; retained all rows" if not any((exact_duplicate_extras, duplicate_key_extras, blank_key_rows)) else "blocked; review, no rows deleted",
+    })
+    if exact_duplicate_extras or duplicate_key_extras or blank_key_rows:
         raise ValueError(
-            "La clave de persona no es única o tiene componentes vacíos. "
-            "No se deduplicó ni se publicó una salida; revise perfil y contrato."
+            "Se detectaron filas exactas repetidas, clave de persona repetida o componentes vacíos. "
+            "No se deduplicó ni se publicó una salida; revise el contrato y el historial de origen."
         )
     return cleaned, pd.DataFrame(changes), pd.DataFrame(semantic_changes)
 
@@ -1169,7 +1221,19 @@ def run_pipeline(config: PipelineConfig = CONFIG) -> dict[str, Any]:
         "Only data/persona.csv is loaded and analyzed; no supplementary input files are used."
     )
     source_metadata["pipeline_status"] = "candidate; not published"
-    source_metadata["semantic_limit"] = "S-01 applied for physically impossible weekly hours. Other suspected anomalies remain review-only pending questionnaire/version confirmation."
+    source_metadata["semantic_limit"] = "S-01 applied for physically impossible weekly hours and S-02 case-normalized explicitly identified open-text fields. Other suspected anomalies remain review-only; no deduplication was performed."
+    duplicate_audit = rule_log.loc[rule_log["rule_id"].eq("L-06")].iloc[0]
+    source_metadata["duplicate_audit"] = {
+        key: int(duplicate_audit[key]) for key in (
+            "rows_examined", "exact_duplicate_rows", "exact_duplicate_extras",
+            "duplicate_key_rows", "duplicate_key_extras", "blank_key_rows",
+        )
+    }
+    source_metadata["text_case_normalization"] = {
+        "rule_id": "S-02", "columns": list(LOWERCASE_TEXT_RESPONSE_COLUMNS),
+        "purpose": "text-analysis consistency", "missing_tokens_preserved": True,
+        "raw_source_preserved": True,
+    }
     run_dir = output_root / source_metadata["run_id"]
     if run_dir.exists():
         raise FileExistsError(f"El directorio de ejecución ya existe; no se sobrescribe: {run_dir}")

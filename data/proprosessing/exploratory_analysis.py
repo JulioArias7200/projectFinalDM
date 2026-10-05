@@ -21,6 +21,8 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_RUN = ROOT / "data/proprosessing/output/20261004T215218Z_568e82e3039d_d3abfb0b5f"
 MIN_CELL = 10
+IDENTIFIER_COLUMNS = {"folio", "nro", "upm", "estrato", "factor"}
+SENSITIVE_PREFIXES = ("s02", "s04", "s05", "y", "z", "p")
 PLOT_VARS = {
     "demografia_persona": ["s01a_02", "s01a_03", "area", "depto"],
     "salud_general_persona": ["s02a_01a", "s02b_01", "s02c_01"],
@@ -69,6 +71,16 @@ def column_summary(df: pd.DataFrame, view_id: str, dictionary: dict[str, Any]) -
         values = df.loc[mask, col].astype("string").str.strip()
         numeric = pd.to_numeric(values.str.replace(",", ".", regex=False), errors="coerce")
         name, section, semantic_type = label_for(col, dictionary)
+        item = dictionary.get("variables", {}).get(col) or dictionary.get("local_extensions", {}).get(col, {})
+        is_sensitive = (
+            col.casefold() in IDENTIFIER_COLUMNS
+            or col.casefold().startswith(SENSITIVE_PREFIXES)
+            or bool(item.get("sensitive", False))
+            or str(item.get("sensitivity") or "").casefold() in {"sensitive", "high", "alta", "alto"}
+        )
+        category_counts = values.value_counts()
+        top_count = int(category_counts.iloc[0]) if not category_counts.empty else 0
+        publish_top_category = not is_sensitive and top_count >= MIN_CELL
         confirmed_quant = any(token in semantic_type.casefold() for token in ("cuantitativa", "monetaria", "numérica continua", "numerica continua"))
         valid_numeric = numeric.dropna()
         quantiles = valid_numeric.quantile([.25, .5, .75]) if confirmed_quant and not valid_numeric.empty else pd.Series(dtype=float)
@@ -80,8 +92,9 @@ def column_summary(df: pd.DataFrame, view_id: str, dictionary: dict[str, Any]) -
             "missing_empty_or_literal_NA_pct": round(100 * (n - mask.sum()) / n, 4) if n else None,
             "exact_zero_token_n": int(text.eq("0").fillna(False).sum()),
             "distinct_observed": int(values.nunique()),
-            "top_category": str(values.value_counts().index[0]) if not values.empty else None,
-            "top_category_n": int(values.value_counts().iloc[0]) if not values.empty else 0,
+            "top_category": str(category_counts.index[0]) if publish_top_category else None,
+            "top_category_n": top_count if publish_top_category else None,
+            "top_category_status": "reported" if publish_top_category else "suppressed: sensitive/identifier or below minimum cell size",
             "numeric_descriptives_status": "eligible by dictionary type" if confirmed_quant else "not computed: categorical, identifier, or type pending",
             "numeric_n": int(len(valid_numeric)) if confirmed_quant else None,
             "minimum": float(valid_numeric.min()) if confirmed_quant and len(valid_numeric) else None,
@@ -155,7 +168,7 @@ def run(candidate: Path) -> Path:
                           result_dir / "plots" / f"{item['view_id']}__{col}.png")
         # Frequency tables are aggregated; identifiers and sensitive fields are omitted.
         for col in df.columns:
-            if col in {"folio", "nro", "upm", "estrato", "factor"} or col.startswith(("s02", "s04", "s05", "y", "z", "p")):
+            if col.casefold() in IDENTIFIER_COLUMNS or col.casefold().startswith(SENSITIVE_PREFIXES):
                 continue
             vals = df.loc[present(df[col]), col].astype("string").str.strip().value_counts()
             safe = vals[vals >= MIN_CELL].head(30)

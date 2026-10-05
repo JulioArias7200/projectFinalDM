@@ -39,6 +39,14 @@ Se necesita registrar, de fuente documental del archivo local: institución/prod
 
 Hasta recibir o localizar esa evidencia, el JSON local mantiene los metadatos públicos F27 como referencias y los campos locales separados, pero el dataset queda marcado como no conciliado. Las reglas de universo previamente cotejadas siguen siendo diagnósticos candidatos; no se promoverán a reglas de limpieza productiva sobre la copia local.
 
+## Instrumento oficial disponible para cotejo — 4 de octubre de 2026
+
+La página de [materiales relacionados de EH 2025 en ANDA](https://anda.ine.gob.bo/index.php/catalog/256/related-materials) ofrece el cuestionario EH 2025 (fecha 2025-10-08), el Manual del/la Encuestador/a, el Manual del/la Supervisor/a y el Manual Técnico de Monitoreo. La descripción oficial indica que el cuestionario contiene flujos/saltos y cortes por grupos poblacionales; esos documentos son las referencias para terminar la matriz de universos y revisar dominios.
+
+Disponibilidad documental no equivale a conciliación de `persona.csv`: el CSV local sigue teniendo 12 filas más, 3 variables F27 ausentes y 2 extensiones propias. El cuestionario servirá como fuente externa para cotejar las 273 columnas coincidentes, pero cada regla propuesta debe contrastarse con los códigos y patrones locales. No se importó ningún otro microdato, no se alteró el CSV y ninguna regla nueva se habilita solo por encontrar estos enlaces.
+
+Referencias: [cuestionario EH 2025 (PDF)](https://anda.ine.gob.bo/index.php/catalog/256/download/1859), [Manual del/la Encuestador/a](https://anda.ine.gob.bo/index.php/catalog/256/download/1860), [Manual del/la Supervisor/a](https://anda.ine.gob.bo/index.php/catalog/256/download/1861) y [Manual Técnico de Monitoreo](https://anda.ine.gob.bo/index.php/catalog/256/download/1862). La página relacionada confirma autor INE, fecha y alcance general. El cotejo pregunta por pregunta y la correspondencia con la copia local siguen pendientes.
+
 ## Registro de cambios del proyecto
 
 - Añadido este informe con los pasos, métricas, diferencias y decisión de procedencia.
@@ -50,4 +58,4 @@ Hasta recibir o localizar esa evidencia, el JSON local mantiene los metadatos p�
 
 ## Próximo paso técnico
 
-Solicitar/localizar la constancia de entrega del microdato local y cotejarla con el F27/cuestionario correspondiente. Si no puede obtenerse, declarar explícitamente una versión local derivada y construir un DDI de trabajo validado para esa copia, manteniendo separado lo publicado por INE de las inferencias locales. Solo después se podrán cerrar las máscaras de universos y autorizar una nueva versión candidata.
+Usar primero el cuestionario y los manuales oficiales enlazados arriba para construir el mapa de preguntas, filtros y dominios de las 273 variables coincidentes; contrastar cada regla con los códigos observados en `persona.csv`, sin alterar filas/columnas ni corregir excepciones por inferencia. En paralelo, solicitar/localizar constancia de entrega, licencia y versión exacta del microdato. Si no se obtiene, declarar explícitamente una versión local derivada y producir un DDI de trabajo validado para las 275 columnas del CSV, manteniendo separado lo publicado por INE de las conclusiones locales. La falta de procedencia no impide el perfilado local, pero sí mantiene las reglas F27 como candidatas hasta comprobarlas.

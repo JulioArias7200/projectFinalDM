@@ -2,9 +2,9 @@
 
 ## Objetivo y alcance
 
-Preparar `data/persona.csv`, identificado por el usuario como un dataset muy sucio, para análisis descriptivo confiable y trazable. El pipeline local ya se ejecutó y produjo un candidato y reportes antes/después; esto no equivale a una versión validada ni publicada. La integración de Flask y PostgreSQL, la revisión semántica de universos y la publicación controlada siguen pendientes.
+Preparar `data/persona.csv`, identificado por el usuario como un dataset muy sucio, para análisis descriptivo confiable y trazable. La versión `persona-317279aafe9023a2` retiene 39.497 filas y 275 columnas, aplica S-01/S-02, pasa validación estructural y se publica internamente mediante catálogo JSON. La limpieza semántica integral permanece pendiente para dominios/universos sin evidencia suficiente.
 
-La teoría explica cómo elegir un tratamiento; el diccionario y cuestionario de la edición exacta determinan qué significa cada variable. No existe una regla de limpieza universal para las 275 columnas. La primera entrega cubre el perfil de todas ellas y la clasificación y validación estructural del esquema completo. Las reglas semánticas se habilitan progresivamente por grupos con definiciones confirmadas: identificación, ubicación, demografía, educación, actividad e ingresos. Las columnas sin definición confirmada se conservan, se marcan como pendientes y quedan excluidas de indicadores semánticos; no se declara validación integral mientras persistan esos pendientes.
+La teoría explica cómo elegir un tratamiento; el diccionario disponible determina parcialmente qué significa cada variable. Por instrucción del usuario, esta etapa analiza solo `persona.csv` y no analiza el cuestionario. No existe una regla de limpieza universal para las 275 columnas. El perfil cubre todas ellas y valida estructura/claves; las reglas semánticas se habilitan solo con evidencia disponible. Las columnas sin definición confirmada se conservan y marcan pendientes; no se declara validación integral mientras persistan esos pendientes.
 
 El INE documenta el archivo F27 [EH2025_Persona](https://anda.ine.gob.bo/index.php/catalog/256/data-dictionary/F27?file_name=EH2025_Persona). El usuario confirma `data/persona.csv` como fuente definitiva de trabajo para este proyecto. La comparación con el DDI F27 encontró 39.485 frente a 39.497 casos, 276 frente a 275 columnas y diferencias en nombres; por tanto el DDI es referencia auxiliar para variables coincidentes, no evidencia de que ambas versiones sean idénticas. El JSON conserva por separado las variables F27 y las extensiones locales, sin inferir equivalencias.
 
@@ -42,9 +42,9 @@ SHA-256 del archivo revisado: `568e82e3039d991a1ee0d8e2056448f8c465c03ffa838330c
 
 ## Resultado de la ejecución local
 
-La corrida `20261004T171822Z_568e82e3039d_d3abfb0b5f`, guardada en `data/proprosessing/output/20261004T171822Z_568e82e3039d_d3abfb0b5f/`, procesó únicamente `data/persona.csv`; leyó el JSON del diccionario como metadatos, sin agregar registros ni unir fuentes. El manifiesto registra el mismo hash SHA-256 del origen indicado arriba.
+La corrida histórica `20261004T171822Z_568e82e3039d_d3abfb0b5f`, guardada en `data/proprosessing/output/20261004T171822Z_568e82e3039d_d3abfb0b5f/`, procesó únicamente `data/persona.csv`; leyó el JSON del diccionario como metadatos, sin agregar registros ni unir fuentes. El manifiesto registra el mismo hash SHA-256 del origen indicado arriba. Su salida de 150 columnas fue reemplazada como maestro por una corrida posterior que conserva el esquema completo.
 
-El candidato conserva 39.497 filas y 150 de las 275 columnas de origen. L-80 excluyó 125 columnas por superar estrictamente el 80 % técnico: 9 de `s01`, 22 de salud (`s02`), 7 de educación (`s03`), 65 de trabajo (`s04`), 17 de ingresos no laborales (`s05`) y 5 de otras secciones. La ejecución generó CSV/Parquet candidatos, perfiles antes/después, comparación y bitácora local de reglas, manifiesto, diccionario y 275 gráficos de columna. El CSV de entrada no se sobrescribió. Esta bitácora es un artefacto local; aún no está persistida en PostgreSQL ni hay publicación Flask.
+En esa corrida histórica el candidato conservó 39.497 filas y solo 150 de las 275 columnas de origen. L-80 excluyó 125 columnas por superar el 80 % técnico global. Esta exclusión se reconsideró y ya no forma parte del maestro vigente: el maestro retiene las 275 columnas y trata L-80 como alerta. La versión interna actual incorpora S-01/S-02, perfiles/gráficos y 11 vistas temáticas. El CSV de entrada no se sobrescribió; la bitácora/puntero se persiste en JSON local y Flask lee la versión seleccionada por ese catálogo.
 
 El porcentaje L-80 se calculó sobre el total de filas, no sobre la población elegible según saltos del cuestionario. `s04c_17a` (salario líquido) quedó excluida al registrar 81,3505 % de ausencia técnica, aunque es una pregunta de universo condicional. Sus no respuestas pueden corresponder a personas fuera del universo. La exclusión debe revisarse antes de estudiar salarios o publicar el candidato. Los tokens técnicos de ausencia tampoco se clasificaron como errores de respuesta. La ejecución no eliminó filas, no imputó y no suprimió atípicos: IQR se usa solo como alerta.
 
@@ -56,7 +56,7 @@ Dos variables de empleo principal muestran el mismo efecto: `s04c_17a` requiere 
 
 La conciliación de esquema continúa siendo un bloqueo para validación semántica completa: el DDI F27 declara 39.485 casos y 276 variables, frente a 39.497 filas y 275 columnas locales; tres campos F27 no aparecen en el CSV y dos nombres son extensiones locales (`s05c_09e`, `totper`). La procedencia exacta debe confirmarse antes de aplicar saltos y dominios como reglas definitivas.
 
-Estos controles no incluyen dominios completos, duplicados exactos de fila, universos, consistencia entre variables ni clasificación de faltantes por pregunta. No contabilizan como cero cadenas como `0.0`, ni como vacíos valores con espacios. La codificación definitiva permanece pendiente de confirmación de procedencia. La clave observada es candidata para esta copia; debe validarse en cada carga y tras cualquier normalización. Un peso positivo no confirma el diseño muestral.
+La inspección de referencia del 3 de octubre no incluía deduplicación exacta; esta se incorporó después al pipeline. La candidata actual confirmó cero filas idénticas y cero claves duplicadas/incompletas. Siguen pendientes dominios completos, universos y clasificación causal de faltantes por pregunta. La codificación definitiva permanece pendiente de procedencia. La clave es candidata para esta copia y se valida en cada carga. Un peso positivo no confirma el diseño muestral.
 
 ## Procedimiento de limpieza
 
@@ -77,7 +77,7 @@ Estos controles no incluyen dominios completos, duplicados exactos de fila, univ
 | L-03 | Espacios o formatos inconsistentes | Normalizar únicamente columnas autorizadas; conservar valor de origen y detectar colisiones | Preparación; no recortar texto libre o claves sin regla |
 | L-04 | Vacío, `NA`, cero y no aplica | Clasificar estados por columna y universo; conservar causa/origen aunque el valor analítico use nulo | Tipos y preparación; saltos confirmados del cuestionario |
 | L-05 | Tipos y códigos | Convertir magnitudes con formato explícito; validar categorías contra diccionario, sin promediar códigos | Tipos; no inferir etiquetas de `area`, `depto`, `condact` o `niv_ed` |
-| L-06 | Duplicados exactos o de clave | Reportar grupos; conservar/cuarentenar según política aprobada, sin elegir fila arbitraria | Preparación; confirmar identidad y regla de conservación |
+| L-06 | Duplicados exactos o de clave | Reportar grupos; conservar/cuarentenar según política aprobada, sin elegir fila arbitraria. Duplicado confirmado bloquea la candidata, no elimina filas | Preparación; confirmar identidad y regla de conservación |
 | L-07 | Rangos y extremos | Validar rangos confirmados; usar cuantiles/IQR como alertas de revisión, sin borrar automáticamente | Descriptiva y preparación; 96–99 no son siempre edades inválidas |
 | L-08 | Dependencias y nivel persona/hogar | Validar saltos y relaciones solo con semántica y tolerancias documentadas | Preparación; no sumar `yhog` repetido por persona como total de hogares |
 | L-09 | Ponderador de encuesta | Comprobar `factor` numérico, finito y positivo donde aplique; bloquear ponderación si no está confirmado | Inferencia y contrato de encuesta; no inventar pesos |
@@ -97,9 +97,17 @@ Cada definición incluye `rule_id`, versión, orden, columnas, universo, condici
 
 La primera entrega se acepta con reglas y pruebas sintéticas de faltantes, duplicados, tipos, atípicos, conflictos y publicación segura, además de un reporte técnico del archivo real sin exponer personas. No exige imputación para todas las variables ni eliminar todo `NA`.
 
+### S-02 — Normalización de respuestas textuales abiertas
+
+La conversión a minúsculas se limita a una lista explícita de campos de respuesta abierta identificados como “Especifique” en las etiquetas del diccionario local. No se aplica a identificadores, categorías codificadas, valores numéricos ni tokens de ausencia. El valor original se conserva en `data/persona.csv`; cada celda modificada se registra en la bitácora restringida con regla, fila, columna, antes/después y motivo. Esta transformación facilita comparaciones textuales sin afirmar que las respuestas son equivalentes semánticamente. Las columnas no clasificadas como texto abierto se preservan hasta que se confirme su naturaleza.
+
+### Resultado empírico de duplicados y texto — 2026-10-04
+
+La inspección de solo lectura de `persona.csv` encontró cero filas idénticas repetidas y cero duplicados/nulos en la clave candidata `(folio,nro)`. El pipeline repetirá estos controles y detendrá la construcción de una nueva candidata si aparece un conflicto; no elimina automáticamente registros. El diagnóstico encontró respuestas alfabéticas en campos identificadores y en campos textuales abiertos, así como tokens y valores que no son texto libre. Por eso una conversión indiscriminada a minúsculas sería incorrecta. S-02 transforma solo las 13 columnas enumeradas en `LOWERCASE_TEXT_RESPONSE_COLUMNS`; los demás valores mantienen su forma original.
+
 ### Regla adicional de calidad por columna (L-80)
 
-En la corrida actual L-80 se calculó sobre todas las filas y excluyó 125 columnas; la revisión posterior demostró que ese denominador causa falsos descartes. Por ejemplo, `s04c_17a` pasó de 81,3505 % de ausencia global a 4 faltantes de 7.370 elegibles al aplicar su filtro DDI. Por tanto, las 125 exclusiones existentes se consideran **provisionales** y ese candidato no es apto como conjunto maestro ni para análisis laborales completos.
+En la corrida histórica `20261004T171822Z_...`, L-80 se calculó sobre todas las filas y excluyó 125 columnas; la revisión posterior demostró que ese denominador causa falsos descartes. Por ejemplo, `s04c_17a` pasó de 81,3505 % de ausencia global a 4 faltantes de 7.370 elegibles al aplicar su filtro DDI. Por tanto, las 125 exclusiones de ese candidato son **históricas y provisionales**; no se aplican al maestro vigente, que conserva el esquema completo.
 
 La regla se redefine para la siguiente versión del pipeline: (1) el conjunto maestro conserva las columnas de origen; (2) para cada variable se reporta ausencia global y, cuando se pueda reconstruir un filtro documentado, `N elegible`, `N respondido`, `N faltante elegible` y su porcentaje; (3) L-80 solo puede excluir una variable de una vista analítica por defecto si el porcentaje supera estrictamente 80 % **dentro del universo elegible confirmado**; (4) si no existe regla de elegibilidad confirmada, la variable se conserva y se marca `REVIEW_UNIVERSE`, sin tratar no elegibles como errores. Las variables excluidas de una vista permanecen disponibles en el maestro y en vistas focalizadas. No se modifica `data/persona.csv`.
 
@@ -117,7 +125,7 @@ La decisión vigente conserva las 39.497 filas y las 275 columnas de `persona.cs
 
 La línea base técnica aplicaba estructura/clave, normalización tipada y perfiles, pero no transformaba ningún valor. La regla S-01 descrita abajo es la única excepción semántica incorporada desde entonces. `NA`, vacío, cero y no aplica no se colapsan; no se imputan valores, no se eliminan filas, categorías, extremos ni variables. Los dominios desconocidos y discrepancias entre preguntas quedan como incidencias, no como correcciones.
 
-La etiqueta de salida será versión candidata hasta reconciliar manifiesto, esquema, clave, recuentos, diferencias y artefactos. La corrida de la línea base técnica no afirmaba limpieza semántica integral ni publicación: la interfaz Flask/PostgreSQL no estaba disponible y faltaba confirmar el cuestionario exacto. La instrucción del usuario fija qué archivo es fuente del proyecto, pero no resuelve las diferencias con F27 ni los saltos de cada pregunta.
+La versión publicada internamente se etiqueta `published_internal_with_semantic_limitations`: pasó manifiesto, esquema, clave, recuentos, diferencias y artefactos. Esto no afirma limpieza semántica integral. La persistencia elegida es JSON local; se conserva la advertencia por diferencias con F27 y saltos no confirmados.
 
 ## Resultado ejecutado y validado — versión maestra técnica — 4 de octubre de 2026
 

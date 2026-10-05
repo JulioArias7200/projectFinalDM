@@ -1,0 +1,22 @@
+<section class="bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)] space-y-4" data-purpose="dataset-identity-traceability">
+  <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3">
+    <div>
+      <div class="flex items-center gap-2.5">
+        <span class="w-2.5 h-2.5 rounded-full {{ 'bg-emerald-400' if manifest.get('published_version_id') else 'bg-amber-400' }}"></span>
+        <h2 class="text-sm font-bold text-[var(--text-main)]">Encuesta de Hogares — {{ manifest.get('dataset_name', 'persona.csv') }}</h2>
+        <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20">{{ 'Publicada para uso interno' if manifest.get('published_version_id') else 'Sin versión publicada' }}</span>
+      </div>
+      <p class="text-xs text-[var(--text-secondary)] mt-1">Versión <code>{{ manifest.get('published_version_id') or 'pendiente' }}</code> · {{ manifest.get('semantic_status', 'Estado semántico pendiente de validar') }}</p>
+    </div>
+    <div class="bg-[var(--bg-card-subtle)] px-3 py-1.5 rounded-xl border border-[var(--border-card)] text-xs font-mono">
+      <span class="text-[var(--text-muted)] text-[10px] uppercase">SHA-256 raw:</span>
+      <span class="text-[var(--text-main)]" title="{{ manifest.get('sha256', '') }}">{{ (manifest.get('sha256') or 'sin hash')[:12] }}{% if manifest.get('sha256') %}…{{ manifest.get('sha256')[-4:] }}{% endif %}</span>
+    </div>
+  </div>
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-[var(--border-card)] text-xs">
+    <div class="p-2.5 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)]"><span class="text-[10px] text-[var(--text-muted)] block uppercase">Filas publicadas</span><span class="text-sm font-bold text-[var(--text-main)]">{{ manifest.get('rows', '—') }}</span></div>
+    <div class="p-2.5 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)]"><span class="text-[10px] text-[var(--text-muted)] block uppercase">Columnas</span><span class="text-sm font-bold text-[var(--text-main)]">{{ manifest.get('columns', '—') }}</span></div>
+    <div class="p-2.5 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)]"><span class="text-[10px] text-[var(--text-muted)] block uppercase">Publicación UTC</span><span class="text-[10px] font-mono text-[var(--text-main)]">{{ manifest.get('published_at') or manifest.get('created_at_utc') or '—' }}</span></div>
+    <div class="p-2.5 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-card)]"><span class="text-[10px] text-[var(--text-muted)] block uppercase">Estado semántico</span><span class="text-[10px] text-amber-300">{{ manifest.get('semantic_status', 'Pendiente de validar') }}</span></div>
+  </div>
+</section>

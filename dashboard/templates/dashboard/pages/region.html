@@ -310,12 +310,28 @@
       </tbody>
     </table>
   </div>
+
+  <!-- Methodological Control Notice on Sampling Weights (Cap. 3 y 4 Descriptiva e Inferencia) -->
+  <div class="p-4 border-t border-[var(--border-card)] bg-[var(--bg-card-subtle)] flex items-start gap-3 text-xs text-[var(--text-secondary)]">
+    <div class="w-5 h-5 text-amber-400 shrink-0 mt-0.5">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+    </div>
+    <div class="space-y-1">
+      <span class="font-bold text-[var(--text-main)]">Control Metodológico de Representatividad y Factores de Expansión:</span>
+      <p>
+        El tamaño de muestra observado (<code class="font-mono text-amber-300">n = 39,497</code>) representa a una población estimada de <code class="font-mono text-amber-300">N ≈ 12,397,705</code> habitantes. Los cálculos inferenciales requieren utilizar el factor de ponderación (<code class="font-mono text-cyan-300">factor</code>), estrato y UPM para evitar sesgos por sobre-muestreo en departamentos de menor densidad demográfica (Pando, Beni).
+      </p>
+    </div>
+  </div>
 </div>
 
 <!-- Embedded JSON Data Payload for Map Controller -->
 <script id="region-data-json" type="application/json">
   {{ region_data | tojson | safe }}
 </script>
+
 {% endblock %}
 
 {% block scripts %}
