@@ -93,11 +93,37 @@
 
     if (!regionData || !regionData.departamentos) return;
 
+    // Check URL query parameters for pre-selected universe layer (e.g. ?universo=salud)
+    const urlParams = new URLSearchParams(window.location.search);
+    const qUniverse = urlParams.get('universo');
+    if (qUniverse && UNIVERSE_THEMES[qUniverse]) {
+      activeUniverse = qUniverse;
+    }
+
     bindFilterButtons();
     bindMapInteractions();
     bindTableInteractions();
+    syncInitialFilterButton();
     updateMapDisplay();
     updateDepartmentCard(selectedDeptId);
+  }
+
+  function syncInitialFilterButton() {
+    const buttons = document.querySelectorAll('.universe-filter-btn');
+    buttons.forEach((btn) => {
+      const uniKey = btn.getAttribute('data-universe');
+      if (uniKey === activeUniverse) {
+        buttons.forEach((b) => {
+          b.classList.remove('active', 'text-white', 'shadow-md');
+          b.classList.add('bg-[var(--bg-card-subtle)]', 'text-[var(--text-muted)]');
+          b.style.backgroundColor = '';
+        });
+        const theme = UNIVERSE_THEMES[activeUniverse];
+        btn.classList.remove('bg-[var(--bg-card-subtle)]', 'text-[var(--text-muted)]');
+        btn.classList.add('active', 'text-white', 'shadow-md');
+        btn.style.backgroundColor = theme.color;
+      }
+    });
   }
 
   function bindFilterButtons() {
@@ -111,8 +137,9 @@
 
           // Update Button styles
           buttons.forEach((b) => {
-            b.classList.remove('active', 'bg-amber-500', 'bg-cyan-500', 'bg-purple-600', 'bg-blue-600', 'bg-red-600', 'text-white', 'shadow-md');
+            b.classList.remove('active', 'text-white', 'shadow-md');
             b.classList.add('bg-[var(--bg-card-subtle)]', 'text-[var(--text-muted)]');
+            b.style.backgroundColor = '';
           });
 
           const theme = UNIVERSE_THEMES[activeUniverse];

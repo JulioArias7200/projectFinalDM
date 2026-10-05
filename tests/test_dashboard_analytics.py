@@ -19,9 +19,9 @@ class DashboardAnalyticsTests(unittest.TestCase):
     def test_small_categories_are_combined_and_suppressed(self):
         values = pd.Series(["1"] * 100 + ["2"] * 12 + ["3"] * 4)
         entries = DatasetService._chart_entry_rows(values, numeric_only=True)
-        self.assertEqual(entries[0]["label"], "Código 1")
+        self.assertEqual(entries[0]["label"], "Código 1 (sin etiqueta en el diccionario)")
         self.assertEqual(entries[0]["display_count"], "100")
-        complementary = next(item for item in entries if item["label"] == "Código 2")
+        complementary = next(item for item in entries if item["label"] == "Código 2 (sin etiqueta en el diccionario)")
         self.assertEqual(complementary["display_count"], "Supresión complementaria")
         self.assertEqual(complementary["bar_pct"], 0)
         small = next(item for item in entries if item["label"] == "Categorías suprimidas (<10 c/u)")
@@ -32,7 +32,24 @@ class DashboardAnalyticsTests(unittest.TestCase):
     def test_literal_na_and_empty_are_separate_internal_categories(self):
         values = pd.Series(["", "NA"] * 12 + ["1"] * 12)
         entries = DatasetService._chart_entry_rows(values, numeric_only=True)
-        self.assertEqual({entry["label"] for entry in entries}, {"Celda vacía", "Token NA", "Código 1"})
+        self.assertEqual({entry["label"] for entry in entries}, {"Celda vacía", "Token NA", "Código 1 (sin etiqueta en el diccionario)"})
+
+    def test_explicit_dictionary_labels_replace_generic_code_names(self):
+        values = pd.Series(["1"] * 12 + ["2"] * 12)
+        entries = DatasetService._chart_entry_rows(
+            values,
+            numeric_only=True,
+            category_labels={"1": "1. Hombre", "2": "2. Mujer"},
+        )
+        self.assertEqual({entry["label"] for entry in entries}, {"Hombre (código 1)", "Mujer (código 2)"})
+
+    def test_age_bins_follow_ddi_top_code_and_valid_range(self):
+        self.assertEqual(DatasetService._age_display_label("0"), "0–4 años (incluye <1 año)")
+        self.assertEqual(DatasetService._age_display_label("97"), "95–97 años")
+        self.assertEqual(DatasetService._age_display_label("98"), "98 años o más (código tope 98)")
+        self.assertEqual(DatasetService._age_display_label("99"), "Fuera del rango documentado (>98)")
+        self.assertEqual(DatasetService._age_display_label(""), "Celda vacía")
+        self.assertEqual(DatasetService._age_display_label("NA"), "Token NA")
 
     def test_published_reader_verifies_catalog_hash_and_reads_only_requested_columns(self):
         with tempfile.TemporaryDirectory() as temp:

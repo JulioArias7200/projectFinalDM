@@ -42,6 +42,21 @@
   </section>
   {% endif %}
 
+  <!-- Geographic Distribution Link / CTA -->
+  <section class="bg-[var(--bg-card)] rounded-2xl p-5 border border-[var(--border-card)] shadow-[var(--card-shadow)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#00d2ff]/20 to-[#8a5cf6]/20 flex items-center justify-center text-xl shrink-0 border border-[var(--border-card)]">🗺️</div>
+      <div>
+        <h2 class="text-xs font-bold text-[var(--text-main)]">Distribución Territorial Departamental de {{ universe.title }}</h2>
+        <p class="text-[11px] text-[var(--text-muted)] mt-0.5">Explore la cobertura y distribución observada de este universo a lo largo de los 9 departamentos de Bolivia.</p>
+      </div>
+    </div>
+    <a href="{{ url_for('dashboard.region', universo=universe.id) }}" class="shrink-0 px-4 py-2 rounded-xl text-xs font-medium font-mono bg-gradient-to-r from-[#00d2ff]/10 to-[#8a5cf6]/10 text-[var(--text-main)] hover:border-cyan-500/40 border border-[var(--border-card)] transition-all flex items-center gap-2 group">
+      <span>Ver en Mapa Interactivo</span>
+      <span class="group-hover:translate-x-0.5 transition-transform text-cyan-400">→</span>
+    </a>
+  </section>
+
   <section class="bg-[var(--bg-card)] rounded-2xl border border-[var(--border-card)] shadow-[var(--card-shadow)] overflow-hidden">
     <div class="p-4 border-b border-[var(--border-card)]">
       <h2 class="text-sm font-semibold text-[var(--text-main)]">Inventario de columnas del módulo</h2>
@@ -60,3 +75,4 @@
   </section>
 </div>
 {% endblock %}
+

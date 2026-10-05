@@ -241,7 +241,8 @@ class DatasetService:
         return frame.copy()
 
     @staticmethod
-    def _chart_entry_rows(series: pd.Series, *, numeric_only: bool = False, preserve_labels: bool = False) -> List[Dict[str, Any]]:
+    def _chart_entry_rows(series: pd.Series, *, numeric_only: bool = False, preserve_labels: bool = False,
+                          category_labels: Optional[Dict[str, str]] = None) -> List[Dict[str, Any]]:
         """Build privacy-conscious aggregate bars; never return a source record."""
         values = series.astype(str)
         labels = []
@@ -254,8 +255,16 @@ class DatasetService:
                 labels.append("Token NA")
             elif numeric_only and not re.fullmatch(r"-?\d+(?:\.\d+)?", value):
                 labels.append("Otro token / formato")
+            elif numeric_only and re.fullmatch(r"-?\d+(?:\.\d+)?", value):
+                mapped = (category_labels or {}).get(value)
+                if mapped:
+                    # Strip a repeated numeric prefix (e.g. "1. Hombre") but retain the source code.
+                    mapped = re.sub(rf"^{re.escape(value)}[.)]?\s*", "", str(mapped)).strip()
+                    labels.append(f"{mapped} (código {value})" if mapped else f"Código {value} (etiqueta vacía en el diccionario)")
+                else:
+                    labels.append(f"Código {value} (sin etiqueta en el diccionario)")
             elif re.fullmatch(r"-?\d+(?:\.\d+)?", value):
-                labels.append(f"Código {value}" if numeric_only else value)
+                labels.append(value)
             else:
                 labels.append("Respuesta no codificada")
         counts = pd.Series(labels).value_counts(dropna=False).to_dict()
@@ -279,6 +288,29 @@ class DatasetService:
                 item["display_count"] = f"{item['count']:,}".replace(",", ".")
         return common
 
+    @staticmethod
+    def _age_display_label(value: str) -> str:
+        """Use the DDI age domain: 0–97 grouped, with 98 as the 98+ top-code."""
+        if value == "":
+            return "Celda vacía"
+        if value == "NA":
+            return "Token NA"
+        try:
+            age = float(value)
+        except ValueError:
+            return "No numérico"
+        if not math.isfinite(age):
+            return "No numérico"
+        if not age.is_integer():
+            return "Edad no entera (revisar)"
+        if age == 98:
+            return "98 años o más (código tope 98)"
+        if 0 <= age < 98:
+            lower = int(age // 5) * 5
+            upper = min(lower + 4, 97)
+            return "0–4 años (incluye <1 año)" if lower == 0 else f"{lower}–{upper} años"
+        return "Fuera del rango documentado (>98)" if age > 98 else "Valor negativo (revisar)"
+
     def get_demographic_charts(self) -> Dict[str, Any]:
         """Observed-only distributions from the published master, with no population expansion."""
         required = ["s01a_02", "s01a_03", "depto", "area"]
@@ -288,33 +320,21 @@ class DatasetService:
         if frame is None or not version:
             return {"available": False, "version_id": version, "panels": []}
         panels = []
-        for column, title, note, numeric in [
-            ("s01a_03", "Edad declarada", "Conteos observados por grupos de 5 años; se conserva cualquier edad numérica, sin recorte por atípicos.", True),
-            ("s01a_02", "Sexo: códigos observados", "Se muestran códigos tal como aparecen; no se asignan etiquetas de sexo sin dominio validado.", True),
-            ("depto", "Departamento: códigos observados", "Conteos de la copia por código; no son estimaciones de población departamental.", True),
-            ("area", "Área: códigos observados", "Conteos de la copia por código; no se interpreta el código mientras el dominio no esté confirmado.", True),
+        for column, title, note in [
+            ("s01a_03", "Edad declarada por grupos de 5 años", "Grupos descriptivos basados en el DDI: 0–4 incluye menores de un año; el código 98 representa 98 años o más. Valores fuera del rango declarado se muestran aparte."),
+            ("s01a_02", "Sexo declarado", "Etiquetas reproducidas del diccionario JSON DDI EH2025 F27; conteos de personas de esta copia, no estimaciones poblacionales."),
+            ("depto", "Departamento de residencia: conteo observado", "Nombres departamentales tomados del diccionario JSON DDI EH2025 F27; los conteos no son estimaciones poblacionales."),
+            ("area", "Área declarada", "Etiquetas reproducidas del diccionario JSON DDI EH2025 F27; conteos de la copia, sin ponderación."),
         ]:
             if column not in frame:
                 continue
             series = frame[column]
             if column == "s01a_03":
-                def age_group(value: str) -> str:
-                    if value == "":
-                        return "Celda vacía"
-                    if value == "NA":
-                        return "Token NA"
-                    try:
-                        age = float(value)
-                    except ValueError:
-                        return "No numérico"
-                    if not math.isfinite(age):
-                        return "No numérico"
-                    return f"{int(age // 5) * 5}–{int(age // 5) * 5 + 4}" if 0 <= age < 120 else ("120+" if age >= 120 else "Valor negativo")
-                grouped = series.map(age_group)
+                grouped = series.map(self._age_display_label)
                 entries = self._chart_entry_rows(grouped, preserve_labels=True)
-                entries.sort(key=lambda item: int(item["label"].split("–", 1)[0]) if item["label"][:1].isdigit() else 10_000)
+                entries.sort(key=lambda item: int(item["label"].split("–", 1)[0]) if item["label"][:1].isdigit() else (98 if item["label"].startswith("98 ") else 10_000))
             else:
-                entries = self._chart_entry_rows(series, numeric_only=True)
+                entries = self._chart_entry_rows(series, numeric_only=True, category_labels=self.get_variable_categories(column))
             panels.append({"title": title, "description": note, "variable": column,
                            "unit": "persona", "n": len(frame), "entries": entries})
         return {"available": bool(panels), "version_id": version, "updated_at": manifest.get("published_at"), "accent": "#00d2ff",
@@ -344,10 +364,11 @@ class DatasetService:
         for column in columns:
             if column not in frame:
                 continue
-            panels.append({"title": f"Frecuencia observada de códigos — {column}",
-                           "description": "Conteos exploratorios en el maestro completo; incluye estados vacíos/NA. No aplica filtro de elegibilidad ni interpreta códigos como tasas.",
+            panels.append({"title": f"Distribución de respuestas registradas — {column}",
+                           "description": "Conteos exploratorios en el maestro completo. Las etiquetas reproducen el diccionario JSON DDI EH2025 F27; las categorías sin etiqueta se señalan y algunas etiquetas del DDI pueden ser abreviadas. La copia local difiere del esquema F27. No aplica filtro de elegibilidad ni representa tasas.",
                            "variable": column, "variable_label": self.get_variable_label(column), "unit": "persona", "n": len(frame),
-                           "entries": self._chart_entry_rows(frame[column], numeric_only=True)})
+                           "entries": self._chart_entry_rows(frame[column], numeric_only=True,
+                                                              category_labels=self.get_variable_categories(column))})
         if not panels:
             return {"available": False, "version_id": version, "panels": []}
         return {"available": True, "version_id": version, "updated_at": manifest.get("published_at"),
@@ -357,12 +378,45 @@ class DatasetService:
 
     def get_variable_label(self, variable: str) -> str:
         """Return a dictionary description, falling back to the column name."""
-        latest = self.get_latest_run_dir()
-        if not latest:
-            return variable
-        dictionary = read_json_file(os.path.join(latest, "data_dictionary.json"), default={})
+        dictionary = self._read_published_dictionary()
         item = (dictionary.get("variables") or {}).get(variable, {})
         return item.get("display_name") or item.get("description") or variable
+
+    def _read_published_dictionary(self) -> Dict[str, Any]:
+        """Load the dictionary belonging to the published version only after hash validation."""
+        latest = self.get_latest_run_dir()
+        if not latest:
+            return {}
+        path = os.path.join(latest, "data_dictionary.json")
+        manifest = read_json_file(os.path.join(latest, "manifest.json"), default={})
+        expected = (manifest.get("artifact_sha256") or {}).get("data_dictionary.json") or manifest.get("data_dictionary_sha256")
+        if not expected or not os.path.isfile(path):
+            return {}
+        digest = hashlib.sha256()
+        try:
+            with open(path, "rb") as source:
+                for chunk in iter(lambda: source.read(1024 * 1024), b""):
+                    digest.update(chunk)
+        except OSError:
+            return {}
+        if digest.hexdigest().lower() != str(expected).lower():
+            return {}
+        return read_json_file(path, default={})
+
+    def get_variable_categories(self, variable: str) -> Dict[str, str]:
+        """Return only explicit DDI category labels; never infer a code's meaning."""
+        dictionary = self._read_published_dictionary()
+        item = (dictionary.get("variables") or {}).get(variable, {})
+        official = item.get("official") or {}
+        if official.get("file_id") != "F27":
+            return {}
+        categories = {}
+        for category in official.get("categories", []):
+            value = str(category.get("value", ""))
+            label = str(category.get("label", "")).strip()
+            if value and value.lower() not in {"sysmiss", "missing", "nan"} and label:
+                categories[value] = label
+        return categories
 
     def get_review_summary(self) -> Dict[str, Any]:
         """Aggregate semantic review states; no person-level data is read."""
