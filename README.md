@@ -14,23 +14,114 @@ La auditoría estructural y de artefactos pasó 10/10 controles; la suite tiene 
 - Validación y muestreo: `docs/final-validation-sampling-persona.md`
 - Dictamen semántico: `docs/semantic-cleaning-audit.md`
 
-## Ejecutar
+## Guía de Ejecución Paso a Paso (Desde Cero)
 
-Desde la raíz, con Python 3.11+ y dependencias del proyecto instaladas:
+Para poner en marcha el proyecto localmente en cualquier máquina limpia (Windows, Linux o macOS), siga estos pasos:
 
-```powershell
-python data/proprosessing/preprocessing.py
-python data/proprosessing/publish_validated_candidate.py --candidate data/proprosessing/output/<run_id>
-python dashboard/app.py
+### 1. Clonar el Repositorio
+
+Abra su terminal y clone el repositorio desde GitHub:
+
+```bash
+git clone https://github.com/JulioArias7200/projectFinalDM.git
+cd projectFinalDM
 ```
 
-La publicación vuelve a ejecutar las verificaciones censales, copia toda la corrida a una carpeta de versión inmutable y activa el puntero JSON mediante escritura atómica. El dashboard consume solo la versión registrada en `data/audit_log.json`, no una carpeta candidata elegida por fecha. No se sobrescribe el raw ni una versión anterior.
+### 2. Crear y Activar un Entorno Virtual
 
-Las pruebas usan fixtures inventadas, nunca registros reales:
+Se recomienda usar Python 3.10, 3.11 o 3.12:
 
-```powershell
-python -m unittest discover -s tests -v
+- **En Windows (PowerShell):**
+  ```powershell
+  python -m venv venv
+  .\venv\Scripts\Activate.ps1
+  ```
+  *(Si PowerShell restringe scripts, ejecute antes: `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`)*
+
+- **En Linux o macOS:**
+  ```bash
+  python3 -m venv venv
+  source venv/bin/activate
+  ```
+
+### 3. Instalar las Dependencias
+
+Instale todas las librerías necesarias especificadas en `requirements.txt`:
+
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
 ```
+
+### 4. Verificar la Suite de Pruebas Unitarias
+
+Antes de iniciar la aplicación, valide que la integridad de las reglas, los esquemas y los contratos JSON se cumplan al 100%:
+
+```bash
+python -m pytest tests/ -v
+```
+
+*(Debe confirmar 16 pruebas aprobadas: `16 passed`)*.
+
+### 5. Iniciar la Aplicación Web (Dashboard Flask)
+
+Ejecute el servidor de desarrollo local:
+
+- **Opción recomendada (directo con Python):**
+  ```powershell
+  python dashboard/app.py
+  ```
+
+- **O utilizando el runner de Flask:**
+  ```powershell
+  flask --app dashboard.app run --port 5000
+  ```
+
+Abra su navegador web e ingrese a la siguiente dirección:
+👉 **[http://127.0.0.1:5000/dashboard/](http://127.0.0.1:5000/dashboard/)**
+
+---
+
+### 6. Ejecución del Pipeline de Limpieza desde Cero (Opcional)
+
+Si desea regenerar el proceso de limpieza y validación censal a partir del microdato fuente de solo lectura (`data/persona.csv`):
+
+1. **Ejecutar el pipeline de transformación y auditoría de reglas (L-01 a L-12, S-01, S-02):**
+   ```powershell
+   python data/proprosessing/preprocessing.py
+   ```
+   *Esto generará una carpeta candidata en `data/proprosessing/output/<RUN_ID>/` con los perfiles y vistas.*
+
+2. **Publicar la versión validada en el catálogo atómico JSON:**
+   ```powershell
+   python data/proprosessing/publish_validated_candidate.py --candidate data/proprosessing/output/<RUN_ID>
+   ```
+   *La publicación valida hashes criptográficos SHA-256, genera la copia inmutable en `versions/` y actualiza atómicamente el puntero en `data/audit_log.json`.*
+
+---
+
+### 7. Compilación del Informe Académico LaTeX (Opcional)
+
+Para compilar el informe de 30 páginas con tipografía formal, figuras de 300 DPI y tablas:
+
+```bash
+cd informe
+pdflatex main.tex
+biber main
+pdflatex main.tex
+pdflatex main.tex
+cd ..
+```
+*El documento resultante queda disponible en `informe/main.pdf`.*
+
+---
+
+### 8. Despliegue en la Nube (Producción en Render)
+
+El proyecto cuenta con configuración lista para despliegues en la nube:
+* **Plataforma Activa:** [https://projectfinaldm.onrender.com/dashboard/](https://projectfinaldm.onrender.com/dashboard/)
+* **Build Command:** `pip install -r requirements.txt`
+* **Start Command:** `gunicorn wsgi:app`
 
 ## Alcance semántico
 
