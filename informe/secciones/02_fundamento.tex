@@ -1,0 +1,22 @@
+\section{Fundamento teórico y metodológico}
+
+\subsection{Minería de datos y marcos de ciclo de vida: CRISP-DM y KDD}
+La minería de datos se define formalmente como la etapa no trivial dentro del proceso de Descubrimiento de Conocimiento en Bases de Datos (KDD) orientada a la identificación de patrones válidos, novedosos, potencialmente útiles y comprensibles \parencite{fayyad1996data, fayyad1996kdd}. El marco KDD divide la cadena de valor en cinco etapas secuenciales e iterativas: selección, preprocesamiento/limpieza, transformación, minería propiamente dicha y evaluación/interpretación.
+
+Por su parte, la metodología CRISP-DM organiza el esfuerzo analítico en seis fases interconectadas: Comprensión del Negocio, Comprensión de los Datos, Preparación de los Datos, Modelado, Evaluación y Despliegue \parencite{chapman2000crisp}. En proyectos fundamentados en microdatos oficiales, la literatura metodológica del curso de Minería de Datos subraya que más del 70\% del esfuerzo técnico reside en la fase de \textit{Preparación de Datos} \parencite{umsa2026curso}. Un modelado predictivo prematuro sobre variables con errores de tipado o saltos de encuesta malinterpretados produce artefactos espurios y perpetúa sesgos estructurales. Por consiguiente, este proyecto delimita su alcance a consolidar un ciclo de preparación, auditoría de calidad y entrega analítica inmutable, garantizando bases firmes para futuros algoritmos de agrupamiento, clasificación o inferencia.
+
+\subsection{Principios teóricos de preparación de datos y calidad}
+El sustento técnico de este trabajo se articula a partir de los principios desarrollados en los módulos temáticos de la materia \parencite{umsa2026curso}:
+
+\begin{enumerate}[leftmargin=0.5in]
+  \item \textbf{Tipología y escalas de medición (Capítulo 2):} Separación estricta entre identificadores relacionales (\texttt{folio}, \texttt{nro}), variables nominales codificadas (\texttt{s01a\_01}, \texttt{depto}), ordinales (\texttt{niv\_ed}) y magnitudes cuantitativas (\texttt{edad}, \texttt{phrs}, \texttt{ylab}). Se prohíbe explícitamente calcular medias sobre variables categóricas o interpretar códigos numéricos sin diccionario.
+  \item \textbf{Estadística descriptiva y detección de anomalías (Capítulo 3):} Empleo del rango intercuartílico (IQR), cuantiles y medidas de dispersión no como herramientas de eliminación destructiva de registros, sino como alertas diagnósticas para orientar la auditoría humana especializada.
+  \item \textbf{Tratamiento de valores faltantes y universos condicionales (Capítulo 5):} Clasificación formal de las ausencias. Se distingue entre no respuesta aleatoria (omisión de respuesta) y no respuesta estructural (resultado de un salto legítimo del cuestionario). Se prohíbe la imputación de medias o modas globales sobre campos condicionales.
+  \item \textbf{Aseguramiento de la calidad y ciclo de vida de datos (Capítulo 11):} Implementación de controles censales, registro de cambios en bitácoras \textit{append-only} y preservación de la reproducibilidad científica mediante verificación criptográfica de artefactos intermedios y finales.
+  \item \textbf{Límites de la inferencia estadística (Capítulo 4):} Distinción rigurosa entre estadísticos observados en la muestra ($n = 39.497$) y estimaciones paramétricas poblacionales ($N \approx 12,4\text{ millones}$). Cualquier cálculo inferencial generalizable requiere incorporar el diseño muestral complejo (estratificación y ponderadores \texttt{factor}).
+\end{enumerate}
+
+\subsection{Trazabilidad, persistencia atómica y gobernanza en JSON}
+En concordancia con las restricciones de diseño arquitectónico del proyecto, se descartó el uso de sistemas de gestión de bases de datos relacionales pesadas como PostgreSQL. En su lugar, se adoptó una arquitectura ligera, portable y desacoplada basada en archivos inmutables en disco (Parquet/CSV) y persistencia de catálogos mediante documentos JSON locales con sustitución atómica. 
+
+Bajo este esquema, una versión candidata no se hace visible para la interfaz web hasta que supera todas las compuertas de validación de integridad (esquema, recuento censal y verificación de hashes). Toda modificación de celdas queda registrada con actor, regla, valor anterior y nuevo en una bitácora append-only, asignando al despliegue el estado técnico explícito \texttt{published\_internal\_with\_semantic\_limitations}, lo que garantiza honestidad intelectual al delimitar qué variables cuentan con respaldo semántico confirmado y cuáles permanecen en estado de revisión.

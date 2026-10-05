@@ -1,0 +1,21 @@
+\section{Discusión}
+
+\subsection{Integridad estructural frente al mito de la limpieza destructiva}
+Los resultados obtenidos demuestran un avance metodológico sustancial respecto a los enfoques convencionales de preparación de datos: el dataset maestro conserva íntegramente sus 275 variables y 39.497 filas, sin recurrir a la supresión arbitraria de columnas dispersas ni a la imputación algorítmica ciega de valores faltantes. 
+
+La decisión de reclasificar la regla L-80 como una alerta meramente informativa en lugar de un mecanismo de eliminación automática fue plenamente respaldada por la evidencia empírica. El análisis demostró que en encuestas de hogares, la ausencia global agrega poblaciones heterogéneas; excluir atributos con más del 80\% de valores \texttt{NA} habría destruido variables críticas de la economía laboral, tales como el salario líquido (\texttt{s04c\_17a}) o las características del empleo secundario (\texttt{s04e\_26\_cod}), las cuales exhiben tasas de respuesta superiores al 99\% cuando se calculan sobre su universo elegible documentado.
+
+\subsection{El concepto de dataset limpio y las limitaciones semánticas}
+En consonancia con los principios de calidad de datos, es imperativo distinguir entre \textit{integridad estructural} y \textit{depuración semántica integral}. El artefacto \texttt{persona\_clean\_master.parquet} es un dataset estructuralmente impecable: no contiene colisiones de clave, registros truncados ni tipos incompatibles, y sus alteraciones físicas se limitan a tres celdas biológicamente imposibles en horas semanales (regla S-01) y a la normalización de cadenas de texto libre (regla S-02). 
+
+No obstante, no puede afirmarse que la matriz esté 100\% depurada en términos de negocio o semántica oficial. Como se identificó en la conciliación con el catálogo F27 del INE, existen diferencias de 12 registros (39.497 en la copia de trabajo frente a 39.485 en el estándar público), tres atributos oficiales no presentes localmente y dos extensiones locales sin diccionario confirmado (\texttt{s05c\_09e} y \texttt{totper}). Por ello, clasificar la versión publicada como \texttt{published\_internal\_with\_semantic\_limitations} constituye un acto de honestidad científica indispensable.
+
+\subsection{Diseño muestral, representatividad y límites inferenciales}
+La muestra de 39.497 personas en 12.718 hogares observados en los nueve departamentos del país no representa una muestra aleatoria simple (M.A.S.), sino un diseño estratificado y por conglomerados (UPM). Como consecuencia directa:
+\begin{itemize}[leftmargin=0.5in]
+  \item Existe una clara sobre-representación intencional de departamentos pequeños (como Pando con 1.977 encuestados para una población proyectada de 175 mil hab., frente a Santa Cruz con 6.991 encuestados para más de 3,5 millones de hab.).
+  \item Las tasas observadas presentadas en el dashboard deben interpretarse estrictamente como indicadores de la muestra encuestada. La extrapolación hacia el total nacional de 12,4 millones de habitantes requiere expandir mediante la variable de ponderación \texttt{factor} y aplicar métodos de estimación de varianza compatibles con el diseño de la encuesta (como linealización por series de Taylor o réplicas bootstrap).
+\end{itemize}
+
+\subsection{Consolidación de la vista regional}
+La actualización del módulo geográfico en la aplicación web resolvió la desconexión documentada en revisiones previas. Al vincular el mapa vectorial SVG de Bolivia directamente con las métricas observadas consolidadas en \texttt{departamentos\_full\_stats.json}, el usuario dispone de un contraste regional transparente y fidedigno, distinguiendo con claridad entre el conteo muestral observado ($n$) y el universo de referencia elegible para cada dimensión de salud, educación, empleo y pobreza.

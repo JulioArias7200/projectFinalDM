@@ -1,0 +1,375 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nyt/apasortcite//global/global/global}
+    \entry{chapman2000crisp}{report}{}{}
+      \name{author}{7}{}{%
+        {{un=0,uniquepart=base,hash=6e42f1026173c2e52fdda7fdd636f359}{%
+           family={Chapman},
+           familyi={C\bibinitperiod},
+           given={Pete},
+           giveni={P\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=f37a206983a831906b78d21c7d52eaad}{%
+           family={Clinton},
+           familyi={C\bibinitperiod},
+           given={Julian},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=7c25b09dcdc549eef103243260ef9097}{%
+           family={Kerber},
+           familyi={K\bibinitperiod},
+           given={Randy},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=ad3964a47e85a21d4e37e96bdc189722}{%
+           family={Khabaza},
+           familyi={K\bibinitperiod},
+           given={Thomas},
+           giveni={T\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=0837e07a12ac06f6572ab8dbb4dbdc8b}{%
+           family={Reinartz},
+           familyi={R\bibinitperiod},
+           given={Thomas},
+           giveni={T\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=3a4e3f5f408e7cfa7e86f42b4a99fe8b}{%
+           family={Shearer},
+           familyi={S\bibinitperiod},
+           given={Colin},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=44d12eb23a02b52e9ee5e8f5fe39d9ec}{%
+           family={Wirth},
+           familyi={W\bibinitperiod},
+           given={R{"u}diger},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{institution}{1}{%
+        {SPSS Inc.}%
+      }
+      \strng{namehash}{e4568ace118615d389c03c0583880045}
+      \strng{fullhash}{32469185cc4be6fa3a81549d41bd6ea4}
+      \strng{fullhashraw}{32469185cc4be6fa3a81549d41bd6ea4}
+      \strng{bibnamehash}{32469185cc4be6fa3a81549d41bd6ea4}
+      \strng{authorbibnamehash}{32469185cc4be6fa3a81549d41bd6ea4}
+      \strng{authornamehash}{e4568ace118615d389c03c0583880045}
+      \strng{authorfullhash}{32469185cc4be6fa3a81549d41bd6ea4}
+      \strng{authorfullhashraw}{32469185cc4be6fa3a81549d41bd6ea4}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{CRISP-DM} 1.0: Step-by-step data mining guide}
+      \field{type}{techreport}
+      \field{year}{2000}
+    \endentry
+    \entry{fayyad1996kdd}{article}{}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=b42d184c7549161c8fe0c2d53decab94}{%
+           family={Fayyad},
+           familyi={F\bibinitperiod},
+           given={Usama},
+           giveni={U\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=34f8ca71a399161ab92f9d68b804869f}{%
+           family={Piatetsky-Shapiro},
+           familyi={P\bibinithyphendelim S\bibinitperiod},
+           given={Gregory},
+           giveni={G\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=4940852a16a84802eb98552d6deace24}{%
+           family={Smyth},
+           familyi={S\bibinitperiod},
+           given={Padhraic},
+           giveni={P\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{d209ee15d1bcdde9f91ef133f1a11cb4}
+      \strng{fullhash}{f401cd48784ca09966764313d60e64c0}
+      \strng{fullhashraw}{f401cd48784ca09966764313d60e64c0}
+      \strng{bibnamehash}{f401cd48784ca09966764313d60e64c0}
+      \strng{authorbibnamehash}{f401cd48784ca09966764313d60e64c0}
+      \strng{authornamehash}{d209ee15d1bcdde9f91ef133f1a11cb4}
+      \strng{authorfullhash}{f401cd48784ca09966764313d60e64c0}
+      \strng{authorfullhashraw}{f401cd48784ca09966764313d60e64c0}
+      \field{sortinit}{F}
+      \field{sortinithash}{2638baaa20439f1b5a8f80c6c08a13b4}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{AI Magazine}
+      \field{number}{3}
+      \field{title}{From data mining to knowledge discovery in databases}
+      \field{volume}{17}
+      \field{year}{1996}
+      \field{pages}{37\bibrangedash 54}
+      \range{pages}{18}
+      \verb{doi}
+      \verb 10.1609/aimag.v17i3.1230
+      \endverb
+    \endentry
+    \entry{ineeh2025persona}{online}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=a303d4390a16a468a0c541d209410697}{%
+           family={{Instituto Nacional de Estadística}},
+           familyi={I\bibinitperiod}}}%
+      }
+      \strng{namehash}{a303d4390a16a468a0c541d209410697}
+      \strng{fullhash}{a303d4390a16a468a0c541d209410697}
+      \strng{fullhashraw}{a303d4390a16a468a0c541d209410697}
+      \strng{bibnamehash}{a303d4390a16a468a0c541d209410697}
+      \strng{authorbibnamehash}{a303d4390a16a468a0c541d209410697}
+      \strng{authornamehash}{a303d4390a16a468a0c541d209410697}
+      \strng{authorfullhash}{a303d4390a16a468a0c541d209410697}
+      \strng{authorfullhashraw}{a303d4390a16a468a0c541d209410697}
+      \field{sortinit}{I}
+      \field{sortinithash}{8d291c51ee89b6cd86bf5379f0b151d8}
+      \field{labeldatesource}{nodate}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Encuesta de Hogares 2025: Diccionario de datos de {EH2025\_Persona} (F27)}
+      \field{urlday}{4}
+      \field{urlmonth}{10}
+      \field{urlyear}{2026}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://anda.ine.gob.bo/index.php/catalog/256/data-dictionary/F27?file_name=EH2025_Persona
+      \endverb
+      \verb{url}
+      \verb https://anda.ine.gob.bo/index.php/catalog/256/data-dictionary/F27?file_name=EH2025_Persona
+      \endverb
+    \endentry
+    \entry{umsa2026curso}{manual}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=43ebad22656ccc1e72308114b6e561eb}{%
+           family={{Universidad Mayor de San Andrés, Carrera de Informática}},
+           familyi={U\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Universidad Mayor de San Andrés}%
+      }
+      \strng{namehash}{43ebad22656ccc1e72308114b6e561eb}
+      \strng{fullhash}{43ebad22656ccc1e72308114b6e561eb}
+      \strng{fullhashraw}{43ebad22656ccc1e72308114b6e561eb}
+      \strng{bibnamehash}{43ebad22656ccc1e72308114b6e561eb}
+      \strng{authorbibnamehash}{43ebad22656ccc1e72308114b6e561eb}
+      \strng{authornamehash}{43ebad22656ccc1e72308114b6e561eb}
+      \strng{authorfullhash}{43ebad22656ccc1e72308114b6e561eb}
+      \strng{authorfullhashraw}{43ebad22656ccc1e72308114b6e561eb}
+      \field{sortinit}{U}
+      \field{sortinithash}{6901a00e45705986ee5e7ca9fd39adca}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Material de aula no publicado}
+      \field{title}{Material docente de Data Mining (DAT-253)}
+      \field{year}{2026}
+    \endentry
+  \enddatalist
+  \datalist[entry]{nyt/global//global/global/global}
+    \entry{chapman2000crisp}{report}{}{}
+      \name{author}{7}{}{%
+        {{un=0,uniquepart=base,hash=6e42f1026173c2e52fdda7fdd636f359}{%
+           family={Chapman},
+           familyi={C\bibinitperiod},
+           given={Pete},
+           giveni={P\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=f37a206983a831906b78d21c7d52eaad}{%
+           family={Clinton},
+           familyi={C\bibinitperiod},
+           given={Julian},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=7c25b09dcdc549eef103243260ef9097}{%
+           family={Kerber},
+           familyi={K\bibinitperiod},
+           given={Randy},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=ad3964a47e85a21d4e37e96bdc189722}{%
+           family={Khabaza},
+           familyi={K\bibinitperiod},
+           given={Thomas},
+           giveni={T\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=0837e07a12ac06f6572ab8dbb4dbdc8b}{%
+           family={Reinartz},
+           familyi={R\bibinitperiod},
+           given={Thomas},
+           giveni={T\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=3a4e3f5f408e7cfa7e86f42b4a99fe8b}{%
+           family={Shearer},
+           familyi={S\bibinitperiod},
+           given={Colin},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=44d12eb23a02b52e9ee5e8f5fe39d9ec}{%
+           family={Wirth},
+           familyi={W\bibinitperiod},
+           given={R{"u}diger},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{institution}{1}{%
+        {SPSS Inc.}%
+      }
+      \strng{namehash}{e4568ace118615d389c03c0583880045}
+      \strng{fullhash}{32469185cc4be6fa3a81549d41bd6ea4}
+      \strng{fullhashraw}{32469185cc4be6fa3a81549d41bd6ea4}
+      \strng{bibnamehash}{32469185cc4be6fa3a81549d41bd6ea4}
+      \strng{authorbibnamehash}{32469185cc4be6fa3a81549d41bd6ea4}
+      \strng{authornamehash}{e4568ace118615d389c03c0583880045}
+      \strng{authorfullhash}{32469185cc4be6fa3a81549d41bd6ea4}
+      \strng{authorfullhashraw}{32469185cc4be6fa3a81549d41bd6ea4}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{CRISP-DM} 1.0: Step-by-step data mining guide}
+      \field{type}{techreport}
+      \field{year}{2000}
+    \endentry
+    \entry{fayyad1996kdd}{article}{}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=b42d184c7549161c8fe0c2d53decab94}{%
+           family={Fayyad},
+           familyi={F\bibinitperiod},
+           given={Usama},
+           giveni={U\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=34f8ca71a399161ab92f9d68b804869f}{%
+           family={Piatetsky-Shapiro},
+           familyi={P\bibinithyphendelim S\bibinitperiod},
+           given={Gregory},
+           giveni={G\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=4940852a16a84802eb98552d6deace24}{%
+           family={Smyth},
+           familyi={S\bibinitperiod},
+           given={Padhraic},
+           giveni={P\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{d209ee15d1bcdde9f91ef133f1a11cb4}
+      \strng{fullhash}{f401cd48784ca09966764313d60e64c0}
+      \strng{fullhashraw}{f401cd48784ca09966764313d60e64c0}
+      \strng{bibnamehash}{f401cd48784ca09966764313d60e64c0}
+      \strng{authorbibnamehash}{f401cd48784ca09966764313d60e64c0}
+      \strng{authornamehash}{d209ee15d1bcdde9f91ef133f1a11cb4}
+      \strng{authorfullhash}{f401cd48784ca09966764313d60e64c0}
+      \strng{authorfullhashraw}{f401cd48784ca09966764313d60e64c0}
+      \field{sortinit}{F}
+      \field{sortinithash}{2638baaa20439f1b5a8f80c6c08a13b4}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{AI Magazine}
+      \field{number}{3}
+      \field{title}{From data mining to knowledge discovery in databases}
+      \field{volume}{17}
+      \field{year}{1996}
+      \field{pages}{37\bibrangedash 54}
+      \range{pages}{18}
+      \verb{doi}
+      \verb 10.1609/aimag.v17i3.1230
+      \endverb
+    \endentry
+    \entry{ineeh2025persona}{online}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=a303d4390a16a468a0c541d209410697}{%
+           family={{Instituto Nacional de Estadística}},
+           familyi={I\bibinitperiod}}}%
+      }
+      \strng{namehash}{a303d4390a16a468a0c541d209410697}
+      \strng{fullhash}{a303d4390a16a468a0c541d209410697}
+      \strng{fullhashraw}{a303d4390a16a468a0c541d209410697}
+      \strng{bibnamehash}{a303d4390a16a468a0c541d209410697}
+      \strng{authorbibnamehash}{a303d4390a16a468a0c541d209410697}
+      \strng{authornamehash}{a303d4390a16a468a0c541d209410697}
+      \strng{authorfullhash}{a303d4390a16a468a0c541d209410697}
+      \strng{authorfullhashraw}{a303d4390a16a468a0c541d209410697}
+      \field{sortinit}{I}
+      \field{sortinithash}{8d291c51ee89b6cd86bf5379f0b151d8}
+      \field{labeldatesource}{nodate}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Encuesta de Hogares 2025: Diccionario de datos de {EH2025\_Persona} (F27)}
+      \field{urlday}{4}
+      \field{urlmonth}{10}
+      \field{urlyear}{2026}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://anda.ine.gob.bo/index.php/catalog/256/data-dictionary/F27?file_name=EH2025_Persona
+      \endverb
+      \verb{url}
+      \verb https://anda.ine.gob.bo/index.php/catalog/256/data-dictionary/F27?file_name=EH2025_Persona
+      \endverb
+    \endentry
+    \entry{umsa2026curso}{manual}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=43ebad22656ccc1e72308114b6e561eb}{%
+           family={{Universidad Mayor de San Andrés, Carrera de Informática}},
+           familyi={U\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Universidad Mayor de San Andrés}%
+      }
+      \strng{namehash}{43ebad22656ccc1e72308114b6e561eb}
+      \strng{fullhash}{43ebad22656ccc1e72308114b6e561eb}
+      \strng{fullhashraw}{43ebad22656ccc1e72308114b6e561eb}
+      \strng{bibnamehash}{43ebad22656ccc1e72308114b6e561eb}
+      \strng{authorbibnamehash}{43ebad22656ccc1e72308114b6e561eb}
+      \strng{authornamehash}{43ebad22656ccc1e72308114b6e561eb}
+      \strng{authorfullhash}{43ebad22656ccc1e72308114b6e561eb}
+      \strng{authorfullhashraw}{43ebad22656ccc1e72308114b6e561eb}
+      \field{sortinit}{U}
+      \field{sortinithash}{6901a00e45705986ee5e7ca9fd39adca}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Material de aula no publicado}
+      \field{title}{Material docente de Data Mining (DAT-253)}
+      \field{year}{2026}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

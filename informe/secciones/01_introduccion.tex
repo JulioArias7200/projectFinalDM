@@ -1,0 +1,30 @@
+\section{Introducción}
+
+Los proyectos de minería de datos requieren más que ejecutar algoritmos de aprendizaje automático: necesitan comprender a profundidad la naturaleza de las fuentes, auditar rigurosamente su calidad, preparar los microdatos mediante reglas explícitas y reproducibles, y comunicar con honestidad las limitaciones epistemológicas de cada resultado. La metodología estándar CRISP-DM (\textit{Cross-Industry Standard Process for Data Mining}) y el marco KDD (\textit{Knowledge Discovery in Databases}) conciben un ciclo iterativo estructurado que vincula estrechamente la comprensión del negocio o dominio, la exploración y preparación de los datos, el modelado, la evaluación y el despliegue operativo \parencite{chapman2000crisp, fayyad1996data}. En el análisis de microdatos sociodemográficos procedentes de encuestas por muestreo probabilístico, esta rigurosidad es indispensable: códigos categóricos, valores especiales de no respuesta y filtros o saltos condicionales del cuestionario pueden inducir a conclusiones gravemente distorsionadas si se procesan como atributos numéricos convencionales o si se aplican recetas simplistas de imputación masiva.
+
+El presente proyecto aborda el procesamiento integral de \texttt{data/persona.csv}, archivo de microdatos de personas de la Encuesta de Hogares de Bolivia (EH2025). La estructura local observada consta de 39.497 registros individuales y 275 variables. Se cuenta con un diccionario de metadatos de referencia basado en el archivo F27 del catálogo oficial ANDA del Instituto Nacional de Estadística (INE); no obstante, el catálogo oficial declara 39.485 casos y 276 variables \parencite{ineeh2025persona}. Esta discrepancia (12 registros adicionales y variaciones en la denominación de campos) prohíbe asumir apriorísticamente que la copia de trabajo sea idéntica a la publicación oficial, exigiendo un principio de conservación y auditoría transparente sobre la fuente efectivamente analizada.
+
+\subsection{Problema y pregunta de trabajo}
+En el ámbito de la ciencia de datos aplicada a políticas públicas, el problema de limpieza no consiste simplemente en sustituir celdas vacías o eliminar observaciones atípicas. Consiste en generar una base analítica reproducible sin destruir información cuya interpretación responde al diseño muestral de la encuesta. En este contexto:
+\begin{itemize}[leftmargin=0.5in]
+  \item Una celda con token de ausencia (\texttt{NA}) no equivale necesariamente a un error del encuestador o una omisión del informante: con frecuencia representa una persona que legítimamente no forma parte del universo de la pregunta (por ejemplo, preguntas de empleo para menores de 7 años o de maternidad para varones).
+  \item Un valor extremo en distribuciones asimétricas de ingreso o edad puede ser perfectamente plausible y no constituye un error que deba suprimirse mediante métodos de truncamiento ciego como el rango intercuartílico (IQR).
+  \item Un código numérico discreto (como el departamento o la condición de actividad) no posee propiedades métricas y no admite cálculos de media o desviación estándar sin provocar un error categorial.
+\end{itemize}
+
+Frente a este escenario, la pregunta central que guía el proyecto es: \textit{¿Cómo estructurar un pipeline determinista y auditable que limpie y valide técnicamente el dataset \texttt{persona.csv}, preservando la inmutabilidad de la fuente cruda, respetando la estructura de universos muestrales y desplegando un sistema analítico interactivo en Flask con persistencia atómica en JSON local?}
+
+\subsection{Objetivos}
+El objetivo general es diseñar, ejecutar y documentar un sistema verificable de preparación, auditoría de calidad y visualización analítica de \texttt{persona.csv}, garantizando la inmutabilidad del archivo original, aplicando transformaciones semánticas trazables y estructurando 11 vistas temáticas especializadas.
+
+Los objetivos específicos son:
+\begin{enumerate}[leftmargin=0.5in]
+  \item Caracterizar la estructura técnica, la integridad criptográfica (SHA-256) y la taxonomía de ausencias del archivo \texttt{data/persona.csv}.
+  \item Validar la unicidad de la clave primaria compuesta \texttt{(folio, nro)} y formalizar el contrato de datos para las 275 columnas.
+  \item Implementar y registrar en bitácora transaccional únicamente reglas de limpieza con fundamento físico o lingüístico verificable (reglas S-01 y S-02), preservando el esquema maestro en formato Parquet y CSV.
+  \item Construir 11 vistas analíticas temáticas orientadas a subpoblaciones elegibles según los saltos del cuestionario oficial del INE.
+  \item Desarrollar una aplicación web interactiva en Flask con arquitectura desacoplada, persistencia atómica en JSON local (sin base de datos relacional pesada) y un módulo geográfico interactivo de los 9 departamentos de Bolivia con datos observados exactos.
+\end{enumerate}
+
+\subsection{Alcance y delimitación}
+El análisis se concentra exclusivamente en el microdato individual de \texttt{persona.csv}; no realiza fusiones con las bases complementarias de vivienda, gastos o equipamiento del hogar. Las 11 vistas temáticas generadas son proyecciones analíticas de la versión maestra y no descartan variables del esquema global. El alcance abarca preparación, auditoría, perfiles de calidad y visualización descriptiva. No se entrenan modelos de aprendizaje automático predictivo ni se efectúan inferencias poblacionales no ponderadas, en estricto cumplimiento de los supuestos del diseño muestral complejo.

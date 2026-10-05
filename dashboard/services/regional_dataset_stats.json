@@ -1,0 +1,362 @@
+{
+  "Chuquisaca": {
+    "code": 1,
+    "n_total": 2892,
+    "pct_total": 7.3,
+    "n_hogares": 961,
+    "n_urbano": 1688,
+    "pct_urbano": 58.4,
+    "n_rural": 1204,
+    "pct_rural": 41.6,
+    "n_hombres": 1435,
+    "n_mujeres": 1457,
+    "edad_promedio": 33.3,
+    "salud": {
+      "n_seguro": 0,
+      "pct_seguro": 0.0,
+      "n_mef_13_50": 783,
+      "n_ninos_menor_6": 244,
+      "n_ninos_menor_5": 198
+    },
+    "educacion": {
+      "n_elegibles_4mas": 2733,
+      "pct_elegibles_4mas": 94.5,
+      "n_pob_15mas": 2123,
+      "n_alfabetizados": 0,
+      "tasa_alfabetismo": 0.0
+    },
+    "empleo": {
+      "n_pet_7mas": 2595,
+      "pct_pet_7mas": 89.7,
+      "n_ocupados": 1510,
+      "tasa_ocupacion_pet": 58.2,
+      "n_ocupacion_secundaria": 0
+    },
+    "ingresos": {
+      "n_pobreza_moderada": 1418,
+      "tasa_pobreza": 49.0,
+      "n_con_ingreso_laboral": 1221,
+      "mediana_ingreso_laboral": 2142
+    }
+  },
+  "La Paz": {
+    "code": 2,
+    "n_total": 9839,
+    "pct_total": 24.9,
+    "n_hogares": 3097,
+    "n_urbano": 8472,
+    "pct_urbano": 86.1,
+    "n_rural": 1367,
+    "pct_rural": 13.9,
+    "n_hombres": 4839,
+    "n_mujeres": 5000,
+    "edad_promedio": 33.0,
+    "salud": {
+      "n_seguro": 0,
+      "pct_seguro": 0.0,
+      "n_mef_13_50": 2913,
+      "n_ninos_menor_6": 747,
+      "n_ninos_menor_5": 600
+    },
+    "educacion": {
+      "n_elegibles_4mas": 9391,
+      "pct_elegibles_4mas": 95.4,
+      "n_pob_15mas": 7557,
+      "n_alfabetizados": 0,
+      "tasa_alfabetismo": 0.0
+    },
+    "empleo": {
+      "n_pet_7mas": 8955,
+      "pct_pet_7mas": 91.0,
+      "n_ocupados": 4849,
+      "tasa_ocupacion_pet": 54.1,
+      "n_ocupacion_secundaria": 0
+    },
+    "ingresos": {
+      "n_pobreza_moderada": 4302,
+      "tasa_pobreza": 43.7,
+      "n_con_ingreso_laboral": 4264,
+      "mediana_ingreso_laboral": 2598
+    }
+  },
+  "Cochabamba": {
+    "code": 3,
+    "n_total": 6714,
+    "pct_total": 17.0,
+    "n_hogares": 2187,
+    "n_urbano": 5506,
+    "pct_urbano": 82.0,
+    "n_rural": 1208,
+    "pct_rural": 18.0,
+    "n_hombres": 3309,
+    "n_mujeres": 3405,
+    "edad_promedio": 32.7,
+    "salud": {
+      "n_seguro": 0,
+      "pct_seguro": 0.0,
+      "n_mef_13_50": 1910,
+      "n_ninos_menor_6": 588,
+      "n_ninos_menor_5": 466
+    },
+    "educacion": {
+      "n_elegibles_4mas": 6345,
+      "pct_elegibles_4mas": 94.5,
+      "n_pob_15mas": 5010,
+      "n_alfabetizados": 0,
+      "tasa_alfabetismo": 0.0
+    },
+    "empleo": {
+      "n_pet_7mas": 6024,
+      "pct_pet_7mas": 89.7,
+      "n_ocupados": 3206,
+      "tasa_ocupacion_pet": 53.2,
+      "n_ocupacion_secundaria": 0
+    },
+    "ingresos": {
+      "n_pobreza_moderada": 2712,
+      "tasa_pobreza": 40.4,
+      "n_con_ingreso_laboral": 2751,
+      "mediana_ingreso_laboral": 2800
+    }
+  },
+  "Oruro": {
+    "code": 4,
+    "n_total": 2721,
+    "pct_total": 6.9,
+    "n_hogares": 999,
+    "n_urbano": 1780,
+    "pct_urbano": 65.4,
+    "n_rural": 941,
+    "pct_rural": 34.6,
+    "n_hombres": 1335,
+    "n_mujeres": 1386,
+    "edad_promedio": 32.9,
+    "salud": {
+      "n_seguro": 0,
+      "pct_seguro": 0.0,
+      "n_mef_13_50": 728,
+      "n_ninos_menor_6": 255,
+      "n_ninos_menor_5": 209
+    },
+    "educacion": {
+      "n_elegibles_4mas": 2574,
+      "pct_elegibles_4mas": 94.6,
+      "n_pob_15mas": 2000,
+      "n_alfabetizados": 0,
+      "tasa_alfabetismo": 0.0
+    },
+    "empleo": {
+      "n_pet_7mas": 2411,
+      "pct_pet_7mas": 88.6,
+      "n_ocupados": 1384,
+      "tasa_ocupacion_pet": 57.4,
+      "n_ocupacion_secundaria": 0
+    },
+    "ingresos": {
+      "n_pobreza_moderada": 968,
+      "tasa_pobreza": 35.6,
+      "n_con_ingreso_laboral": 1182,
+      "mediana_ingreso_laboral": 2376
+    }
+  },
+  "Potosí": {
+    "code": 5,
+    "n_total": 2859,
+    "pct_total": 7.2,
+    "n_hogares": 938,
+    "n_urbano": 1356,
+    "pct_urbano": 47.4,
+    "n_rural": 1503,
+    "pct_rural": 52.6,
+    "n_hombres": 1340,
+    "n_mujeres": 1519,
+    "edad_promedio": 32.6,
+    "salud": {
+      "n_seguro": 0,
+      "pct_seguro": 0.0,
+      "n_mef_13_50": 779,
+      "n_ninos_menor_6": 278,
+      "n_ninos_menor_5": 225
+    },
+    "educacion": {
+      "n_elegibles_4mas": 2680,
+      "pct_elegibles_4mas": 93.7,
+      "n_pob_15mas": 2010,
+      "n_alfabetizados": 0,
+      "tasa_alfabetismo": 0.0
+    },
+    "empleo": {
+      "n_pet_7mas": 2526,
+      "pct_pet_7mas": 88.4,
+      "n_ocupados": 1531,
+      "tasa_ocupacion_pet": 60.6,
+      "n_ocupacion_secundaria": 0
+    },
+    "ingresos": {
+      "n_pobreza_moderada": 1367,
+      "tasa_pobreza": 47.8,
+      "n_con_ingreso_laboral": 1077,
+      "mediana_ingreso_laboral": 2200
+    }
+  },
+  "Tarija": {
+    "code": 6,
+    "n_total": 2913,
+    "pct_total": 7.4,
+    "n_hogares": 998,
+    "n_urbano": 2115,
+    "pct_urbano": 72.6,
+    "n_rural": 798,
+    "pct_rural": 27.4,
+    "n_hombres": 1420,
+    "n_mujeres": 1493,
+    "edad_promedio": 33.6,
+    "salud": {
+      "n_seguro": 0,
+      "pct_seguro": 0.0,
+      "n_mef_13_50": 825,
+      "n_ninos_menor_6": 229,
+      "n_ninos_menor_5": 184
+    },
+    "educacion": {
+      "n_elegibles_4mas": 2773,
+      "pct_elegibles_4mas": 95.2,
+      "n_pob_15mas": 2204,
+      "n_alfabetizados": 0,
+      "tasa_alfabetismo": 0.0
+    },
+    "empleo": {
+      "n_pet_7mas": 2628,
+      "pct_pet_7mas": 90.2,
+      "n_ocupados": 1591,
+      "tasa_ocupacion_pet": 60.5,
+      "n_ocupacion_secundaria": 0
+    },
+    "ingresos": {
+      "n_pobreza_moderada": 906,
+      "tasa_pobreza": 31.1,
+      "n_con_ingreso_laboral": 1367,
+      "mediana_ingreso_laboral": 2598
+    }
+  },
+  "Santa Cruz": {
+    "code": 7,
+    "n_total": 6991,
+    "pct_total": 17.7,
+    "n_hogares": 2215,
+    "n_urbano": 6189,
+    "pct_urbano": 88.5,
+    "n_rural": 802,
+    "pct_rural": 11.5,
+    "n_hombres": 3453,
+    "n_mujeres": 3538,
+    "edad_promedio": 30.7,
+    "salud": {
+      "n_seguro": 0,
+      "pct_seguro": 0.0,
+      "n_mef_13_50": 2089,
+      "n_ninos_menor_6": 610,
+      "n_ninos_menor_5": 509
+    },
+    "educacion": {
+      "n_elegibles_4mas": 6592,
+      "pct_elegibles_4mas": 94.3,
+      "n_pob_15mas": 5148,
+      "n_alfabetizados": 0,
+      "tasa_alfabetismo": 0.0
+    },
+    "empleo": {
+      "n_pet_7mas": 6245,
+      "pct_pet_7mas": 89.3,
+      "n_ocupados": 3284,
+      "tasa_ocupacion_pet": 52.6,
+      "n_ocupacion_secundaria": 0
+    },
+    "ingresos": {
+      "n_pobreza_moderada": 1590,
+      "tasa_pobreza": 22.7,
+      "n_con_ingreso_laboral": 3072,
+      "mediana_ingreso_laboral": 3033
+    }
+  },
+  "Beni": {
+    "code": 8,
+    "n_total": 2591,
+    "pct_total": 6.6,
+    "n_hogares": 747,
+    "n_urbano": 1913,
+    "pct_urbano": 73.8,
+    "n_rural": 678,
+    "pct_rural": 26.2,
+    "n_hombres": 1289,
+    "n_mujeres": 1302,
+    "edad_promedio": 28.9,
+    "salud": {
+      "n_seguro": 0,
+      "pct_seguro": 0.0,
+      "n_mef_13_50": 739,
+      "n_ninos_menor_6": 263,
+      "n_ninos_menor_5": 214
+    },
+    "educacion": {
+      "n_elegibles_4mas": 2429,
+      "pct_elegibles_4mas": 93.7,
+      "n_pob_15mas": 1779,
+      "n_alfabetizados": 0,
+      "tasa_alfabetismo": 0.0
+    },
+    "empleo": {
+      "n_pet_7mas": 2266,
+      "pct_pet_7mas": 87.5,
+      "n_ocupados": 1104,
+      "tasa_ocupacion_pet": 48.7,
+      "n_ocupacion_secundaria": 0
+    },
+    "ingresos": {
+      "n_pobreza_moderada": 932,
+      "tasa_pobreza": 36.0,
+      "n_con_ingreso_laboral": 1000,
+      "mediana_ingreso_laboral": 2685
+    }
+  },
+  "Pando": {
+    "code": 9,
+    "n_total": 1977,
+    "pct_total": 5.0,
+    "n_hogares": 576,
+    "n_urbano": 1084,
+    "pct_urbano": 54.8,
+    "n_rural": 893,
+    "pct_rural": 45.2,
+    "n_hombres": 1037,
+    "n_mujeres": 940,
+    "edad_promedio": 26.7,
+    "salud": {
+      "n_seguro": 0,
+      "pct_seguro": 0.0,
+      "n_mef_13_50": 562,
+      "n_ninos_menor_6": 220,
+      "n_ninos_menor_5": 176
+    },
+    "educacion": {
+      "n_elegibles_4mas": 1837,
+      "pct_elegibles_4mas": 92.9,
+      "n_pob_15mas": 1303,
+      "n_alfabetizados": 0,
+      "tasa_alfabetismo": 0.0
+    },
+    "empleo": {
+      "n_pet_7mas": 1716,
+      "pct_pet_7mas": 86.8,
+      "n_ocupados": 1020,
+      "tasa_ocupacion_pet": 59.4,
+      "n_ocupacion_secundaria": 0
+    },
+    "ingresos": {
+      "n_pobreza_moderada": 732,
+      "tasa_pobreza": 37.0,
+      "n_con_ingreso_laboral": 775,
+      "mediana_ingreso_laboral": 2858
+    }
+  }
+}

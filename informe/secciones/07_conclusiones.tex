@@ -1,0 +1,20 @@
+\section{Conclusiones y trabajo futuro}
+
+\subsection{Conclusiones del proyecto}
+El desarrollo del proyecto permitió establecer un estándar de ingeniería y minería de datos riguroso, reproducible y éticamente responsable sobre el microdato sociodemográfico \texttt{data/persona.csv}. Se destacan los siguientes logros fundamentales:
+
+\begin{enumerate}[leftmargin=0.5in]
+  \item \textbf{Preservación estricta de la fuente y reproducibilidad criptográfica:} Se mantuvo la inmutabilidad absoluta de \texttt{data/persona.csv}, respaldada por su hash SHA-256. Toda ejecución del pipeline generó artefactos versionados e independientes, materializando una versión maestra limpia (\texttt{persona\_clean\_master.parquet}) con las 39.497 filas y 275 columnas intactas.
+  \item \textbf{Superación del paradigma de limpieza destructiva:} Se demostró teórica y empíricamente que la eliminación ciega de variables con alta tasa de ausencia técnica (regla L-80) o la imputación mecánica de medias sobre atributos condicionales destruyen la semántica de las encuestas por muestreo. La conservación íntegra del esquema permitió retener información crucial sobre empleo asalariado e ingresos secundarios.
+  \item \textbf{Aplicación de reglas semánticas auditables:} Se ejecutaron únicamente transformaciones con fundamento verificable: validación de unicidad de la tupla relacional \texttt{(folio, nro)}, tipado estricto, corrección de frontera física en la regla S-01 (reasignación a \texttt{NA} de 3 celdas con jornadas mayores a 168 horas semanales) y estandarización lingüística en la regla S-02 (12.516 celdas en minúsculas en 13 variables de especificación abierta), con registro detallado en bitácora append-only.
+  \item \textbf{Estructuración de 11 vistas temáticas especializadas:} La segmentación no destructiva de la matriz según poblaciones elegibles (educación $\ge 4$ años, empleo $\ge 7$ años, fecundidad, niñez, ingresos y agregados de hogar) resolvió el compromiso entre integridad global y eficiencia en consultas estadísticas focalizadas.
+  \item \textbf{Arquitectura desacoplada y despliegue interactivo:} Se construyó una aplicación web funcional en Flask con persistencia atómica en documentos JSON locales (sin sobrecostos de configuración en bases de datos relacionales), integrando un mapa interactivo de Bolivia con división oficial de los 9 departamentos que consume datos observados fidedignos, con arquitectura portable lista para despliegue continuo en entornos productivos.
+\end{enumerate}
+
+\subsection{Trabajo futuro y recomendaciones}
+Para las fases subsiguientes del ciclo de minería de datos, se recomienda:
+\begin{itemize}[leftmargin=0.5in]
+  \item \textbf{Conciliación formal de la procedencia:} Gestionar con la entidad emisora (INE) la versión oficial del formulario y manual de codificación para resolver la naturaleza de los 12 casos divergentes y las extensiones locales (\texttt{totper} y \texttt{s05c\_09e}).
+  \item \textbf{Modelado inferencial con diseño de encuesta:} Incorporar rutinas estadísticas en Python (mediante librerías especializadas como \texttt{statsmodels} o \texttt{samplics}) que utilicen los estratos, UPM y el factor de expansión (\texttt{factor}) para calcular errores estándar, intervalos de confianza y contrastes de hipótesis representativos de la población boliviana.
+  \item \textbf{Modelado predictivo y de agrupamiento (KDD Fase 4):} Con una base de datos limpia y segmentada, abordar tareas de segmentación socioeconómica mediante clustering no supervisado (K-Means, GMM) y modelos de clasificación para la predicción de vulnerabilidad o inserción laboral informal.
+\end{itemize}

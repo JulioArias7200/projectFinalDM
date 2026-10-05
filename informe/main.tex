@@ -1,0 +1,108 @@
+\documentclass[12pt,letterpaper]{article}
+
+% Informe universitario con formato institucional del proyecto.
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{newtxtext,newtxmath}
+\usepackage[letterpaper,margin=1in]{geometry}
+\usepackage{setspace}
+\doublespacing
+\usepackage{indentfirst}
+\setlength{\parindent}{0.5in}
+\usepackage{graphicx}
+\usepackage{booktabs,tabularx,longtable,array}
+\usepackage{caption}
+\captionsetup[table]{labelfont=bf,textfont=it,justification=raggedright,singlelinecheck=false,skip=4pt}
+\captionsetup[figure]{labelfont=bf,textfont=it,justification=raggedright,singlelinecheck=false,skip=4pt}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{csquotes}
+\usepackage[style=authoryear,backend=biber,sorting=nyt]{biblatex}
+\addbibresource{referencias.bib}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage[hidelinks,plainpages=false,hypertexnames=false]{hyperref}
+\hypersetup{
+  pdftitle={Limpieza: dataset persona.csv},
+  pdfauthor={Julio Nelson Arias Cruz},
+  pdfsubject={Informe de proyecto de Data Mining DAT-253},
+  pdfkeywords={minería de datos, persona.csv}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\thepage}
+\setlength{\headheight}{15pt}
+\renewcommand{\headrulewidth}{0pt}
+\fancypagestyle{preliminar}{\fancyhf{}\fancyhead[R]{\thepage}\renewcommand{\headrulewidth}{0pt}}
+\titleformat{\section}{\normalfont\bfseries\large}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\normalfont\bfseries\normalsize}{\thesubsection.}{0.6em}{}
+\titleformat{\subsubsection}{\normalfont\bfseries\itshape\normalsize}{\thesubsubsection.}{0.6em}{}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\setlength{\emergencystretch}{3em}
+
+\begin{document}
+
+% Carátula basada en la referencia institucional existente en informe/main.tex.
+\begin{titlepage}
+  \centering
+  {\Large\bfseries UNIVERSIDAD MAYOR DE SAN ANDRÉS\\[0.3cm]}
+  {\large\bfseries FACULTAD DE CIENCIAS PURAS Y NATURALES\\[0.2cm]}
+  {\large\bfseries CARRERA DE INFORMÁTICA\\[0.2cm]}
+  {\large DATA MINING (DAT-253)\\[0.4cm]}
+  \vspace*{0.25in}
+  \includegraphics[width=0.31\textwidth]{Logo_Umsa.png}\\[0.8cm]
+  {\Large\bfseries INFORME DE PROYECTO\\[0.25cm]}
+  {\large\bfseries PREPARACIÓN DEL DATASET \texttt{persona.csv}\\[0.9cm]}
+  {\normalsize
+    \textbf{Estudiante:}\\
+    Julio Nelson Arias Cruz\\[0.55cm]
+    La Paz -- Bolivia\\
+    2026
+  }
+\end{titlepage}
+
+\pagenumbering{roman}
+\setcounter{page}{2}
+\thispagestyle{preliminar}
+\noindent\textbf{\large Resumen}\par
+\input{secciones/resumen.tex}
+\vspace{0.3cm}
+\noindent\textbf{Palabras clave:} minería de datos, calidad de datos, limpieza trazable, encuesta de hogares, análisis descriptivo.
+
+\newpage
+\thispagestyle{preliminar}
+\tableofcontents
+\newpage
+\thispagestyle{preliminar}
+\listoftables
+\newpage
+\thispagestyle{preliminar}
+\listoffigures
+
+\newpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\input{secciones/01_introduccion.tex}
+\input{secciones/02_fundamento.tex}
+\input{secciones/03_metodologia.tex}
+\input{secciones/04_resultados.tex}
+\input{secciones/05_dashboard.tex}
+\input{secciones/06_discusion.tex}
+\input{secciones/07_conclusiones.tex}
+
+\newpage
+\printbibliography[title={Referencias}]
+
+\appendix
+\section{Reproducibilidad y artefactos consultados}
+La verificación documentada para esta entrega se ejecuta desde la raíz del repositorio. El comando de pruebas registrado fue:
+\begin{quote}\small\texttt{python -m unittest discover -s tests -v}\end{quote}
+En el entorno usado el ejecutable global de Python 3.12 fue invocado mediante su ruta absoluta. El resultado más reciente registrado para el cambio de etiquetas del dashboard fue de 16 pruebas aprobadas. Las pruebas son sintéticas y verifican comportamientos del código; no son análisis estadísticos adicionales de los microdatos.
+
+Version interna examinada: persona-317279aafe9023a2 (39.497 filas por 275 columnas). Sus artefactos versionados y la documentacion fuente se conservan en el repositorio. Consultar las secciones de metodologia, conciliacion, auditoria semantica, validacion, analisis exploratorio y dashboard.
+
+\end{document}
