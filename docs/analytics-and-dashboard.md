@@ -2,11 +2,21 @@
 
 ## Estado funcional vigente — 4 de octubre de 2026
 
-El dashboard Flask consume microdatos solo desde la versión indicada por `data/audit_log.json` y verifica el SHA-256 registrado antes de calcular los gráficos. La página principal y `/demografia` muestran distribuciones observadas de edad y códigos de sexo/departamento/área. Salud, educación y empleo muestran conteos de códigos de respuesta agregados; no aplican filtros de elegibilidad ni asignan equivalencias interpretativas no verificadas. Ingresos permanece bloqueado para visualizaciones sustantivas. `/region` informa que la visualización regional está pendiente y ya no presenta los valores de demostración anteriores. `/revision-pendiente` resume los estados de la matriz documental.
+El dashboard Flask consume microdatos solo desde la versión indicada por `data/audit_log.json` y verifica el SHA-256 registrado antes de calcular los gráficos. La pagina principal y `/demografia` muestran distribuciones observadas de edad, sexo, departamento y area; cuando el diccionario DDI F27 tiene una categoria explicita, se muestra su etiqueta junto al codigo. Salud, educacion y empleo muestran conteos agregados y etiquetan solo codigos documentados; no aplican filtros de elegibilidad ni validan que el CSV local pertenezca exactamente a F27. Ingresos permanece bloqueado para visualizaciones sustantivas. `/region` informa que la visualización regional está pendiente y ya no presenta los valores de demostración anteriores. `/revision-pendiente` resume los estados de la matriz documental.
 
 Los gráficos son barras HTML responsivas que heredan `Inter`, `theme.css`, `base.css` y los tokens de fondo, texto y color; códigos/metadata usan `font-mono`. Muestran versión, fecha, universo/filtro, unidad, `N` y método. Categorías con menos de 10 casos se agrupan y se aplica supresión complementaria para impedir deducir el total oculto por resta. Las vistas maternas, infantiles y secundarias siguen siendo filtros registrados en manifiesto, todavía no certificados para interpretación. No se presentan porcentajes oficiales, proyecciones, ponderaciones o inferencia. Se ejecutaron 14 pruebas sintéticas y las 8 rutas del resumen/universos/revisión/región respondieron HTTP 200; la comprobación automatizada de render no sustituye una inspección visual manual en ambos temas.
 
 La descripción histórica del prototipo en las secciones siguientes debe leerse subordinada a este estado funcional: sus KPI y capas regionales estáticas no son resultados válidos ni se sirven en las páginas actuales.
+
+## Aclaracion de etiquetas de codigos — 4 de octubre de 2026
+
+Los textos como `Codigo 1` y `Codigo 2` identifican los valores numericos almacenados en una respuesta; por si solos no explican que categoria representan. El dashboard ahora consulta las categorias explicitas del diccionario JSON incluido en la version publicada y muestra la etiqueta junto al valor, por ejemplo `Hombre (codigo 1)`. Si el diccionario no contiene una etiqueta explicita, la interfaz declara `sin etiqueta en el diccionario`; no adivina su significado. Los graficos de salud, educacion y empleo son conteos observados sin filtro de elegibilidad y no deben leerse como tasas.
+
+Las etiquetas se reproducen del diccionario oficial ANDA/INE EH2025 Persona, archivo F27, cuya integridad se verifica con el SHA-256 del manifiesto. La conciliacion documentada en [source-reconciliation-persona.md](source-reconciliation-persona.md) encontro que el CSV local no coincide por completo con F27 (diferencias de filas y nombres de columnas). Por ello estas etiquetas son referencias del diccionario, no prueba de que el CSV local pertenezca exactamente a esa version ni validacion de sus dominios. Los codigos cuya descripcion DDI es opaca o abreviada, como `condact`, permanecen literales y requieren cotejo del cuestionario.
+
+La edad `s01a_03` se presenta aparte porque el DDI define 0–98 y especifica que 98 es un codigo tope para 98 anos o mas; el grafico agrupa 0–97 en intervalos descriptivos de cinco anos y reserva una categoria para 98+. No clasifica automaticamente valores fuera del dominio como errores ni realiza limpieza de microdatos.
+
+La implementacion se encuentra en `dashboard/services/dataset_service.py`; las pruebas sinteticas cubren la aplicacion de etiquetas explicitas, el caso sin etiqueta y el codigo tope de edad. En la actualizacion se ejecutaron 16 pruebas del proyecto: todas pasaron. No se modificaron `data/persona.csv` ni los artefactos de datos.
 
 ## Alcance del sistema Flask y Arquitectura Frontend
 

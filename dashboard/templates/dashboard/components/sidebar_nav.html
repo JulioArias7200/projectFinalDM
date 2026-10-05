@@ -37,6 +37,18 @@
         <span class="whitespace-nowrap text-xs font-medium">Panel Principal</span>
       </a>
 
+      <!-- Mapa Regional (Bolivia) -->
+      <a href="{{ url_for('dashboard.region') }}"
+        class="nav-item relative w-full h-11 px-3.5 rounded-xl flex items-center gap-3.5 transition-all {% if active_page == 'region' %}bg-gradient-to-r from-amber-500 to-pink-500 text-white font-semibold{% else %}hover:text-[var(--text-main)] hover:bg-[var(--sidebar-hover)]{% endif %}"
+        title="Mapa Territorial de Bolivia por Universos">
+        <div class="w-5 h-5 flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+            <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/>
+          </svg>
+        </div>
+        <span class="whitespace-nowrap text-xs font-medium">Mapa Bolivia</span>
+      </a>
+
       <!-- Demografía -->
       <a href="{{ url_for('dashboard.demografia') }}"
         class="nav-item relative w-full h-11 px-3.5 rounded-xl flex items-center gap-3.5 transition-all {% if active_page == 'demografia' %}bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold{% else %}hover:text-[var(--text-main)] hover:bg-[var(--sidebar-hover)]{% endif %}"

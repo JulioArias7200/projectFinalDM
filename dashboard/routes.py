@@ -10,14 +10,14 @@ from .services.audit_service import audit_service
 
 @dashboard_bp.route("/")
 def index():
-    """Dataset summary with observed demographic distributions."""
+    """Main DM Lab Dashboard (Minería de Datos & 5 Universos)."""
     manifest = dataset_service.get_manifest()
-    charts = dataset_service.get_demographic_charts()
+    rules = dataset_service.get_cleaning_rules()
     return render_template(
         "dashboard/pages/index.html",
         active_page="index",
         manifest=manifest,
-        charts=charts
+        rules=rules
     )
 
 
@@ -45,8 +45,13 @@ def procedimiento():
 
 @dashboard_bp.route("/region")
 def region():
-    """Regional inference is disabled until definitions and metrics are validated."""
-    return render_template("dashboard/pages/region_pendiente.html", active_page="demografia")
+    """Regional Geographic Distribution & Universe Mapping across 9 Departments of Bolivia."""
+    region_data = dataset_service.get_regional_distribution()
+    return render_template(
+        "dashboard/pages/region.html",
+        active_page="region",
+        region_data=region_data
+    )
 
 
 
