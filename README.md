@@ -100,23 +100,7 @@ Si desea regenerar el proceso de limpieza y validación censal a partir del micr
 
 ---
 
-### 7. Compilación del Informe Académico LaTeX (Opcional)
-
-Para compilar el informe de 30 páginas con tipografía formal, figuras de 300 DPI y tablas:
-
-```bash
-cd informe
-pdflatex main.tex
-biber main
-pdflatex main.tex
-pdflatex main.tex
-cd ..
-```
-*El documento resultante queda disponible en `informe/main.pdf`.*
-
----
-
-### 8. Despliegue en la Nube (Producción en Render)
+### 7. Despliegue en la Nube (Producción en Render)
 
 El proyecto cuenta con configuración lista para despliegues en la nube:
 * **Plataforma Activa:** [https://projectfinaldm.onrender.com/dashboard/](https://projectfinaldm.onrender.com/dashboard/)
