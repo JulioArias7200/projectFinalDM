@@ -1,0 +1,11 @@
+# Enforce LF endings on checkout across all platforms (Windows, Linux, macOS)
+* text=auto eol=lf
+
+# Explicit binary files that should never undergo line ending conversion
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.parquet binary
+*.pdf binary
+*.ico binary

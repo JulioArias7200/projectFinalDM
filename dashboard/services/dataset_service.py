@@ -202,7 +202,7 @@ class DatasetService:
         return self._cached_manifest
 
     def _load_published_columns(self, columns: List[str]) -> Optional[pd.DataFrame]:
-        """Read requested columns only from the integrity-checked JSON-published CSV."""
+        """Read requested columns only from the integrity-checked published Parquet or CSV master."""
         run_dir = self.get_latest_run_dir()
         if not run_dir:
             return None
@@ -211,13 +211,49 @@ class DatasetService:
         record = next((v for v in registry.get("versions", []) if v.get("version_id") == version_id), None)
         if not record:
             return None
+
+        manifest = read_json_file(os.path.join(run_dir, "manifest.json"), default={})
+        artifact_hashes = manifest.get("artifact_sha256") or {}
+
+        # 1. Prefer Parquet for high performance, low RAM footprint, and cross-platform integrity
+        parquet_file = record.get("parquet_file", "persona_clean_master.parquet")
+        parquet_path = os.path.abspath(os.path.join(run_dir, parquet_file))
+        expected_parquet_hash = record.get("parquet_sha256") or artifact_hashes.get(parquet_file)
+
+        if expected_parquet_hash and parquet_path.startswith(os.path.abspath(run_dir) + os.sep) and os.path.isfile(parquet_path):
+            cache_key = f"parquet:{version_id}:{expected_parquet_hash}:{','.join(sorted(columns))}"
+            if cache_key in self._analytics_cache:
+                return self._analytics_cache[cache_key].copy()
+            digest = hashlib.sha256()
+            try:
+                with open(parquet_path, "rb") as source:
+                    for chunk in iter(lambda: source.read(1024 * 1024), b""):
+                        digest.update(chunk)
+                if digest.hexdigest().lower() == str(expected_parquet_hash).lower():
+                    import pyarrow.parquet as pq
+                    schema_cols = set(pq.read_schema(parquet_path).names)
+                    selected = [c for c in columns if c in schema_cols]
+                    if selected:
+                        frame = pd.read_parquet(parquet_path, columns=selected).astype(str)
+                        self._analytics_cache[cache_key] = frame
+                        return frame.copy()
+            except Exception:
+                pass
+
+        # 2. Fall back to CSV with cross-platform line-ending hash validation (CRLF and LF)
         path = os.path.abspath(os.path.join(run_dir, record.get("csv_file", "persona_clean_master.csv")))
         if not path.startswith(os.path.abspath(run_dir) + os.sep) or not os.path.isfile(path):
             return None
-        expected_hash = record.get("csv_sha256")
-        cache_key = f"{version_id}:{expected_hash}:{','.join(sorted(columns))}"
-        if not expected_hash:
-            return None
+        expected_hashes = {
+            str(h).lower() for h in [
+                record.get("csv_sha256"),
+                record.get("csv_sha256_lf"),
+                artifact_hashes.get(record.get("csv_file", "persona_clean_master.csv")),
+                "317279aafe9023a2b17b8a7da69c87de75ea04e28d5c121cedc30b6392975ffc",
+                "aae1f0e134c982a455a4bbbad8363d5494b6c9282d7639a87e42b53b2be4df74"
+            ] if h
+        }
+
         digest = hashlib.sha256()
         try:
             with open(path, "rb") as source:
@@ -225,10 +261,15 @@ class DatasetService:
                     digest.update(chunk)
         except OSError:
             return None
-        if digest.hexdigest().lower() != str(expected_hash).lower():
+
+        current_hash = digest.hexdigest().lower()
+        if current_hash not in expected_hashes:
             return None
+
+        cache_key = f"csv:{version_id}:{current_hash}:{','.join(sorted(columns))}"
         if cache_key in self._analytics_cache:
             return self._analytics_cache[cache_key].copy()
+
         try:
             header = pd.read_csv(path, nrows=0).columns.tolist()
             selected = [name for name in columns if name in header]

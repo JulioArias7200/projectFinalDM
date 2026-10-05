@@ -9,4 +9,17 @@ __pycache__/
 .env
 .venv/
 
-    
+# LaTeX build artifacts
+*.aux
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.log
+
